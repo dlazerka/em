@@ -20,7 +20,7 @@ public class MemeServlet extends HttpServlet {
 
     String idStr = req.getPathInfo().replaceAll("[^0-9]+", "");
     if (idStr.equals("")) {
-      resp.sendError(400, "'id' not specified");
+      resp.sendError(404);
       return;
     }
     long id = Long.valueOf(idStr);
