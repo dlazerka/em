@@ -21,17 +21,17 @@ var MemeView = Backbone.View.extend({
 	tagName: 'span',
 	className: 'meme',
 	template: function(obj) {
-        var output = '';
+    var output = '';
 
-        _.each(obj.messages, function(message) {
-            output += '<div class="message ' + message.css + '">' + message.text + '</div>';
-        });
+    _.each(obj.messages, function(message) {
+        output += '<div class="message ' + message.css + '">' + message.text + '</div>';
+    });
 
-        output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
-        output += '<span>by ' + obj.author + '</span>';
+    output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
+    output += '<span>by ' + obj.author + '</span>';
 
-        return output;
-    },
+    return output;
+  },
 
 	initialize: function () {
 		this.render();
