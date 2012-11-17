@@ -6,7 +6,8 @@ var Meme = Backbone.Model.extend({
 		date: (new Date),
 		template: 'template1',
 		author: 'me',
-		messages: [{text: '', css: 'top-center'}]
+		messages: [{text: '', css: 'top-center'}],
+		font: 'Impact'
 	},
 	urlRoot: '/meme'
 });
