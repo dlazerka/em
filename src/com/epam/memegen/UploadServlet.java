@@ -18,13 +18,16 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
+import java.util.zip.CRC32;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     ServletFileUpload u = new ServletFileUpload();
-    u.setFileSizeMax(1 << 20 - 10000); // 1MiB - 10kB
+    u.setFileSizeMax((1 << 20) - 10000); // 1MiB - 10kB
     resp.setContentType("text/plain");
     resp.getWriter().println("Hello, world");
 
@@ -37,12 +40,17 @@ public class UploadServlet extends HttpServlet {
         Blob blob = new Blob(bytes);
         String name = item.getName();
 
+        CRC32 crc32 = new CRC32();
+        crc32.update(bytes);
+
+        Key key = KeyFactory.createKey("Image", crc32.getValue());
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Entity entity = new Entity("Image");
+
+        Entity entity = new Entity(key);
         entity.setUnindexedProperty("blob", blob);
         entity.setProperty("name", name);
         datastore.put(entity);
-        Key key = entity.getKey();
+
         resp.sendRedirect(key.getId() + "");
       }
     } catch (FileUploadException e) {
