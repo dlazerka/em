@@ -16,6 +16,8 @@ for (var i = 0; i < 10; i++) {
   memes.push(new Meme({
     url: 'https://memegen.googleplex.com/memeimage?k=11485229',
     messages: [
+      {text: 'Monogomous', css: 'top-center'},
+      {text: 'Menonymous', css: 'center-center'},
       {text: 'Monogomous', css: 'bottom-center'}]
   }));
 }
