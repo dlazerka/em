@@ -1,0 +1,21 @@
+.searchword {
+    display: inline!important;
+    font-family: inherit!important;
+    font-style: inherit!important;
+    font-variant: inherit!important;
+    font-weight: inherit!important;
+    border-color: transparent !important;
+    color: black!important;
+    background-color: rgba(96, 255, 96, 0.7)!important;
+    /*background-image: url('http://www.epam.com/etc/designs/epam/en/_jcr_content/common/logo.img.png/1352806012000.png');*/
+    /*background-image: url('http://www.epam.com/etc/designs/epam/en/_jcr_content/common/copyrights.img.png/1339156262857.png');*/
+    background-repeat: no-repeat;
+    background-size: contain;
+    font-size: inherit!important;
+    -webkit-transition-property: color, background-color, -webkit-box-shadow;
+    -webkit-transition-duration: 0.5s, 0.5s, 0.5s;
+    -webkit-transition-timing-function: linear, linear, linear;
+    padding: 0.2em!important;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.42) 3px 3px 4px!important;
+    border-radius: 6px!important;
+}

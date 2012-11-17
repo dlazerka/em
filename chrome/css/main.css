@@ -1,0 +1,95 @@
+#header {
+	height: 60px;
+	font-family: Impact;
+}
+
+#side_bar {
+	width: 150px;
+	float: left;
+	font-family: Impact;	
+}
+
+#main_area{
+	margin-left: 170px;
+}
+
+.meme {
+	display: inline-block;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	position: relative;
+	height: 180px;
+}
+
+.meme img {
+	display: inline-block;
+	height: 180px;
+}
+
+.meme span {
+	display: none;
+	float: left;
+	padding-bottom: 20px;
+}
+
+.meme .message {
+	color: #fff;
+	font-family: Impact;
+	font-size: 30px;
+	text-shadow: 0 0 0.2em #000;
+	letter-spacing: 2px;
+	white-space: nowrap;
+	margin-left: 10px;
+}
+
+.meme .top-left {
+	position: absolute;
+	text-align: left;
+}
+
+.meme .top-center {
+	position: absolute;
+	text-align: center;
+}
+
+.meme .top-right {
+	position: absolute;
+	text-align: left;
+}
+
+.meme .center-left {
+	position: absolute;
+	text-align: left;
+	top: 50%;
+}
+
+.meme .center-center {
+	position: absolute;
+	text-align: center;
+	top: 50%;
+}
+
+.meme .center-right {
+	position: absolute;
+	text-align: left;
+	top: 50%;
+}
+
+.meme .bottom-left {
+	position: absolute;
+	text-align: left;
+	bottom: 0;
+}
+
+.meme .bottom-center {
+	position: absolute;
+	text-align: center;
+	bottom: 0;
+}
+
+.meme .bottom-right {
+	position: absolute;
+	text-align: left;
+	bottom: 0;
+}
+
