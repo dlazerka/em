@@ -7,7 +7,24 @@
         "default_icon": "troll.png",
         "default_popup": "popup.html"
     },
+    "options_page": "options.html",
+    "background" : {
+        "scripts": ["background.js"]
+    },
+    "content_scripts" : [
+        {
+            "css": [ "style.css" ],
+            "matches" : [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js" : ["js/lib/jquery.js", "contentscript.js"],
+            "run_at" : "document_idle",
+            "all_frames" : false
+        }
+    ],
     "permissions": [
-        "http://api.flickr.com/"
+        "http://api.flickr.com/",
+        "http://epammeme.appspot.com/"
     ]
 }

@@ -1,39 +1,64 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+//fetchMemes();
+go();
 
-var req = new XMLHttpRequest();
-req.open(
-    "GET",
-    "http://api.flickr.com/services/rest/?" +
-        "method=flickr.photos.search&" +
-        "api_key=90485e931f687a9b9c2a66bf58a3861a&" +
-        "text=hello%20world&" +
-        "safe_search=1&" +  // 1 is "safe"
-        "content_type=1&" +  // 1 is "photos only"
-        "sort=relevance&" +  // another good one is "interestingness-desc"
-        "per_page=20",
-    true);
-req.onload = showPhotos;
-req.send(null);
+function go() {
+    var memes = new Memes();
+    for (var i = 0; i < 10; i++) {
+        memes.push(new Meme({
+            url: 'https://memegen.googleplex.com/memeimage?k=11637038',
+            messages: [
+                {text: 'This Meme', css: 'top-center'},
+                {text: 'Is Deprecated', css: 'bottom-center'}]
+        }));
 
-function showPhotos() {
-  var photos = req.responseXML.getElementsByTagName("photo");
+        memes.push(new Meme({
+            url: 'https://memegen.googleplex.com/memeimage?k=11567160',
+            messages: [
+                {text: 'HolidayS are comming!', css: 'bottom-center'}]
+        }));
 
-  for (var i = 0, photo; photo = photos[i]; i++) {
-    var img = document.createElement("image");
-    img.src = constructImageURL(photo);
-    var div = document.createElement("div");
-    div.appendChild(img);
-    document.body.appendChild(div);
-  }
+        memes.push(new Meme({
+            url: 'https://memegen.googleplex.com/memeimage?k=11485229',
+            messages: [
+                {text: 'Monogomous', css: 'top-center'},
+                {text: 'Menonymous', css: 'center-center'},
+                {text: 'Monogomous', css: 'bottom-center'}]
+        }));
+    }
+
+    //memes.fetch();
+
+    for (var i = 0; i < 30; i++) {
+        console.log(memes.at(i));
+        var memeView = new MemeView({model: memes.at(i)});
+
+        $("#main_area").append(memeView.render().$el);
+    }
+
 }
 
-// See: http://www.flickr.com/services/api/misc.urls.html
-function constructImageURL(photo) {
-  return "http://farm" + photo.getAttribute("farm") +
-      ".static.flickr.com/" + photo.getAttribute("server") +
-      "/" + photo.getAttribute("id") +
-      "_" + photo.getAttribute("secret") +
-      "_s.jpg";
+
+
+function fetchMemes() {
+    var jsonfile = new XMLHttpRequest();
+    jsonfile.open("GET", "http://epammeme.appspot.com/memes", true);
+    jsonfile.onreadystatechange = function() {
+        if (jsonfile.readyState == 4) {
+            if (jsonfile.status == 200) {
+                showMemes(JSON.parse(jsonfile.responseText));
+            }
+        }
+    };
+    jsonfile.send(null);
+}
+
+function showMemes(memeList) {
+    for (var i = 0; i < memeList.length; i++) {
+        var meme = memeList[i];
+        var img = document.createElement("image");
+        img.src = "http://epammeme.appspot.com" + meme.src;
+        var div = document.createElement("div");
+        div.appendChild(img);
+        document.body.appendChild(div);
+    }
 }
