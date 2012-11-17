@@ -21,7 +21,7 @@ public class MemesServlet extends HttpServlet {
     PreparedQuery prepared = datastore.prepare(q);
     Iterable<Entity> iterable = prepared.asIterable();
 
-    resp.setContentType("text/json");
+    resp.setContentType("application/json");
 
     PrintWriter writer = resp.getWriter();
     writer.append("[\n");
@@ -32,15 +32,11 @@ public class MemesServlet extends HttpServlet {
       } else {
         writer.append(",\n");
       }
-      writer.write("{");
-      long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
-      name = name.replaceAll("[^a-zA-Z0-9_-]", "");
-      writer.write("id: " + id);
-      writer.write(",url: '/" + id + "'");
-      writer.write(",name: '" + name + "'");
-      writer.write("}");
+
+      String json = Util.memeToJson(entity);
+      writer.write(json);
     }
     writer.append("\n]");
   }
+
 }
