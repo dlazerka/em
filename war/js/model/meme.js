@@ -13,7 +13,7 @@ var Meme = Backbone.Model.extend({
 
 var Memes = Backbone.Collection.extend({
 	model: Meme,
-	url: '/memes'
+	url: 'memes'
 });
 
 var MemeView = Backbone.View.extend({
