@@ -27,7 +27,7 @@ var MemeView = Backbone.View.extend({
         output += '<div class="message ' + message.css + '">' + message.text + '</div>';
     });
 
-    output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
+    output += '<img src="' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
     output += '<span>by ' + obj.author + '</span>';
 
     return output;
