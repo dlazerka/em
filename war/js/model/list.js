@@ -20,7 +20,7 @@ for (var i = 0; i < 10; i++) {
   }));
 }
 
-// memes.fetch();
+ //memes.fetch();
 
 for (var i = 0; i < 30; i++) {
   var memeView = new MemeView({model: memes.at(i)});

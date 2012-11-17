@@ -13,7 +13,7 @@ var Meme = Backbone.Model.extend({
 
 var Memes = Backbone.Collection.extend({
 	model: Meme,
-	url: 'memes'
+	url: 'http://epammeme.appspot.com/memes'
 });
 
 var MemeView = Backbone.View.extend({
@@ -33,6 +33,20 @@ var MemeView = Backbone.View.extend({
 				author: this.model.get('author'),
 				messages: this.model.get('messages')
 			}));
+
+		var element = this.$el;
+
+		$('img', element).load(function() {
+      $('div', element).map(function() {
+        var width = $(this).width();
+        var parentWidht = $(element).width() - 20;
+        if (parentWidht < width) {
+        	$(this).css('font-size', Math.floor(30 * parentWidht / width));
+        } else {
+        	$(this).width(parentWidht);
+        }
+      });
+    });
 
 		return this;
 	},
