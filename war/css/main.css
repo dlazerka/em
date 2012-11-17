@@ -1,16 +1,49 @@
-#header {
-	height: 60px;
+body, h1 {
+	margin: 0;
+	padding: 0;
+	color: #333;
+}
+
+h1#header {
+	font-weight: normal;
 	font-family: Impact;
+	color: #036;
+	border-bottom: 1px gray solid;
+	margin: 0;
+	font-style: italic;
+	background-color: rgba(0,0,0,0.1);
+}
+
+h1#header span:nth-child(1) {
+	color: #79C457;
+}
+h1#header span:nth-child(2) {
+    color: #79C457;
+}
+
+
+
+h1#header {
+	letter-spacing: 1px;
 }
 
 #side_bar {
 	width: 150px;
 	float: left;
-	font-family: Impact;	
+	margin: 1em;
+	font-family: Arial;
+}
+
+#side_bar button {
+    font-size: 1em;
+}
+
+a {
+	color: #15c;
 }
 
 #main_area{
-	margin-left: 170px;
+	margin: 1em 170px;
 }
 
 .meme {
