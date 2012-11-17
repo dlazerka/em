@@ -1,0 +1,15 @@
+.meme {
+	display: inline-block;
+	padding-right: 20px;
+	position: relative;
+}
+
+.meme img {
+	display: inline-block;
+	height: 180px;
+}
+
+.meme span {
+	float: left;
+	padding-bottom: 20px;
+}

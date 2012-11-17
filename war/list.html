@@ -4,6 +4,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Epam Memes</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script type="text/javascript" src="js/lib/underscore.js"></script>
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/backbone.js"></script>
@@ -13,17 +14,35 @@
     <div id="main_area"></div>
 
     <script type="text/template" id="meme_template">
-      <img src="<%= image %>"/>
+      <img src="<%= image %>" alt="<%= text %>" title="<%= text %>"/>
+      <span>by <%= author %></span>
     </script>
 
     <script type="text/javascript" src="js/model/meme.js"></script>
     <script>
       var memes = [];
-      for (var i = 0; i < 20; i++) {
-        memes.push(new Meme({image: 'https://memegen.googleplex.com/memeimage?k=11637038'}));
+      for (var i = 0; i < 10; i++) {
+        memes.push(new Meme({
+          url: 'https://memegen.googleplex.com/memeimage?k=11637038',
+          messages: [
+            {text: 'This Meme', layout: 'top-center'},
+            {text: 'Is Deprecated', layout: 'bottom-center'}]
+        }));
+
+        memes.push(new Meme({
+          url: 'https://memegen.googleplex.com/memeimage?k=11567160',
+          messages: [
+            {text: 'HolidayS are comming!', layout: 'bottom-center'}]
+        }));
+
+        memes.push(new Meme({
+          url: 'https://memegen.googleplex.com/memeimage?k=11485229',
+          messages: [
+            {text: 'Monogomous', layout: 'bottom-center'}]
+        }));
       }
 
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < 30; i++) {
         var memeView = new MemeView({model: memes[i]});
 
         $('#main_area').append(memeView.render().$el);

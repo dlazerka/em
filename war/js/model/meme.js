@@ -2,7 +2,7 @@
 
 var Meme = Backbone.Model.extend({
 	defaults: {
-		image: 'empty.gif',
+		url: 'empty.gif',
 		date: (new Date),
 		template: 'template1',
 		author: 'me',
@@ -28,7 +28,9 @@ var MemeView = Backbone.View.extend({
 	render: function() {
 		this.$el.html(
 			this.template({
-				image: this.model.get('image')
+				image: this.model.get('url'),
+				text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
+				author: this.model.get('author')
 			}));
 
 		return this;
