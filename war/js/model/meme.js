@@ -6,7 +6,7 @@ var Meme = Backbone.Model.extend({
 		date: (new Date),
 		template: 'template1',
 		author: 'me',
-		messages: [{text: 'Hello World!', layout: 'top-center'}]
+		messages: [{text: 'Hello World!', css: 'top-center'}]
 	},
 	urlRoot: '/meme'
 });
@@ -30,7 +30,8 @@ var MemeView = Backbone.View.extend({
 			this.template({
 				image: this.model.get('url'),
 				text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
-				author: this.model.get('author')
+				author: this.model.get('author'),
+				messages: this.model.get('messages')
 			}));
 
 		return this;

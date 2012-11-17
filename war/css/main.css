@@ -15,8 +15,9 @@
 
 .meme {
 	display: inline-block;
-	padding-right: 20px;
+	margin-right: 20px;
 	position: relative;
+	height: 180px;
 }
 
 .meme img {
@@ -25,6 +26,76 @@
 }
 
 .meme span {
+	display: none;
 	float: left;
 	padding-bottom: 20px;
 }
+
+.meme .message {
+	color: #fff;
+	font-family: Impact;
+	font-size: 30px;
+	text-shadow: 0 0 0.2em #000;
+	letter-spacing: 2px;
+}
+
+.meme .top-left {
+	position: absolute;
+	width: 100%;
+	text-align: left;
+}
+
+.meme .top-center {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+}
+
+.meme .top-right {
+	position: absolute;
+	width: 100%;
+	text-align: left;
+}
+
+.meme .center-left {
+	position: absolute;
+	width: 100%;
+	text-align: left;
+	top: 50%;
+}
+
+.meme .center-center {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	top: 50%;
+}
+
+.meme .center-right {
+	position: absolute;
+	width: 100%;
+	text-align: left;
+	top: 50%;
+}
+
+.meme .bottom-left {
+	position: absolute;
+	width: 100%;
+	text-align: left;
+	bottom: 0;
+}
+
+.meme .bottom-center {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	bottom: 0;
+}
+
+.meme .bottom-right {
+	position: absolute;
+	width: 100%;
+	text-align: left;
+	bottom: 0;
+}
+

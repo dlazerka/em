@@ -22,9 +22,10 @@
 
     <div id="main_area"></div>
 
-
-
     <script type="text/template" id="meme_template">
+      <% _.each(messages, function(message) { %>
+        <div class="message <%= message.css %>"><%= message.text %></div>
+      <% }); %>
       <img src="<%= image %>" alt="<%= text %>" title="<%= text %>"/>
       <span>by <%= author %></span>
     </script>
