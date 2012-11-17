@@ -1,3 +1,18 @@
+#header {
+	height: 60px;
+	font-family: Impact;
+}
+
+#side_bar {
+	width: 150px;
+	float: left;
+	font-family: Impact;	
+}
+
+#main_area{
+	margin-left: 170px;
+}
+
 .meme {
 	display: inline-block;
 	padding-right: 20px;
