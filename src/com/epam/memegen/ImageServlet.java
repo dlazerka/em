@@ -28,7 +28,7 @@ public class ImageServlet extends HttpServlet {
     long id = Long.valueOf(idStr);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey("Image", id);
+    Key key = KeyFactory.createKey("Meme", id);
     Entity entity;
     try {
       entity = datastore.get(key);

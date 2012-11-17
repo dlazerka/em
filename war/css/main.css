@@ -14,15 +14,6 @@ h1#header {
 	background-color: rgba(0,0,0,0.1);
 }
 
-h1#header span:nth-child(1) {
-	color: #79C457;
-}
-h1#header span:nth-child(2) {
-    color: #79C457;
-}
-
-
-
 h1#header {
 	letter-spacing: 1px;
 }

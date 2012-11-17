@@ -15,6 +15,7 @@ public class MainServlet extends HttpServlet {
     FileReader fr = new FileReader("list.html");
     String content = IOUtils.toString(fr);
     resp.setContentType("text/html");
+    resp.setCharacterEncoding("UTF-8");
     resp.getWriter().write(content);
   }
 }
