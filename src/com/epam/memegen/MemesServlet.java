@@ -17,7 +17,7 @@ import com.google.appengine.api.datastore.Query;
 public class MemesServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query q = new Query("Image");
+    Query q = new Query("Meme");
     PreparedQuery prepared = datastore.prepare(q);
     Iterable<Entity> iterable = prepared.asIterable();
 

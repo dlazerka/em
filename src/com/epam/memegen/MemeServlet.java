@@ -20,13 +20,13 @@ public class MemeServlet extends HttpServlet {
 
     String idStr = req.getPathInfo().replaceAll("[^0-9]+", "");
     if (idStr.equals("")) {
-      resp.sendError(400, "'id' param not specified");
+      resp.sendError(400, "'id' not specified");
       return;
     }
     long id = Long.valueOf(idStr);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey("Image", id);
+    Key key = KeyFactory.createKey("Meme", id);
     Entity entity;
     try {
       entity = datastore.get(key);

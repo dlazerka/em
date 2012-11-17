@@ -29,7 +29,6 @@ public class UploadServlet extends HttpServlet {
     ServletFileUpload u = new ServletFileUpload();
     u.setFileSizeMax((1 << 20) - 10000); // 1MiB - 10kB
     resp.setContentType("text/plain");
-    resp.getWriter().println("Hello, world");
 
     try {
       FileItemIterator iterator = u.getItemIterator(req);
@@ -43,7 +42,7 @@ public class UploadServlet extends HttpServlet {
         CRC32 crc32 = new CRC32();
         crc32.update(bytes);
 
-        Key key = KeyFactory.createKey("Image", crc32.getValue());
+        Key key = KeyFactory.createKey("Meme", crc32.getValue());
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Entity entity = new Entity(key);

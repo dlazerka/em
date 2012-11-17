@@ -20,9 +20,7 @@ public class ImageServlet extends HttpServlet {
     resp.setContentType("image/jpeg");
 
     String pathInfo = req.getPathInfo();
-    pathInfo = pathInfo.substring(1); // remove /
-    pathInfo  = pathInfo.replaceFirst("/.*$", "");
-    String idStr = pathInfo.replaceAll("[^0-9]+", "");
+    String idStr = Util.getIdFromPathInfo(pathInfo);
     if (idStr.equals("")) {
       resp.sendError(404);
       return;
@@ -40,4 +38,5 @@ public class ImageServlet extends HttpServlet {
       resp.sendError(404);
     }
   }
+
 }

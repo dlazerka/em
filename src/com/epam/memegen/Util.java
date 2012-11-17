@@ -18,4 +18,11 @@ public class Util {
     writer.append("}");
     return writer.toString();
   }
+
+  public static String getIdFromPathInfo(String pathInfo) {
+    pathInfo = pathInfo.substring(1); // remove /
+    pathInfo = pathInfo.replaceFirst("/.*$", "");
+    String idStr = pathInfo.replaceAll("[^0-9]+", "");
+    return idStr;
+  }
 }
