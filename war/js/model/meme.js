@@ -1,4 +1,4 @@
-// @jauhen
+// jauhen@
 
 var Meme = Backbone.Model.extend({
 	defaults: {
@@ -17,7 +17,7 @@ var Memes = Backbone.Collection.extend({
 });
 
 var MemeView = Backbone.View.extend({
-	tagName: 'div',
+	tagName: 'span',
 	className: 'meme',
 	template: _.template($('#meme_template').html()),
 
