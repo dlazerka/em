@@ -45,51 +45,60 @@
 .meme .top-left {
 	position: absolute;
 	text-align: left;
+	top: 5px;
 }
 
 .meme .top-center {
 	position: absolute;
 	text-align: center;
+	top: 5px;
 }
 
 .meme .top-right {
 	position: absolute;
 	text-align: left;
+	top: 5px;
 }
 
 .meme .center-left {
 	position: absolute;
 	text-align: left;
 	top: 50%;
+	margin-top: -15px;
+	line-height: 30px;
 }
 
 .meme .center-center {
 	position: absolute;
 	text-align: center;
 	top: 50%;
+	margin-top: -15px;
+	line-height: 30px;
 }
 
 .meme .center-right {
 	position: absolute;
 	text-align: left;
 	top: 50%;
+	margin-top: -15px;
+	line-height: 30px;
 }
 
 .meme .bottom-left {
 	position: absolute;
 	text-align: left;
-	bottom: 0;
+	bottom: 5px;
 }
 
 .meme .bottom-center {
 	position: absolute;
 	text-align: center;
-	bottom: 0;
+	bottom: 5px;
 }
 
 .meme .bottom-right {
 	position: absolute;
 	text-align: left;
-	bottom: 0;
+	bottom: 5px;
 }
 
