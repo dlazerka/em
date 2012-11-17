@@ -2,23 +2,116 @@
 <html>
   <head>
     <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        min-width:357px;
-        overflow-x:hidden;
-      }
-
-      img {
-        margin:5px;
-        border:2px solid black;
-        vertical-align:middle;
-        width:300px;
-      }
-    </style>
+      <script type="text/template" id="meme_template">
+          <% _.each(messages, function(message) { %>
+          <div class="message <%= message.css %>"><%= message.text %></div>
+          <% }); %>
+          <img src="<%= image %>" alt="<%= text %>" title="<%= text %>"/>
+          <span>by <%= author %></span>
+      </script>
 
     <!-- JavaScript and HTML must be in separate files for security. -->
-    <script src="popup.js"></script>
+    <link type="text/css" href="css/main.css">
+
+
+      <style>
+          body {
+              min-width:300px;
+              overflow-x:hidden;
+          }
+
+          img {
+              border:1px solid black;
+              vertical-align:middle;
+          }
+
+          .meme {
+              display: inline-block;
+              margin-bottom: 20px;
+              position: relative;
+              width: 280px;
+          }
+
+          .meme img {
+              display: inline-block;
+              width: 280px;
+          }
+
+          .meme span {
+              display: none;
+              float: left;
+              padding-bottom: 20px;
+          }
+
+          .meme .message {
+              color: #fff;
+              font-family: Impact;
+              font-size: 30px;
+              text-shadow: 0 0 0.2em #000;
+              letter-spacing: 2px;
+              white-space: nowrap;
+              margin-left: 10px;
+          }
+
+          .meme .top-left {
+              position: absolute;
+              text-align: left;
+          }
+
+          .meme .top-center {
+              position: absolute;
+              text-align: center;
+          }
+
+          .meme .top-right {
+              position: absolute;
+              text-align: left;
+          }
+
+          .meme .center-left {
+              position: absolute;
+              text-align: left;
+              top: 50%;
+          }
+
+          .meme .center-center {
+              position: absolute;
+              text-align: center;
+              top: 50%;
+          }
+
+          .meme .center-right {
+              position: absolute;
+              text-align: left;
+              top: 50%;
+          }
+
+          .meme .bottom-left {
+              position: absolute;
+              text-align: left;
+              bottom: 0;
+          }
+
+          .meme .bottom-center {
+              position: absolute;
+              text-align: center;
+              bottom: 0;
+          }
+
+          .meme .bottom-right {
+              position: absolute;
+              text-align: left;
+              bottom: 0;
+          }
+      </style>
+      <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/underscore.js"></script>
+    <script src="js/lib/backbone.js"></script>
   </head>
   <body>
+    <div id="main_area"></div>
+    <script src="js/model/meme.js"></script>
+    <script src="popup.js"></script>
+
   </body>
 </html>
