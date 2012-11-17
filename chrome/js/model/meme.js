@@ -5,7 +5,8 @@ var Meme = Backbone.Model.extend({
 		src: 'empty.gif',
 		date: (new Date),
 		template: 'template1',
-		author: 'me'
+		author: 'me',
+        timestamp: 0
 	},
 	urlRoot: '/meme'
 });
@@ -22,7 +23,7 @@ var MemeView = Backbone.View.extend({
         var output = '';
 
         _.each(obj.messages, function(message) {
-           output += '<div class="message ' + message.css + '">' + message.text + '</div>';
+            output += '<div class="message ' + message.css + '">' + message.text + '</div>';
         });
 
         output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';

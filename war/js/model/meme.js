@@ -20,7 +20,18 @@ var Memes = Backbone.Collection.extend({
 var MemeView = Backbone.View.extend({
 	tagName: 'span',
 	className: 'meme',
-	template: _.template($('#meme_template').html()),
+	template: function(obj) {
+        var output = '';
+
+        _.each(obj.messages, function(message) {
+            output += '<div class="message ' + message.css + '">' + message.text + '</div>';
+        });
+
+        output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
+        output += '<span>by ' + obj.author + '</span>';
+
+        return output;
+    },
 
 	initialize: function () {
 		this.render();
