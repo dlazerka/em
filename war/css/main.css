@@ -25,6 +25,7 @@ h1#header {
 	font-family: Arial;
 }
 
+
 #side_bar button {
     font-size: 1em;
 }
@@ -35,6 +36,10 @@ a {
 
 #main_area{
 	margin: 1em 170px;
+}
+
+form.upload {
+	margin-left: 1em;
 }
 
 .meme {

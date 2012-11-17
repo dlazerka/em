@@ -14,11 +14,12 @@
     <h1 id="header">&lt;epam:<span>m</span><span>e</span><span>m</span><span>e</span><span>s</span>&gt;</h1>
 
     <div id="side_bar">
-      <button onclick="location.href='list.html'">Memes list</button>
+      <button onclick="location.href='upload.html'">Отжечь</button>
+      <a href="/">Recent Memes</a>
     </div>
   
     <div id="main_area">
-	    <form action="/upload" method="POST" enctype="multipart/form-data">
+	    <form class="upload" action="/upload" method="POST" enctype="multipart/form-data">
 	        <input type="file" name="file">
 	        <br/>
 	        <input type="text" placeholder="Top text" name="top_text"/> 
