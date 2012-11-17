@@ -2,11 +2,10 @@
 
 var Meme = Backbone.Model.extend({
 	defaults: {
-		url: 'empty.gif',
+		src: 'empty.gif',
 		date: (new Date),
 		template: 'template1',
-		author: 'me',
-		messages: [{text: 'Hello World!', css: 'top-center'}]
+		author: 'me'
 	},
 	urlRoot: '/meme'
 });
@@ -26,7 +25,7 @@ var MemeView = Backbone.View.extend({
            output += '<div class="message ' + message.css + '">' + message.text + '</div>';
         });
 
-        output += '<img src="' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
+        output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
         output += '<span>by ' + obj.author + '</span>';
 
         return output;
@@ -40,7 +39,7 @@ var MemeView = Backbone.View.extend({
 
 		this.$el.html(
 			this.template({
-				image: this.model.get('url'),
+				image: this.model.get('src'),
 				text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
 				author: this.model.get('author'),
 				messages: this.model.get('messages')
