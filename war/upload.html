@@ -4,15 +4,40 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Epam Memes</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script type="text/javascript" src="js/underscore.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/backbone.js"></script>
   </head>
 
   <body>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit">
-    </form>
+    <h1 id="header">&lt;epam:<span>m</span><span>e</span><span>m</span><span>e</span><span>s</span>&gt;</h1>
+
+    <div id="side_bar">
+      <button onclick="location.href='upload.html'">Create meme</button>
+    </div>
+  
+    <div id="main_area">
+	    <form action="/upload" method="POST" enctype="multipart/form-data">
+	        <input type="file" name="file">
+	        <br/>
+	        <input type="text" placeholder="Top text" name="top_text"/> 
+	        	<label><input type="radio" name="top" value="left">Left</label>
+	        	<label><input type="radio" name="top" value="center" checked>Center</label>
+	        	<label><input type="radio" name="top" value="right">Right</label>
+	        <br/>
+	        <input type="text" placeholder="Center text" name="center_text"/> 
+	        	<label><input type="radio" name="center" value="left">Left</label>
+	        	<label><input type="radio" name="center" value="center" checked>Center</label>
+	        	<label><input type="radio" name="center" value="right">Right</label>
+	        <br/>
+	        <input type="text" placeholder="Bottom text" name="bottom_text"/> 
+	        	<label><input type="radio" name="bottom" value="left">Left</label>
+	        	<label><input type="radio" name="bottom" value="center" checked>Center</label>
+	        	<label><input type="radio" name="bottom" value="right">Right</label>
+	       	<br/>
+	        <input type="submit">
+	    </form>
+    </div>
   </body>
 </html>
