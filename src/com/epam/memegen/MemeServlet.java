@@ -55,7 +55,15 @@ public class MemeServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key key = KeyFactory.createKey("Meme", id);
-    datastore.delete(key);
+    Entity entity;
+    try {
+      entity = datastore.get(key);
+    } catch (EntityNotFoundException e) {
+      resp.sendError(404, "No such meme");
+      return;
+    }
+    entity.setProperty("deleted", true);
+    datastore.put(entity);
     resp.setStatus(200);
   }
 
