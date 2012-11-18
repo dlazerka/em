@@ -25,7 +25,9 @@ var AppRouter = Backbone.Router.extend({
       $('#main_area').append('<br/>');
       $('<button class="delete">Delete</button>').on('click', function() {
         meme.destroy({success: function() {
-          Backbone.history.navigate('', true);
+          setTimeout(function() {
+            Backbone.history.navigate('', true);
+          }, 500);
         }})
       }).appendTo($('#main_area'));
     }});
