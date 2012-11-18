@@ -67,7 +67,7 @@ public class UploadServlet extends HttpServlet {
       Entity entity = new Entity("Meme");
       entity.setUnindexedProperty("blob", blob);
       entity.setProperty("fileName", fileName);
-      entity.setProperty("timestamp", new Date().getTime());
+      entity.setProperty("date", new Date());
       if (topText != null) entity.setProperty("topText", topText);
       if (centerText != null) entity.setProperty("centerText", centerText);
       if (bottomText != null) entity.setProperty("bottomText", bottomText);
