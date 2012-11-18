@@ -1,12 +1,11 @@
 //fetchMemes();
 chrome.browserAction.setBadgeText({text:''});
 bg = chrome.extension.getBackgroundPage();
-bg.unreadCount = 0;
 
 go();
 function go() {
     var memes = new Memes();
-    var max = bg.lastSeen;
+    var max = bg.lastSeen || 0;
     memes.fetch({success: function(m) {
         for (var i = 0; i < m.length; i++) {
             ts = parseInt(m.at(i).get('timestamp'));
@@ -16,8 +15,10 @@ function go() {
             var memeView = new MemeView({model: m.at(i)});
             $('#main_area').append(memeView.render().$el);
         }
+        console.log("max=" + max);
         bg.lastSeen = max;
-    }});
+        localStorage.setItem("lastSeen", bg.lastSeen);
+    }, data: { top: 5}});
 }
 
 
