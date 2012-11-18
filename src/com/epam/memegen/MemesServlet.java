@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -32,8 +33,16 @@ public class MemesServlet extends HttpServlet {
       q.setFilter(filterPredicate);
     }
 
+    FetchOptions options = FetchOptions.Builder.withDefaults();
+    String top = req.getParameter("top");
+    if (top != null) {
+      int t = Integer.parseInt(top);
+      options.limit(t);
+    }
     PreparedQuery prepared = datastore.prepare(q);
-    Iterable<Entity> iterable = prepared.asIterable();
+
+
+    Iterable<Entity> iterable = prepared.asIterable(options);
 
     resp.setContentType("application/json");
     resp.setCharacterEncoding("UTF-8");
