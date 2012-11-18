@@ -38,6 +38,14 @@ var MemeView = Backbone.View.extend({
 		this.render();
 	},
 
+  events: {
+    'click' : 'onclick' 
+  },
+
+  onclick: function() {
+    window.location.href = 'meme.html?id=' + this.model.get('id');
+  },
+
 	render: function() {
 		this.$el.html(
 			this.template({
