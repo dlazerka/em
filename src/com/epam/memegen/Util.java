@@ -1,22 +1,60 @@
 package com.epam.memegen;
 
+import java.io.IOException;
+import java.util.Date;
+
 import com.google.appengine.api.datastore.Entity;
+import com.google.gson.stream.JsonWriter;
 
 public class Util {
   public static String sanitize(String str) {
+    if (str == null) return null;
     return str.replaceAll("[^a-zA-Z0-9\\._-]", "");
   }
 
-  public static String memeToJson(Entity meme) {
-    StringBuilder writer = new StringBuilder();
-    writer.append("{");
+  public static void memeToJson(Entity meme, JsonWriter w) throws IOException {
+    w.beginObject();
+
     long id = meme.getKey().getId();
-    String name = (String) meme.getProperty("name");
-    name = Util.sanitize(name);
-    writer.append("\"id\": " + id);
-    writer.append(", \"src\": \"/image/" + id + "/" + name + "\"");
-    writer.append("}");
-    return writer.toString();
+    w.name("id");
+    w.value(id);
+
+    String fileName = (String) meme.getProperty("fileName");
+    String src;
+    if (fileName != null) {
+      src = "/image/" + id + "/" + fileName;
+      fileName = Util.sanitize(fileName);
+    } else {
+      src = "/image/" + id;
+    }
+    w.name("src").value(src);
+    Date date = (Date) meme.getProperty("date");
+    if (date != null) w.name("timestamp").value(date.getTime());
+
+    w.name("messages").beginArray();
+    String topText = (String) meme.getProperty("topText");
+    String centerText = (String) meme.getProperty("centerText");
+    String bottomText = (String) meme.getProperty("bottomText");
+    if (topText != null) {
+      w.beginObject();
+      w.name("text").value(topText);
+      w.name("css").value("top-center");
+      w.endObject();
+    }
+    if (bottomText != null) {
+      w.beginObject();
+      w.name("text").value(bottomText);
+      w.name("css").value("bottom-center");
+      w.endObject();
+    }
+    if (centerText != null) {
+      w.beginObject();
+      w.name("text").value(centerText);
+      w.name("css").value("center-center");
+      w.endObject();
+    }
+    w.endArray();
+    w.endObject();
   }
 
   public static String getIdFromPathInfo(String pathInfo) {

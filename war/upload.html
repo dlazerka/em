@@ -5,9 +5,9 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Epam Memes</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <script type="text/javascript" src="js/underscore.js"></script>
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/backbone.js"></script>
+    <script type="text/javascript" src="js/lib/underscore.js"></script>
+    <script type="text/javascript" src="js/lib/jquery.js"></script>
+    <script type="text/javascript" src="js/lib/backbone.js"></script>
   </head>
 
   <body>
@@ -21,20 +21,20 @@
     </div>
   
     <div id="main_area">
-	    <form class="upload" action="/upload" method="POST" enctype="multipart/form-data">
+	    <form class="upload" action="/upload" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
 	        <input type="file" name="file">
 	        <br/>
-	        <input type="text" placeholder="Top text" name="top_text"/> 
+	        <input type="text" placeholder="Top text" name="topText"/> 
 	        	<label><input type="radio" name="top" value="left">Left</label>
 	        	<label><input type="radio" name="top" value="center" checked>Center</label>
 	        	<label><input type="radio" name="top" value="right">Right</label>
 	        <br/>
-	        <input type="text" placeholder="Center text" name="center_text"/> 
+	        <input type="text" placeholder="Center text" name="centerText"/> 
 	        	<label><input type="radio" name="center" value="left">Left</label>
 	        	<label><input type="radio" name="center" value="center" checked>Center</label>
 	        	<label><input type="radio" name="center" value="right">Right</label>
 	        <br/>
-	        <input type="text" placeholder="Bottom text" name="bottom_text"/> 
+	        <input type="text" placeholder="Bottom text" name="bottomText"/> 
 	        	<label><input type="radio" name="bottom" value="left">Left</label>
 	        	<label><input type="radio" name="bottom" value="center" checked>Center</label>
 	        	<label><input type="radio" name="bottom" value="right">Right</label>

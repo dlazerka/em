@@ -26,7 +26,7 @@ h1#header {
 }
 
 
-#side_bar button {
+button {
     font-size: 1em;
 }
 
@@ -69,6 +69,8 @@ form.upload {
 	letter-spacing: 2px;
 	white-space: nowrap;
 	margin-left: 10px;
+	display: none;
+	cursor: pointer;	
 }
 
 .meme .top-left {
@@ -129,5 +131,17 @@ form.upload {
 	position: absolute;
 	text-align: left;
 	bottom: 5px;
+}
+
+.meme.memeBig {
+	height: auto;
+}
+
+.meme.memeBig img {
+	height: auto;
+}
+
+.meme.memeBig .message {
+	font-size: 40px;
 }
 

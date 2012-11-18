@@ -2,6 +2,8 @@ package com.epam.memegen;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.zip.CRC32;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +19,6 @@ import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-
-import java.util.zip.CRC32;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
@@ -28,32 +26,68 @@ public class UploadServlet extends HttpServlet {
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     ServletFileUpload u = new ServletFileUpload();
     u.setFileSizeMax((1 << 20) - 10000); // 1MiB - 10kB
-    resp.setContentType("text/plain");
+
+    String topText = null;
+    String centerText = null;
+    String bottomText = null;
+
+    String fileName = null;
+    CRC32 crc32 = new CRC32();
+    Blob blob = null;
 
     try {
       FileItemIterator iterator = u.getItemIterator(req);
       while (iterator.hasNext()) {
         FileItemStream item = iterator.next();
         InputStream is = item.openStream();
-        byte[] bytes = IOUtils.toByteArray(is);
-        Blob blob = new Blob(bytes);
-        String name = item.getName();
+        String fieldName = item.getFieldName();
 
-        CRC32 crc32 = new CRC32();
-        crc32.update(bytes);
-
-        Key key = KeyFactory.createKey("Meme", crc32.getValue());
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
-        Entity entity = new Entity(key);
-        entity.setUnindexedProperty("blob", blob);
-        entity.setProperty("name", name);
-        datastore.put(entity);
-
-        resp.sendRedirect(key.getId() + "");
+        if (!item.isFormField()) {
+          fileName = item.getName();
+          if (is.available() > 0) {
+            byte[] bytes = IOUtils.toByteArray(is);
+            blob = new Blob(bytes);
+            crc32.update(bytes);
+          }
+        } else if (fieldName.equals("topText")) {
+          topText = IOUtils.toString(is, "UTF-8");
+        } else if (fieldName.equals("centerText")) {
+          centerText = IOUtils.toString(is, "UTF-8");
+        } else if (fieldName.equals("bottomText")) {
+          bottomText = IOUtils.toString(is, "UTF-8");
+        }
       }
+
+      if (blob == null) {
+        resp.sendError(400, "No file content");
+        return;
+      }
+
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      Entity entity = new Entity("Meme");
+      entity.setUnindexedProperty("blob", blob);
+      entity.setProperty("fileName", fileName);
+      entity.setProperty("date", new Date());
+      if (!isNullOrEmpty(topText)) {
+        entity.setProperty("topText", topText);
+      }
+      if (!isNullOrEmpty(centerText)) {
+        entity.setProperty("centerText", centerText);
+      }
+      if (!isNullOrEmpty(bottomText)) {
+        entity.setProperty("bottomText", bottomText);
+      }
+
+      datastore.put(entity);
+
+      resp.sendRedirect("/");
+
     } catch (FileUploadException e) {
       throw new IOException(e);
     }
+  }
+
+  private boolean isNullOrEmpty(String str) {
+    return str == null || str.trim().equals("");
   }
 }
