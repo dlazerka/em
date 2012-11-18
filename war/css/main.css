@@ -26,7 +26,7 @@ h1#header {
 }
 
 
-#side_bar button {
+button {
     font-size: 1em;
 }
 
@@ -145,9 +145,3 @@ form.upload {
 	font-size: 40px;
 }
 
-.delete {
-	border: 1px solid #666;
-	background: #CCC;
-	padding: 5px 10px;
-	display: inline-block;
-}

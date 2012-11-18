@@ -23,7 +23,7 @@ var AppRouter = Backbone.Router.extend({
       var memeView = new MemeView({model: meme, className: 'meme memeBig', fontSize: 40});
       $('#main_area').html(memeView.render().$el);
       $('#main_area').append('<br/>');
-      $('<div class="delete">Delete</div>').on('click', function() {
+      $('<button class="delete">Delete</button>').on('click', function() {
         meme.destroy({success: function() {
           Backbone.history.navigate('', true);
         }})

@@ -2,9 +2,12 @@ package com.epam.memegen;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.jsp.ah.datastoreViewerBody_jsp;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -39,4 +42,22 @@ public class MemeServlet extends HttpServlet {
       resp.sendError(404);
     }
   }
+
+  @Override
+  protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    String idStr = req.getPathInfo().replaceAll("[^0-9]+", "");
+    if (idStr.equals("")) {
+      resp.sendError(404);
+      return;
+    }
+    long id = Long.valueOf(idStr);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Key key = KeyFactory.createKey("Meme", id);
+    datastore.delete(key);
+    resp.setStatus(200);
+  }
+
+
 }
