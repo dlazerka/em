@@ -12,6 +12,8 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class MemesServlet extends HttpServlet {
@@ -24,19 +26,13 @@ public class MemesServlet extends HttpServlet {
     resp.setContentType("application/json");
 
     PrintWriter writer = resp.getWriter();
-    writer.append("[\n");
-    boolean first = true;
+    JsonWriter w = new JsonWriter(writer);
+    w.beginArray();
     for (Entity entity : iterable) {
-      if (first) {
-        first = false;
-      } else {
-        writer.append(",\n");
-      }
-
-      String json = Util.memeToJson(entity);
-      writer.write(json);
+      Util.memeToJson(entity, w);
     }
-    writer.append("\n]");
+    w.endArray();
+    w.close();
   }
 
 }

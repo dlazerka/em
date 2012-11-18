@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class MemeServlet extends HttpServlet {
@@ -30,8 +31,7 @@ public class MemeServlet extends HttpServlet {
     Entity entity;
     try {
       entity = datastore.get(key);
-      String json = Util.memeToJson(entity);
-      resp.getWriter().write(json);
+      Util.memeToJson(entity, new JsonWriter(resp.getWriter()));
     } catch (EntityNotFoundException e) {
       resp.sendError(404);
     }
