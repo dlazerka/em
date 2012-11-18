@@ -32,6 +32,7 @@ var AppRouter = Backbone.Router.extend({
   }
 });
 
+$.ajaxSetup({ cache: false });
 var app_router = new AppRouter;
 
 // Trigger the initial route and enable HTML5 History API support
