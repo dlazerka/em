@@ -38,5 +38,4 @@ public class MemesServlet extends HttpServlet {
     }
     writer.append("\n]");
   }
-
 }
