@@ -16,29 +16,15 @@
 
     <div id="side_bar">
       <button onclick="location.href='upload.html'">Отжечь</button>
+      <br/>
+      <br/>
       <a href="/">Recent Memes</a>
     </div>
 
     <div id="main_area"></div>
 
-    <script type="text/template" id="meme_template">
-      <% _.each(messages, function(message) { %>
-        <div class="message <%= message.css %>"><%= message.text %></div>
-      <% }); %>
-      <img src="<%= image %>" alt="<%= text %>" title="<%= text %>"/>
-      <span>by <%= author %></span>
-    </script>
-
     <script type="text/javascript" src="js/model/meme.js"></script>
     <script type="text/javascript" src="js/model/list.js"></script>
 
-    <script type="text/javascript">
-    $(function() {
-      
-
-    });
-  
-
-    </script>
   </body>
 </html>

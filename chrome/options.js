@@ -29,5 +29,8 @@ function restore_options() {
         }
     }
 }
-document.addEventListener('DOMContentReady', restore_options);
-document.querySelector('#save').addEventListener('click', save_options);
+
+function init() {
+    document.addEventListener('DOMContentReady', restore_options);
+    document.querySelector('#save').addEventListener('click', save_options);
+}
