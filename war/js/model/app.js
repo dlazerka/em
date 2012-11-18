@@ -27,7 +27,7 @@ var AppRouter = Backbone.Router.extend({
         meme.destroy({success: function() {
           setTimeout(function() {
             Backbone.history.navigate('', true);
-          }, 500);
+          }, 1000);
         }})
       }).appendTo($('#main_area'));
     }});

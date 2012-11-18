@@ -48,7 +48,7 @@ var MemeView = Backbone.View.extend({
     var that = this;
     setTimeout(function() {
       Backbone.history.navigate('#meme/' + that.model.get('id'), true);
-    }, 500);
+    }, 1000);
   },
 
 	render: function() {
