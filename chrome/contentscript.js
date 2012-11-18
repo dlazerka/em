@@ -1,5 +1,5 @@
 var regex = /mem-\d+/i;
-var replace = "http://http://epammeme.appspot.com/";
+var replace = "http://epammeme.appspot.com/#meme/";
 
 function update() {
     if (regex.test(document.body.innerText)) {
@@ -13,7 +13,7 @@ function update() {
 }
 
 update();
-setInterval(update, 3000);
+setInterval(update, 5000);
 
 function highlightWord(node, doc){
     doc = typeof(doc) != 'undefined' ? doc : document;

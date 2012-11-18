@@ -9,7 +9,7 @@
     },
     "options_page": "options.html",
     "background" : {
-        "scripts": ["background.js"]
+        "scripts": ["js/lib/jquery.js", "js/lib/underscore.js", "js/lib/backbone.js", "js/model/meme.js", "background.js"]
     },
     "content_scripts" : [
         {
