@@ -34,5 +34,4 @@ public class MemesServlet extends HttpServlet {
     w.endArray();
     w.close();
   }
-
 }
