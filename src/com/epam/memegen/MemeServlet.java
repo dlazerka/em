@@ -32,7 +32,9 @@ public class MemeServlet extends HttpServlet {
     Entity entity;
     try {
       entity = datastore.get(key);
-      Util.memeToJson(entity, new JsonWriter(resp.getWriter()));
+      JsonWriter w = new JsonWriter(resp.getWriter());
+      w.setIndent("  ");
+      Util.memeToJson(entity, w);
     } catch (EntityNotFoundException e) {
       resp.sendError(404);
     }

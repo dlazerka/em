@@ -1,6 +1,7 @@
 package com.epam.memegen;
 
 import java.io.IOException;
+import java.util.Date;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.stream.JsonWriter;
@@ -27,6 +28,8 @@ public class Util {
       src = "/image/" + id;
     }
     w.name("src").value(src);
+    Date date = (Date) meme.getProperty("date");
+    if (date != null) w.name("timestamp").value(date.getTime());
 
     w.name("messages").beginArray();
     String topText = (String) meme.getProperty("topText");

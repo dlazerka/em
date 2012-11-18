@@ -2,6 +2,8 @@ package com.epam.memegen;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.zip.CRC32;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +19,6 @@ import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-
-import java.util.Date;
-import java.util.zip.CRC32;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
@@ -70,11 +67,11 @@ public class UploadServlet extends HttpServlet {
       Entity entity = new Entity("Meme");
       entity.setUnindexedProperty("blob", blob);
       entity.setProperty("fileName", fileName);
+      entity.setProperty("timestamp", new Date().getTime());
       if (topText != null) entity.setProperty("topText", topText);
       if (centerText != null) entity.setProperty("centerText", centerText);
       if (bottomText != null) entity.setProperty("bottomText", bottomText);
 
-      entity.setProperty("date", new Date());
       datastore.put(entity);
 
       resp.sendRedirect("/");
