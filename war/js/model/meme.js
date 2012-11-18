@@ -43,7 +43,7 @@ var MemeView = Backbone.View.extend({
   },
 
   onclick: function() {
-    window.location.href = 'meme.html?id=' + this.model.get('id');
+    Backbone.history.navigate('#meme/' + this.model.get('id'), true);
   },
 
 	render: function() {
