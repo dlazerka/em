@@ -21,6 +21,8 @@ var Memes = Backbone.Collection.extend({
 var MemeView = Backbone.View.extend({
 	tagName: 'span',
 	className: 'meme',
+  fontSize: 30,
+
 	template: function(obj) {
     var output = '';
 
@@ -56,6 +58,7 @@ var MemeView = Backbone.View.extend({
 			}));
 
 		var element = this.$el;
+    var fontSize = this.fontSize;
 
 		$('img', element).load(function() {
       $('div', element).map(function() {
@@ -63,7 +66,7 @@ var MemeView = Backbone.View.extend({
         var width = $(this).width();
         var parentWidht = $(element).width() - 20;
         if (parentWidht < width) {
-        	$(this).css('font-size', Math.floor(30 * parentWidht / width));
+        	$(this).css('font-size', Math.floor(fontSize * parentWidht / width));
         } else {
         	$(this).width(parentWidht);
         }

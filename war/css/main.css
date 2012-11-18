@@ -133,3 +133,21 @@ form.upload {
 	bottom: 5px;
 }
 
+.meme.memeBig {
+	height: auto;
+}
+
+.meme.memeBig img {
+	height: auto;
+}
+
+.meme.memeBig .message {
+	font-size: 40px;
+}
+
+.delete {
+	border: 1px solid #666;
+	background: #CCC;
+	padding: 5px 10px;
+	display: inline-block;
+}
