@@ -23,11 +23,11 @@ var AppRouter = Backbone.Router.extend({
       var memeView = new MemeView({model: meme, className: 'meme memeBig', fontSize: 40});
       $('#main_area').html(memeView.render().$el);
       $('#main_area').append('<br/>');
-      $('#main_area').append('<div class="delete">Delete</div>').on('click', function() {
+      $('<div class="delete">Delete</div>').on('click', function() {
         meme.destroy({success: function() {
           Backbone.history.navigate('', true);
         }})
-      });
+      }).appendTo($('#main_area'));
     }});
   }
 });
