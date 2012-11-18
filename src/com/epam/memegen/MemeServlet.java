@@ -18,6 +18,7 @@ import com.google.gson.stream.JsonWriter;
 public class MemeServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
 
     String idStr = req.getPathInfo().replaceAll("[^0-9]+", "");
     if (idStr.equals("")) {
