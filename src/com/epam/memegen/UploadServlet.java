@@ -29,7 +29,6 @@ public class UploadServlet extends HttpServlet {
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     ServletFileUpload u = new ServletFileUpload();
     u.setFileSizeMax((1 << 20) - 10000); // 1MiB - 10kB
-    resp.setContentType("text/plain");
 
     String topText = null;
     String centerText = null;
@@ -75,6 +74,7 @@ public class UploadServlet extends HttpServlet {
       if (topText != null) entity.setProperty("topText", topText);
       if (centerText != null) entity.setProperty("centerText", centerText);
       if (bottomText != null) entity.setProperty("bottomText", bottomText);
+
       entity.setProperty("date", new Date());
       datastore.put(entity);
 
