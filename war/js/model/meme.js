@@ -1,29 +1,29 @@
 // jauhen@
 
 var Meme = Backbone.Model.extend({
-	defaults: {
+  defaults: {
     id: 0,
-		src: 'empty.gif',
-		date: (new Date),
-		template: 'template1',
-		author: 'me',
-		messages: [{text: '', css: 'top-center'}],
-		font: 'Impact'
-	},
-	urlRoot: '/meme'
+    src: 'empty.gif',
+    date: (new Date),
+    template: 'template1',
+    author: 'me',
+    messages: [{text: '', css: 'top-center'}],
+    font: 'Impact'
+  },
+  urlRoot: '/meme'
 });
 
 var Memes = Backbone.Collection.extend({
-	model: Meme,
-	url: '/memes'
+  model: Meme,
+  url: '/memes'
 });
 
 var MemeView = Backbone.View.extend({
-	tagName: 'span',
-	className: 'meme',
-	fontSize: 30,
+  tagName: 'span',
+  className: 'meme',
+  fontSize: 30,
 
-	template: function(obj) {
+  template: function(obj) {
     var output = '';
 
     _.each(obj.messages, function(message) {
@@ -36,9 +36,9 @@ var MemeView = Backbone.View.extend({
     return output;
   },
 
-	initialize: function () {
-		this.render();
-	},
+  initialize: function () {
+    this.render();
+  },
 
   events: {
     'click' : 'onclick' 
@@ -51,18 +51,17 @@ var MemeView = Backbone.View.extend({
     }, 1000);
   },
 
-	render: function(fontSize) {
-		
-		this.$el.html(
-			this.template({
-				image: this.model.get('src'),
-				text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
-				author: this.model.get('author'),
-				messages: this.model.get('messages')
-			}));
+  render: function() {
+    this.$el.html(
+      this.template({
+        image: this.model.get('src'),
+        text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
+        author: this.model.get('author'),
+        messages: this.model.get('messages')
+      }));
 
-		var element = this.$el;
-    fontSize = fontSize || this.fontSize;
+    var element = this.$el;
+    var fontSize = this.fontSize;
 
     $('img', element).load(function() {
       $('div', element).map(function() {
@@ -70,12 +69,12 @@ var MemeView = Backbone.View.extend({
         $(this).css('display', 'block');
         var width = $(this).width();
         if (parentWidth < width) {
-        	$(this).css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
+          $(this).css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
         }
-       	$(this).width(parentWidth);
+        $(this).width(parentWidth);
       });
     });
 
-		return this;
-	},
+    return this;
+  },
 });

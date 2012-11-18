@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa3c4ddd-af01-4750-b754-849899c7cbb0" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/background.js" afterPath="$PROJECT_DIR$/background.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/memegen.iws" afterPath="$PROJECT_DIR$/memegen.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/model/meme.js" afterPath="$PROJECT_DIR$/js/model/meme.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/popup.html" afterPath="$PROJECT_DIR$/popup.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/popup.js" afterPath="$PROJECT_DIR$/popup.js" />
     </list>
     <ignored path="memegen.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -66,7 +64,16 @@
       <file leaf-file-name="popup.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/popup.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="93" column="30" selection-start="2211" selection-end="2211" vertical-scroll-proportion="0.375">
+            <state line="111" column="45" selection-start="2739" selection-end="2739" vertical-scroll-proportion="0.7591241">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="meme.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../war/js/model/meme.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="73" column="36" selection-start="1446" selection-end="1734" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -138,7 +145,7 @@
       <file leaf-file-name="meme.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/model/meme.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="4" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0">
+            <state line="56" column="52" selection-start="1438" selection-end="1438" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -162,13 +169,13 @@
         <option value="$PROJECT_DIR$/js/model/list.js" />
         <option value="$PROJECT_DIR$/options.html" />
         <option value="$PROJECT_DIR$/options.js" />
-        <option value="$PROJECT_DIR$/js/model/meme.js" />
-        <option value="$PROJECT_DIR$/../war/js/model/meme.js" />
         <option value="$PROJECT_DIR$/background.html" />
         <option value="$PROJECT_DIR$/manifest.json" />
         <option value="$PROJECT_DIR$/contentscript.js" />
         <option value="$PROJECT_DIR$/background.js" />
         <option value="$PROJECT_DIR$/popup.js" />
+        <option value="$PROJECT_DIR$/../war/js/model/meme.js" />
+        <option value="$PROJECT_DIR$/js/model/meme.js" />
         <option value="$PROJECT_DIR$/popup.html" />
       </list>
     </option>
@@ -244,6 +251,52 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="chrome" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="memegen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chrome" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="memegen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chrome" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="memegen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chrome" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -476,11 +529,6 @@
         <state line="334" column="4" selection-start="11637" selection-end="11637" vertical-scroll-proportion="0.33286318" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../war/js/model/meme.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="6" selection-start="803" selection-end="803" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/templates/meme.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -530,11 +578,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/model/meme.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="4" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/background.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="34" column="32" selection-start="1071" selection-end="1098" vertical-scroll-proportion="0.0">
@@ -549,9 +592,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../war/js/model/meme.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="36" selection-start="1446" selection-end="1734" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/model/meme.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="52" selection-start="1438" selection-end="1438" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/popup.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="30" selection-start="2211" selection-end="2211" vertical-scroll-proportion="0.375">
+        <state line="111" column="45" selection-start="2739" selection-end="2739" vertical-scroll-proportion="0.7591241">
           <folding />
         </state>
       </provider>
