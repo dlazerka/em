@@ -20,8 +20,8 @@ var AppRouter = Backbone.Router.extend({
     var meme = new Meme({id: id});
 
     meme.fetch({success: function() {
-      var memeView = new MemeView({model: meme, className: 'meme memeBig', fontSize: 40});
-      $('#main_area').html(memeView.render().$el);
+      var memeView = new MemeView({model: meme, className: 'meme memeBig'});
+      $('#main_area').html(memeView.render(50).$el);
       $('#main_area').append('<br/>');
       $('<button class="delete">Delete</button>').on('click', function() {
         meme.destroy({success: function() {

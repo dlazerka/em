@@ -47,12 +47,13 @@ form.upload {
 	margin-right: 20px;
 	margin-bottom: 20px;
 	position: relative;
-	height: 180px;
+	height: 200px;
 }
+
 
 .meme img {
 	display: inline-block;
-	height: 180px;
+	height: 200px;
 }
 
 .meme span {
@@ -66,9 +67,7 @@ form.upload {
 	font-family: Impact;
 	font-size: 30px;
 	text-shadow: 0 0 0.2em #000;
-	letter-spacing: 2px;
 	white-space: nowrap;
-	margin-left: 10px;
 	display: none;
 	cursor: pointer;	
 }
@@ -133,6 +132,11 @@ form.upload {
 	bottom: 5px;
 }
 
+.meme.memeBig .bottom-center {
+    bottom: 20px;
+}
+
+
 .meme.memeBig {
 	height: auto;
 }
@@ -142,6 +146,6 @@ form.upload {
 }
 
 .meme.memeBig .message {
-	font-size: 40px;
+	font-size: 50px;
 }
 
