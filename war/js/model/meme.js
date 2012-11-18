@@ -62,14 +62,13 @@ var MemeView = Backbone.View.extend({
 
 		$('img', element).load(function() {
       $('div', element).map(function() {
+        var parentWidth = $(element).width() - 20;
         $(this).css('display', 'block');
         var width = $(this).width();
-        var parentWidht = $(element).width() - 20;
-        if (parentWidht < width) {
-        	$(this).css('font-size', Math.floor(fontSize * parentWidht / width));
-        } else {
-        	$(this).width(parentWidht);
+        if (parentWidth < width) {
+        	$(this).css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
         }
+       	$(this).width(parentWidth);
       });
     });
 
