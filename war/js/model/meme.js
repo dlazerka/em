@@ -2,6 +2,7 @@
 
 var Meme = Backbone.Model.extend({
 	defaults: {
+    id: 0,
 		src: 'empty.gif',
 		date: (new Date),
 		template: 'template1',
@@ -50,7 +51,7 @@ var MemeView = Backbone.View.extend({
 
 		$('img', element).load(function() {
       $('div', element).map(function() {
-        $(this).css('display': 'block');
+        $(this).css('display', 'block');
         var width = $(this).width();
         var parentWidht = $(element).width() - 20;
         if (parentWidht < width) {

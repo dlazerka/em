@@ -66,9 +66,8 @@ public class UploadServlet extends HttpServlet {
         return;
       }
 
-      Key key = KeyFactory.createKey("Meme", crc32.getValue());
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      Entity entity = new Entity(key);
+      Entity entity = new Entity("Meme");
       entity.setUnindexedProperty("blob", blob);
       entity.setProperty("fileName", fileName);
       if (topText != null) entity.setProperty("topText", topText);
@@ -78,7 +77,7 @@ public class UploadServlet extends HttpServlet {
       entity.setProperty("date", new Date());
       datastore.put(entity);
 
-      resp.sendRedirect(key.getId() + "");
+      resp.sendRedirect("/");
 
     } catch (FileUploadException e) {
       throw new IOException(e);
