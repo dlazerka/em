@@ -1,28 +1,28 @@
 body, h1 {
-	margin: 0;
-	padding: 0;
-	color: #333;
+  margin: 0;
+  padding: 0;
+  color: #333;
 }
 
 h1#header {
-	font-weight: normal;
-	font-family: Impact;
-	color: #036;
-	border-bottom: 1px gray solid;
-	margin: 0;
-	font-style: italic;
-	background-color: rgba(0,0,0,0.1);
+  font-weight: normal;
+  font-family: Impact;
+  color: #036;
+  border-bottom: 1px gray solid;
+  margin: 0;
+  font-style: italic;
+  background-color: rgba(0,0,0,0.1);
 }
 
 h1#header {
-	letter-spacing: 1px;
+  letter-spacing: 1px;
 }
 
 #side_bar {
-	width: 150px;
-	float: left;
-	margin: 1em 0 0 1em;
-	font-family: Arial;
+  width: 150px;
+  float: left;
+  margin: 1em 0 0 1em;
+  font-family: Arial;
 }
 
 
@@ -31,117 +31,117 @@ button, input {
 }
 
 a {
-	color: #15c;
+  color: #15c;
 }
 
 #main_area{
-	margin: 1em 170px;
+  margin: 1em 170px;
 }
 
 form.upload {
-	margin-left: 1em;
+  margin-left: 1em;
 }
 
 .meme {
-	display: inline-block;
-	margin-right: 20px;
-	margin-bottom: 20px;
-	position: relative;
-	height: 180px;
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  height: 180px;
 }
 
 .meme img {
-	display: inline-block;
-	height: 180px;
+  display: inline-block;
+  height: 180px;
 }
 
 .meme span {
-	display: none;
-	float: left;
-	padding-bottom: 20px;
+  display: none;
+  float: left;
+  padding-bottom: 20px;
 }
 
 .meme .message {
-	color: #fff;
-	font-family: Impact;
-	font-size: 30px;
-	text-shadow: 0 0 0.2em #000;
-	letter-spacing: 2px;
-	white-space: nowrap;
-	margin-left: 10px;
-	display: none;
-	cursor: pointer;	
+  color: #fff;
+  font-family: Impact;
+  font-size: 30px;
+  text-shadow: 0 0 0.2em #000;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  margin-left: 10px;
+  display: none;
+  cursor: pointer;  
 }
 
 .meme .top-left {
-	position: absolute;
-	text-align: left;
-	top: 5px;
+  position: absolute;
+  text-align: left;
+  top: 5px;
 }
 
 .meme .top-center {
-	position: absolute;
-	text-align: center;
-	top: 5px;
+  position: absolute;
+  text-align: center;
+  top: 5px;
 }
 
 .meme .top-right {
-	position: absolute;
-	text-align: left;
-	top: 5px;
+  position: absolute;
+  text-align: left;
+  top: 5px;
 }
 
 .meme .center-left {
-	position: absolute;
-	text-align: left;
-	top: 50%;
-	margin-top: -15px;
-	line-height: 30px;
+  position: absolute;
+  text-align: left;
+  top: 50%;
+  margin-top: -15px;
+  line-height: 30px;
 }
 
 .meme .center-center {
-	position: absolute;
-	text-align: center;
-	top: 50%;
-	margin-top: -15px;
-	line-height: 30px;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  margin-top: -15px;
+  line-height: 30px;
 }
 
 .meme .center-right {
-	position: absolute;
-	text-align: left;
-	top: 50%;
-	margin-top: -15px;
-	line-height: 30px;
+  position: absolute;
+  text-align: left;
+  top: 50%;
+  margin-top: -15px;
+  line-height: 30px;
 }
 
 .meme .bottom-left {
-	position: absolute;
-	text-align: left;
-	bottom: 5px;
+  position: absolute;
+  text-align: left;
+  bottom: 5px;
 }
 
 .meme .bottom-center {
-	position: absolute;
-	text-align: center;
-	bottom: 5px;
+  position: absolute;
+  text-align: center;
+  bottom: 5px;
 }
 
 .meme .bottom-right {
-	position: absolute;
-	text-align: left;
-	bottom: 5px;
+  position: absolute;
+  text-align: left;
+  bottom: 5px;
 }
 
 .meme.memeBig {
-	height: auto;
+  height: auto;
 }
 
 .meme.memeBig img {
-	height: auto;
+  height: auto;
 }
 
 .meme.memeBig .message {
-	font-size: 40px;
+  font-size: 40px;
 }
 
