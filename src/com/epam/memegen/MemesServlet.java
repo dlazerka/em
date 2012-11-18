@@ -46,6 +46,7 @@ public class MemesServlet extends HttpServlet {
 
     resp.setContentType("application/json");
     resp.setCharacterEncoding("UTF-8");
+    resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
 
     PrintWriter writer = resp.getWriter();
     JsonWriter w = new JsonWriter(writer);
