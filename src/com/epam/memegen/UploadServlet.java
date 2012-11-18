@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import java.util.Date;
 import java.util.zip.CRC32;
 
 @SuppressWarnings("serial")
@@ -30,28 +31,55 @@ public class UploadServlet extends HttpServlet {
     u.setFileSizeMax((1 << 20) - 10000); // 1MiB - 10kB
     resp.setContentType("text/plain");
 
+    String topText = null;
+    String centerText = null;
+    String bottomText = null;
+
+    String fileName = null;
+    CRC32 crc32 = new CRC32();
+    Blob blob = null;
+
     try {
       FileItemIterator iterator = u.getItemIterator(req);
       while (iterator.hasNext()) {
         FileItemStream item = iterator.next();
         InputStream is = item.openStream();
-        byte[] bytes = IOUtils.toByteArray(is);
-        Blob blob = new Blob(bytes);
-        String name = item.getName();
+        String fieldName = item.getFieldName();
 
-        CRC32 crc32 = new CRC32();
-        crc32.update(bytes);
-
-        Key key = KeyFactory.createKey("Meme", crc32.getValue());
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
-        Entity entity = new Entity(key);
-        entity.setUnindexedProperty("blob", blob);
-        entity.setProperty("name", name);
-        datastore.put(entity);
-
-        resp.sendRedirect(key.getId() + "");
+        if (!item.isFormField()) {
+          fileName = item.getName();
+          if (is.available() > 0) {
+            byte[] bytes = IOUtils.toByteArray(is);
+            blob = new Blob(bytes);
+            crc32.update(bytes);
+          }
+        } else if (fieldName.equals("topText")) {
+          topText = IOUtils.toString(is, "UTF-8");
+        } else if (fieldName.equals("centerText")) {
+          centerText = IOUtils.toString(is, "UTF-8");
+        } else if (fieldName.equals("bottomText")) {
+          bottomText = IOUtils.toString(is, "UTF-8");
+        }
       }
+
+      if (blob == null) {
+        resp.sendError(400, "No file content");
+        return;
+      }
+
+      Key key = KeyFactory.createKey("Meme", crc32.getValue());
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      Entity entity = new Entity(key);
+      entity.setUnindexedProperty("blob", blob);
+      entity.setProperty("fileName", fileName);
+      if (topText != null) entity.setProperty("topText", topText);
+      if (centerText != null) entity.setProperty("centerText", centerText);
+      if (bottomText != null) entity.setProperty("bottomText", bottomText);
+      entity.setProperty("date", new Date());
+      datastore.put(entity);
+
+      resp.sendRedirect(key.getId() + "");
+
     } catch (FileUploadException e) {
       throw new IOException(e);
     }
