@@ -68,9 +68,15 @@ public class UploadServlet extends HttpServlet {
       entity.setUnindexedProperty("blob", blob);
       entity.setProperty("fileName", fileName);
       entity.setProperty("date", new Date());
-      if (topText != null) entity.setProperty("topText", topText);
-      if (centerText != null) entity.setProperty("centerText", centerText);
-      if (bottomText != null) entity.setProperty("bottomText", bottomText);
+      if (!isNullOrEmpty(topText)) {
+        entity.setProperty("topText", topText);
+      }
+      if (!isNullOrEmpty(centerText)) {
+        entity.setProperty("centerText", centerText);
+      }
+      if (!isNullOrEmpty(bottomText)) {
+        entity.setProperty("bottomText", bottomText);
+      }
 
       datastore.put(entity);
 
@@ -79,5 +85,9 @@ public class UploadServlet extends HttpServlet {
     } catch (FileUploadException e) {
       throw new IOException(e);
     }
+  }
+
+  private boolean isNullOrEmpty(String str) {
+    return str == null || str.trim().equals("");
   }
 }
