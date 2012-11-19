@@ -2,10 +2,7 @@ package com.epam.memegen;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +14,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -33,15 +27,11 @@ public class MemesServlet extends HttpServlet {
     Query q = new Query("Meme");
     q.addSort("date", SortDirection.DESCENDING);
 
-    List<Filter> filters = new ArrayList<Filter>();
-
-    String since  = req.getParameter("since");
+    String since = req.getParameter("since");
     if (since != null) {
       Date date = new Date(Long.valueOf(since));
-//      filters.add(new FilterPredicate("date", FilterOperator.GREATER_THAN, date));
       q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, date));
     }
-//    q.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
     FetchOptions options = FetchOptions.Builder.withDefaults();
     String top = req.getParameter("top");
