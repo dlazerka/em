@@ -17,8 +17,7 @@ public class Util {
     w.beginObject();
 
     long id = meme.getKey().getId();
-    w.name("id");
-    w.value(id);
+    w.name("id").value(id);
 
     String fileName = (String) meme.getProperty("fileName");
     String src = "/image/" + id;
@@ -30,7 +29,7 @@ public class Util {
 
     BlobKey blobKey = (BlobKey) meme.getProperty("blobKey");
     if (blobKey != null) {
-      w.name("src2").value("/image2?blobKey=" + blobKey.getKeyString());
+      w.name("src").value("/image/meme" + id + "?blobKey=" + blobKey.getKeyString());
     }
 
     Date date = (Date) meme.getProperty("date");

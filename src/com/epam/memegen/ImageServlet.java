@@ -6,37 +6,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.Blob;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.ByteRange;
 
 @SuppressWarnings("serial")
 public class ImageServlet extends HttpServlet {
-  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    resp.setContentType("image/jpeg");
+  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-    String pathInfo = req.getPathInfo();
-    String idStr = Util.getIdFromPathInfo(pathInfo);
-    if (idStr.equals("")) {
-      resp.sendError(404);
+  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    String blobKey = req.getParameter("blobKey");
+    if (blobKey == null) {
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No 'blobKey' param");
       return;
     }
-    long id = Long.valueOf(idStr);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey("Meme", id);
-    Entity entity;
-    try {
-      entity = datastore.get(key);
-      Blob blob = (Blob) entity.getProperty("blob");
-      resp.getOutputStream().write(blob.getBytes());
-    } catch (EntityNotFoundException e) {
-      resp.sendError(404);
+    ByteRange byteRange = blobstoreService.getByteRange(req);
+    if (byteRange == null) {
+      blobstoreService.serve(new BlobKey(blobKey), resp);
+    } else {
+      blobstoreService.serve(new BlobKey(blobKey), byteRange, resp);
     }
   }
-
 }

@@ -34,6 +34,8 @@ public class AdminUploadServlet extends HttpServlet {
 
     if (blobKeys.isEmpty()) {
       resp.getWriter().write("blobKeys is empty");
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No blobKeys for 'image' field");
+      return;
     }
 
     String m = req.getParameter("m");
