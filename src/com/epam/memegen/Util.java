@@ -3,6 +3,7 @@ package com.epam.memegen;
 import java.io.IOException;
 import java.util.Date;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.stream.JsonWriter;
 
@@ -20,14 +21,18 @@ public class Util {
     w.value(id);
 
     String fileName = (String) meme.getProperty("fileName");
-    String src;
+    String src = "/image/" + id;
     if (fileName != null) {
-      src = "/image/" + id + "/" + fileName;
       fileName = Util.sanitize(fileName);
-    } else {
-      src = "/image/" + id;
+      src = src + "/" + fileName;
     }
     w.name("src").value(src);
+
+    BlobKey blobKey = (BlobKey) meme.getProperty("blobKey");
+    if (blobKey != null) {
+      w.name("src2").value("/image2?blobKey=" + blobKey.getKeyString());
+    }
+
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
 

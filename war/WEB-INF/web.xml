@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
   <welcome-file-list>
     <welcome-file>list.html</welcome-file>
   </welcome-file-list>
@@ -19,6 +22,14 @@
     <url-pattern>/image/*</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>Image2</servlet-name>
+    <servlet-class>com.epam.memegen.Image2Servlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Image2</servlet-name>
+    <url-pattern>/image2</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>Upload</servlet-name>
     <servlet-class>com.epam.memegen.UploadServlet</servlet-class>
   </servlet>
@@ -34,6 +45,26 @@
     <servlet-name>Memes</servlet-name>
     <url-pattern>/memes</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>AdminUpload</servlet-name>
+    <servlet-class>com.epam.memegen.AdminUploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminUpload</servlet-name>
+    <url-pattern>/admin/upload</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SystemServiceServlet</servlet-name>
+    <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+    <init-param>
+      <param-name>services</param-name>
+      <param-value />
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SystemServiceServlet</servlet-name>
+    <url-pattern>/_ah/spi/*</url-pattern>
+  </servlet-mapping>
   <security-constraint>
     <web-resource-collection>
       <url-pattern>/*</url-pattern>
@@ -41,6 +72,8 @@
     <auth-constraint>
       <role-name>*</role-name>
     </auth-constraint>
+  </security-constraint>
+  <security-constraint>
     <web-resource-collection>
       <web-resource-name>Admin area</web-resource-name>
       <url-pattern>/admin/*</url-pattern>
@@ -53,16 +86,4 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
-  <servlet>
-    <servlet-name>SystemServiceServlet</servlet-name>
-    <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
-    <init-param>
-      <param-name>services</param-name>
-      <param-value/>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SystemServiceServlet</servlet-name>
-    <url-pattern>/_ah/spi/*</url-pattern>
-  </servlet-mapping>
 </web-app>
