@@ -51,7 +51,7 @@ var MemeView = Backbone.View.extend({
     }, 1000);
   },
 
-  render: function() {
+  render: function(fontSize) {
     this.$el.html(
       this.template({
         image: this.model.get('src'),
@@ -61,7 +61,7 @@ var MemeView = Backbone.View.extend({
       }));
 
     var element = this.$el;
-    var fontSize = this.fontSize;
+    fontSize = fontSize || this.fontSize;
 
     $('img', element).load(function() {
       $('div', element).map(function() {
