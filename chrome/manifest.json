@@ -6,7 +6,7 @@
         "48" : "troll.jpeg",
         "128" : "troll.jpeg"
     },
-    "description": "EPAM Memegen",
+    "description": "http://epammeme.appspot.com/",
     "browser_action": {
         "default_icon": "troll.png",
         "default_popup": "popup.html"

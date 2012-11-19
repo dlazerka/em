@@ -31,6 +31,6 @@ function restore_options() {
 }
 
 function init() {
-    document.addEventListener('DOMContentReady', restore_options);
-    document.querySelector('#save').addEventListener('click', save_options);
+//    document.addEventListener('DOMContentReady', restore_options);
+//    document.querySelector('#save').addEventListener('click', save_options);
 }
