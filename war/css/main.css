@@ -66,11 +66,17 @@ form.upload {
   color: #fff;
   font-family: Impact;
   font-size: 30px;
-  text-shadow: 0 0 0.2em #000;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-width: 1px;
   white-space: nowrap;
   margin-left: 10px;
   display: none;
   cursor: pointer;  
+}
+
+.meme.memeBig .message {
+  -webkit-text-stroke-width: 2px;
 }
 
 .meme .top-left {
