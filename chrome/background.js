@@ -13,7 +13,7 @@ function onRequest(request, sender, sendResponse) {
 // Listen for the content script to send a message to the background page.
 chrome.extension.onRequest.addListener(onRequest);
 
-var fetchFreq = 10000;
+var fetchFreq = 60000;
 var lastSeen = localStorage.getItem("lastSeen") || 0;
 console.log("lastSeen=" + lastSeen);
 

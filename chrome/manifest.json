@@ -11,18 +11,6 @@
     "background" : {
         "scripts": ["js/lib/jquery.js", "js/lib/underscore.js", "js/lib/backbone.js", "js/model/meme.js", "background.js"]
     },
-    "content_scripts" : [
-        {
-            "css": [ "style.css" ],
-            "matches" : [
-                "http://*/*",
-                "https://*/*"
-            ],
-            "js" : ["js/lib/jquery.js", "contentscript.js"],
-            "run_at" : "document_idle",
-            "all_frames" : false
-        }
-    ],
     "permissions": [
         "http://api.flickr.com/",
         "http://epammeme.appspot.com/"
