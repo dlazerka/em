@@ -19,6 +19,9 @@ import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
@@ -63,9 +66,14 @@ public class UploadServlet extends HttpServlet {
         return;
       }
 
+      UserService userService = UserServiceFactory.getUserService();
+      User user = userService.getCurrentUser();
+      String email = user.getEmail();
+
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       Entity entity = new Entity("Meme");
       entity.setUnindexedProperty("blob", blob);
+      entity.setProperty("authorEmail", email);
       entity.setProperty("fileName", fileName);
       entity.setProperty("date", new Date());
       if (!isNullOrEmpty(topText)) {
