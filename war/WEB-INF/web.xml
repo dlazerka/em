@@ -1,54 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
- <welcome-file-list>
-  <welcome-file>list.html</welcome-file>
- </welcome-file-list>
-    
- <servlet>
-  <servlet-name>Meme</servlet-name>
-  <servlet-class>com.epam.memegen.MemeServlet</servlet-class>
- </servlet>
- <servlet-mapping>
-  <servlet-name>Meme</servlet-name>
-  <url-pattern>/meme/*</url-pattern>
- </servlet-mapping>
-
- <servlet>
-  <servlet-name>Image</servlet-name>
-  <servlet-class>com.epam.memegen.ImageServlet</servlet-class>
- </servlet>
- <servlet-mapping>
-  <servlet-name>Image</servlet-name>
-  <url-pattern>/image/*</url-pattern>
- </servlet-mapping>
- 
- <servlet>
-  <servlet-name>Upload</servlet-name>
-  <servlet-class>com.epam.memegen.UploadServlet</servlet-class>
- </servlet>
- <servlet-mapping>
-  <servlet-name>Upload</servlet-name>
-  <url-pattern>/upload</url-pattern>
- </servlet-mapping>
-    
- <servlet>
-  <servlet-name>Memes</servlet-name>
-  <servlet-class>com.epam.memegen.MemesServlet</servlet-class>
- </servlet>
- <servlet-mapping>
-  <servlet-name>Memes</servlet-name>
-  <url-pattern>/memes</url-pattern>
- </servlet-mapping>
- 
- <servlet>
-  <servlet-name>SystemServiceServlet</servlet-name>
-  <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
-  <init-param>
-   <param-name>services</param-name>
-   <param-value/>
-  </init-param>
- </servlet>
- <servlet-mapping>
-  <servlet-name>SystemServiceServlet</servlet-name>
-  <url-pattern>/_ah/spi/*</url-pattern>
- </servlet-mapping>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <welcome-file-list>
+    <welcome-file>list.html</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>Meme</servlet-name>
+    <servlet-class>com.epam.memegen.MemeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Meme</servlet-name>
+    <url-pattern>/meme/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Image</servlet-name>
+    <servlet-class>com.epam.memegen.ImageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Image</servlet-name>
+    <url-pattern>/image/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Upload</servlet-name>
+    <servlet-class>com.epam.memegen.UploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Upload</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Memes</servlet-name>
+    <servlet-class>com.epam.memegen.MemesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Memes</servlet-name>
+    <url-pattern>/memes</url-pattern>
+  </servlet-mapping>
+  <security-constraint>
+    <web-resource-collection>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+    <web-resource-collection>
+      <web-resource-name>Admin area</web-resource-name>
+      <url-pattern>/admin/*</url-pattern>
+      <url-pattern>/admin</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <servlet>
+    <servlet-name>SystemServiceServlet</servlet-name>
+    <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+    <init-param>
+      <param-name>services</param-name>
+      <param-value />
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SystemServiceServlet</servlet-name>
+    <url-pattern>/_ah/spi/*</url-pattern>
+  </servlet-mapping>
 </web-app>
