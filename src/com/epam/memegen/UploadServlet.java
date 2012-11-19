@@ -1,101 +1,67 @@
 package com.epam.memegen;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.zip.CRC32;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.IOUtils;
-
-import com.google.appengine.api.datastore.Blob;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.UploadOptions;
+import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
+  private static final Logger logger = Logger.getLogger(AdminUploadServlet.class.getName());
+  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    ServletFileUpload u = new ServletFileUpload();
-    u.setFileSizeMax((1 << 20) - 10000); // 1MiB - 10kB
-
-    String topText = null;
-    String centerText = null;
-    String bottomText = null;
-
-    String fileName = null;
-    CRC32 crc32 = new CRC32();
-    Blob blob = null;
-
-    try {
-      FileItemIterator iterator = u.getItemIterator(req);
-      while (iterator.hasNext()) {
-        FileItemStream item = iterator.next();
-        InputStream is = item.openStream();
-        String fieldName = item.getFieldName();
-
-        if (!item.isFormField()) {
-          fileName = item.getName();
-          if (is.available() > 0) {
-            byte[] bytes = IOUtils.toByteArray(is);
-            blob = new Blob(bytes);
-            crc32.update(bytes);
-          }
-        } else if (fieldName.equals("topText")) {
-          topText = IOUtils.toString(is, "UTF-8");
-        } else if (fieldName.equals("centerText")) {
-          centerText = IOUtils.toString(is, "UTF-8");
-        } else if (fieldName.equals("bottomText")) {
-          bottomText = IOUtils.toString(is, "UTF-8");
-        }
-      }
-
-      if (blob == null) {
-        resp.sendError(400, "No file content");
-        return;
-      }
-
-      UserService userService = UserServiceFactory.getUserService();
-      User user = userService.getCurrentUser();
-      String email = user.getEmail();
-
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      Entity entity = new Entity("Meme");
-      entity.setUnindexedProperty("blob", blob);
-      entity.setProperty("authorEmail", email);
-      entity.setProperty("fileName", fileName);
-      entity.setProperty("date", new Date());
-      if (!isNullOrEmpty(topText)) {
-        entity.setProperty("topText", topText);
-      }
-      if (!isNullOrEmpty(centerText)) {
-        entity.setProperty("centerText", centerText);
-      }
-      if (!isNullOrEmpty(bottomText)) {
-        entity.setProperty("bottomText", bottomText);
-      }
-
-      datastore.put(entity);
-
-      resp.sendRedirect("/");
-
-    } catch (FileUploadException e) {
-      throw new IOException(e);
-    }
+  /** Creates and returns a new upload url. */
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setContentType("text/plain");
+    String uploadUrl = createUploadUrl();
+    resp.getWriter().write(uploadUrl);
   }
 
-  private boolean isNullOrEmpty(String str) {
-    return str == null || str.trim().equals("");
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setContentType("application/json");
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+    List<BlobKey> blobKeys = blobs.get("image");
+
+    if (blobKeys.isEmpty()) {
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No blobKeys for 'image' field");
+      return;
+    }
+
+    JsonWriter jsonWriter = new JsonWriter(resp.getWriter());
+    jsonWriter.beginObject();
+    String uploadUrl = createUploadUrl();
+    jsonWriter.name("newUploadUrl").value(uploadUrl);
+    jsonWriter.name("uploads");
+    jsonWriter.beginArray();
+    for (BlobKey key : blobKeys) {
+      String blobKeyS = key.getKeyString();
+      logger.info("Received blob " + blobKeyS);
+      jsonWriter.beginObject();
+      jsonWriter.name("src").value("/image/preview?blobKey=" + blobKeyS);
+      jsonWriter.name("blobKey").value(blobKeyS);
+      jsonWriter.endObject();
+    }
+    jsonWriter.endArray();
+    jsonWriter.endObject();
+    jsonWriter.close();
+  }
+
+  private String createUploadUrl() {
+    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 20);
+    String contextPath = getServletContext().getContextPath();
+    String uploadUrl = blobstoreService.createUploadUrl(contextPath, uploadOptions);
+    return uploadUrl;
   }
 }

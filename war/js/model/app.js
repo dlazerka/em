@@ -10,7 +10,7 @@ var AppRouter = Backbone.Router.extend({
     memes.fetch({success: function() {
       $('#main_area').empty();
       for (var i = 0; i < memes.length; i++) {
-        var memeView = new MemeView({model: memes.at(i)});
+        var memeView = new MemeView({model: memes.at(i), className: 'meme memeSmall'});
         $('#main_area').append(memeView.render().$el);
       }
     }});
@@ -35,7 +35,7 @@ var AppRouter = Backbone.Router.extend({
 });
 
 $.ajaxSetup({ cache: false });
-var app_router = new AppRouter;
+new AppRouter();
 
 // Trigger the initial route and enable HTML5 History API support
 Backbone.history.start();

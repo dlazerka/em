@@ -38,8 +38,21 @@ a {
   margin: 1em 170px;
 }
 
-form.upload {
-   margin: 1em 170px;
+.upload {
+  margin: 1em 170px;
+  box-shadow: 3px 3px 10px gray;
+  background-color: white;
+  z-index: 1;
+  position: absolute;
+  padding: 1em;
+}
+
+.upload form {
+   float: left;
+}
+
+.upload:after {
+   clear: both;
 }
 
 .meme {
@@ -50,11 +63,21 @@ form.upload {
   height: 200px;
 }
 
+.meme.memeSmall {
+    cursor: pointer;
+}
 
-.meme img {
+.meme.preview {
+  min-width: 300px;
+  outline: 1px gray solid;
+}
+
+
+.meme img, .preview img {
   display: inline-block;
   height: 200px;
 }
+
 
 .meme span {
   display: none;

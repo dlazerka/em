@@ -28,9 +28,10 @@ public class Util {
     w.name("src").value(src);
 
     BlobKey blobKey = (BlobKey) meme.getProperty("blobKey");
-    if (blobKey != null) {
-      w.name("src").value("/image/meme" + id + "?blobKey=" + blobKey.getKeyString());
+    if (blobKey == null) {
+      throw new IllegalStateException();
     }
+    w.name("src").value("/image/meme" + id + "?blobKey=" + blobKey.getKeyString());
 
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
@@ -66,5 +67,9 @@ public class Util {
     pathInfo = pathInfo.replaceFirst("/.*$", "");
     String idStr = pathInfo.replaceAll("[^0-9]+", "");
     return idStr;
+  }
+
+  public static boolean isNullOrEmpty(String str) {
+    return str == null || str.trim().equals("");
   }
 }

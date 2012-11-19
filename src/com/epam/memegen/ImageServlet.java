@@ -17,7 +17,7 @@ public class ImageServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String blobKey = req.getParameter("blobKey");
-    if (blobKey == null) {
+    if (Util.isNullOrEmpty(blobKey)) {
       resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No 'blobKey' param");
       return;
     }

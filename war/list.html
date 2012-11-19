@@ -18,9 +18,8 @@
       <button onclick="$('form').toggle()">Отжечь</button>
       <br/>
       <br/>
-      <a href="#">Recent Memes</a>
+      <a href="#">Свежачок</a>
     </div>
-
         <form class="upload"
             action="/upload"
             method="POST"
@@ -31,19 +30,10 @@
             <input type="file" name="file">
             <br/>
             <input type="text" placeholder="Top text" name="topText"/> 
-                <label><input type="radio" name="top" value="left">Left</label>
-                <label><input type="radio" name="top" value="center" checked>Center</label>
-                <label><input type="radio" name="top" value="right">Right</label>
             <br/>
             <input type="text" placeholder="Center text" name="centerText"/> 
-                <label><input type="radio" name="center" value="left">Left</label>
-                <label><input type="radio" name="center" value="center" checked>Center</label>
-                <label><input type="radio" name="center" value="right">Right</label>
             <br/>
             <input type="text" placeholder="Bottom text" name="bottomText"/> 
-                <label><input type="radio" name="bottom" value="left">Left</label>
-                <label><input type="radio" name="bottom" value="center" checked>Center</label>
-                <label><input type="radio" name="bottom" value="right">Right</label>
             <br/>
             <input type="submit">
         </form>
