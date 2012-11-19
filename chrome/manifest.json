@@ -1,7 +1,11 @@
 {
     "name": "EPAM Memegen",
-    "version": "1.0",
+    "version": "2.0",
     "manifest_version": 2,
+    "icons" : {
+        "48" : "troll.jpeg",
+        "128" : "troll.jpeg"
+    },
     "description": "EPAM Memegen",
     "browser_action": {
         "default_icon": "troll.png",
@@ -12,7 +16,6 @@
         "scripts": ["js/lib/jquery.js", "js/lib/underscore.js", "js/lib/backbone.js", "js/model/meme.js", "background.js"]
     },
     "permissions": [
-        "http://api.flickr.com/",
         "http://epammeme.appspot.com/"
     ]
 }
