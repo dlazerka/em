@@ -64,14 +64,9 @@ public class MemeServlet extends HttpServlet {
       return;
     }
 
-    UserService userService = UserServiceFactory.getUserService();
-    User user = userService.getCurrentUser();
-    String email = user.getEmail();
-
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity("Meme");
     entity.setProperty("blobKey", new BlobKey(blobKey));
-    entity.setProperty("authorEmail", email);
     entity.setProperty("date", new Date());
     if (!Util.isNullOrEmpty(topText)) {
       entity.setProperty("topText", topText);
