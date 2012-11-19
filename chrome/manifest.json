@@ -1,14 +1,13 @@
 {
     "name": "EPAM Memegen",
-    "version": "2.0",
+    "version": "2.8",
     "manifest_version": 2,
     "icons" : {
-        "48" : "troll.jpeg",
-        "128" : "troll.jpeg"
+        "128" : "troll.png"
     },
     "description": "http://epammeme.appspot.com/",
     "browser_action": {
-        "default_icon": "troll.png",
+        "default_icon": "troll_small.png",
         "default_popup": "popup.html"
     },
     "options_page": "options.html",
