@@ -5,6 +5,10 @@ body, h1 {
   font-family: arial, sans-serif;
 }
 
+div.clear {
+  clear: both;
+}
+
 h1#header {
   font-weight: normal;
   font-family: Impact;
@@ -25,12 +29,18 @@ h1#header {
   margin: 1em 0 0 1em;
 }
 
-.uploadHelperText{
+.uploadHelperText {
   position: absolute;
-  top: 166px;
+  top: 56px;
   text-align: center;
   width: 300px;
   color: gray;
+  line-height: 1.4em;
+  font-size: 15px;
+}
+.imageWithUpload {
+  float: left;
+  position: relative;
 }
 
 button, input {
@@ -42,36 +52,41 @@ a {
   color: #15c;
 }
 
-#main_area{
-  margin: 1em 170px;
+#main_area {
+  margin: 1em 0 0 170px;
 }
 
 .upload {
   margin: 1em 1em 1em 0;
-  box-shadow: 2px 2px 10px gray;
-  background-color: white;
-  padding: 10px;
-  float: left;
 }
 
 .uploadFile {
   width: 300px;
+  display: none;
 }
-.upload form textarea {
-  margin: 0;
+.upload form {
+  float: left;
 }
 
 .upload form textarea,
-img.preview {
-  border: 1px gray solid;
+.preview {
   min-width: 300px;
   margin: 0;
   padding: 0px;
 }
 
+.upload form textarea {
+  padding: 2px;
+  height: 57px;
+  border: 1px gray solid;
+}
+
 img.preview {
+  border: 1px gray solid;
+  min-height: 200px;
+  margin-right: 1em;
   height: 200px;
-  margin-top: .5em;
+  float: left; /* to remove strange space below */
 }
 
 .meme {
@@ -91,7 +106,6 @@ img.preview {
   height: 200px;
   border: 1px gray solid;
 }
-
 
 .meme span {
   display: none;

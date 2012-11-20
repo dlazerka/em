@@ -23,38 +23,46 @@
   <h1 id="header">&lt;epam:<span>m</span><span>e</span><span>m</span><span>e</span><span>s</span>&gt;</h1>
 
     <div id="side_bar">
-      <button id="showCreateDialog" onclick="$('.upload').toggle()">Отжечь</button>
+      <button id="showCreateDialog" onclick="$('.upload').toggle()">
+        Создать
+      </button>
       <br/>
       <br/>
-      <a href="#">Свежачок</a>
+      <a href="/">Все</a>
     </div>
 
-    <div class="upload" style="display: none;">
+    <div>
       <div>
-        <input id="uploadFile" class="uploadFile" type="file">
-        <input type="hidden" id="uploadUrl" value="<%= blobstoreService.createUploadUrl("/upload")%>">
-        <br/>
-        <img id="preview" class="preview"/>
-        <div id="uploadHelperText" class="uploadHelperText">
-            кликни по любой картине<br/>
-            или перетащи со стола<br/> 
-            или загрузи свою<br/>
-            сделай хоть что-нибудь
+        <div class="upload" style="display: none;">
+          <div class="imageWithUpload">
+            <img id="preview" class="preview"/>
+            <div class="clear"></div>
+            <div id="uploadHelperText" class="uploadHelperText">
+                <a href="javascript:$('#uploadFile').click()"
+                    >Загрузить</a> новую картину,<br/>
+                или кликни по любому мему,<br/>
+                или перетащи со стола.<br/> 
+                Сделай хоть что-нибудь.
+            </div>
+            <input id="uploadFile" class="uploadFile" type="file">
+            <input type="hidden" id="uploadUrl"
+                value="<%= blobstoreService.createUploadUrl("/upload")%>">
+          </div>
+          <form action="/meme" method="POST">
+              <textarea name="topText"></textarea>
+              <br/>
+              <textarea name="centerText"></textarea>
+              <br/>
+              <textarea name="bottomText"></textarea>
+              <br/>
+              <input type="hidden" name="blobKey"/>
+              <input type="submit" value="Заслать">
+          </form>
+          <div class="clear"></div>
         </div>
       </div>
-      <form action="/meme" method="POST">
-          <textarea name="topText"></textarea>
-          <br/>
-          <textarea name="centerText"></textarea>
-          <br/>
-          <textarea name="bottomText"></textarea>
-          <br/>
-          <input type="hidden" name="blobKey"/>
-          <input type="submit" value="Заслать">
-      </form>
+      <div id="main_area"></div>
     </div>
-
-    <div id="main_area"></div>
 
     <script type="text/javascript" src="js/model/meme.js"></script>
     <script type="text/javascript" src="js/model/app.js"></script>

@@ -1,4 +1,5 @@
 > Upload with preview
+* Fix select file right after one was uploaded (new uploadUrl)
 * Remove page reload on create and on delete.
 * Use Drag & Drop
 * Use background-size css

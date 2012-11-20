@@ -16,10 +16,7 @@ Upload.onMemeClick = function(event, meme) {
   }
   var src = meme.model.get('src')
   var blobKey = meme.model.get('blobKey');
-
-  $('#uploadHelperText').hide();
-  $('img#preview').attr('src', src);
-  $('form [name="blobKey"]').val(blobKey);
+  Upload.setPreview_(src, blobKey);
   return true;
 };
 
@@ -28,7 +25,7 @@ Upload.onFileFieldChange = function(event) {
   if (!XMLHttpRequestUpload) {
     alert('Your browser doesn\'t support XMLHttpRequestUpload. Try using a modern browser');
   }
-  var element = event.target;
+  var element = $('#uploadFile')[0];
   if (!element.files || !element.files.length) {
     alert('Element doesn\'t contain files');
   }
@@ -51,9 +48,15 @@ Upload.onFileFieldChange = function(event) {
   }).done(function(data) {
     var src = data.uploads[0].src;
     var blobKey = data.uploads[0].blobKey;
-    $('img#preview').attr('src', src);
+
+    Upload.setPreview_(src, blobKey);
     $('#uploadUrl').val(data.newUploadUrl);
-    $('form [name="blobKey"]').val(blobKey);
   });
 };
 
+Upload.setPreview_ = function(src, blobKey) {
+  $('#uploadHelperText').hide();
+  $('#preview').attr('src', src);
+  $('.preview').css('min-width', '1px');
+  $('form [name="blobKey"]').val(blobKey);
+};
