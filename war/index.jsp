@@ -36,17 +36,22 @@
         <div class="upload" style="display: none;">
           <div class="imageWithUpload">
             <img id="preview" class="preview"/>
-            <div class="clear"></div>
             <div id="uploadHelperText" class="uploadHelperText">
                 <a href="javascript:$('#uploadFile').click()"
                     >Загрузить</a> новую картину,<br/>
-                или кликни по любому мему,<br/>
+                или кликни по любому мему.<!-- ,<br/>
                 или перетащи со стола.<br/> 
                 Сделай хоть что-нибудь.
+                -->
             </div>
             <input id="uploadFile" class="uploadFile" type="file">
             <input type="hidden" id="uploadUrl"
                 value="<%= blobstoreService.createUploadUrl("/upload")%>">
+            <br/>
+            <button id="uploadCancel" style="margin-top: 2px; display: none;"
+                onclick="location.href='/'">
+                Отменить
+            </button>
           </div>
           <form action="/meme" method="POST">
               <textarea name="topText"></textarea>

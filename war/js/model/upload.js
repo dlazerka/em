@@ -2,6 +2,8 @@ var Upload = {};
 
 $(function() {
   $('#uploadFile').change(Upload.onFileFieldChange);
+//  $('#preview').bind('drop', Upload.onFileDrop);
+//  $('#preview')[0].addEventListener('drop', Upload.onFileDrop, true);
 });
 
 /** @param event {XMLHttpRequestProgressEvent} */
@@ -50,7 +52,7 @@ Upload.onFileFieldChange = function(event) {
     var blobKey = data.uploads[0].blobKey;
 
     Upload.setPreview_(src, blobKey);
-    $('#uploadUrl').val(data.newUploadUrl);
+    $('#uploadUrl').val(data.newUploadUrl);// doesn't work currently
   });
 };
 
@@ -59,4 +61,16 @@ Upload.setPreview_ = function(src, blobKey) {
   $('#preview').attr('src', src);
   $('.preview').css('min-width', '1px');
   $('form [name="blobKey"]').val(blobKey);
+  $('#uploadCancel').show();
 };
+
+Upload.onFileDrop = function (event) {
+  event.stopPropagation(); // Stops some browsers from redirecting.
+  event.preventDefault();
+
+  var files = event.dataTransfer.files;
+  for (var i = 0, f; f = files[i]; i++) {
+    console.log(f);
+    // Read the File objects in this FileList.
+  }
+}
