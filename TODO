@@ -1,3 +1,6 @@
-> Upload with previw
+> Upload with preview
+* Remove page reload on create and on delete.
 * Use Drag & Drop
 * Use background-size css
+* Draw text on image (try to do it purely client-side, like here http://www.nihilogic.dk/labs/canvas2image/).
+* Voting

@@ -40,6 +40,7 @@ public class UploadServlet extends HttpServlet {
     }
 
     JsonWriter jsonWriter = new JsonWriter(resp.getWriter());
+    jsonWriter.setIndent("  ");
     jsonWriter.beginObject();
     String uploadUrl = createUploadUrl();
     jsonWriter.name("newUploadUrl").value(uploadUrl);
