@@ -35,6 +35,12 @@
         <input type="hidden" id="uploadUrl" value="<%= blobstoreService.createUploadUrl("/upload")%>">
         <br/>
         <img id="preview" class="preview"/>
+        <div id="uploadHelperText" class="uploadHelperText">
+            кликни по любой картине<br/>
+            или перетащи со стола<br/> 
+            или загрузи свою<br/>
+            сделай хоть что-нибудь
+        </div>
       </div>
       <form action="/meme" method="POST">
           <textarea name="topText"></textarea>

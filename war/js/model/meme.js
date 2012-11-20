@@ -3,10 +3,10 @@
 var Meme = Backbone.Model.extend({
   defaults: {
     id: 0,
+    blobKey: null,
     src: 'empty.gif',
     date: (new Date),
     template: 'template1',
-    author: 'me',
     messages: [{text: '', css: 'top-center'}],
     font: 'Impact'
   },
@@ -31,8 +31,7 @@ var MemeView = Backbone.View.extend({
       output += '<div class="message ' + message.css + longCss + '">' + message.text + '</div>';
     });
 
-    output += '<img src="' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
-    output += '<span>by ' + obj.author + '</span>';
+    output += '<img src="' + obj.src + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
 
     return output;
   },
@@ -45,16 +44,17 @@ var MemeView = Backbone.View.extend({
     'click' : 'onclick' 
   },
 
-  onclick: function() {
-    Backbone.history.navigate('#meme/' + this.model.get('id'), true);
+  onclick: function(event) {
+    if (!Upload.onMemeClick(event, this)) {
+      Backbone.history.navigate('#meme/' + this.model.get('id'), true);
+    }
   },
 
   render: function(fontSize) {
     this.$el.html(
       this.template({
-        image: this.model.get('src'),
+        src: this.model.get('src'),
         text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
-        author: this.model.get('author'),
         messages: this.model.get('messages')
       }));
 

@@ -31,6 +31,7 @@ public class Util {
     if (blobKey == null) {
       throw new IllegalStateException();
     }
+    w.name("blobKey").value(blobKey.getKeyString());
     w.name("src").value("/image/meme" + id + "?blobKey=" + blobKey.getKeyString());
 
     Date date = (Date) meme.getProperty("date");

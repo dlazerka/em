@@ -9,6 +9,20 @@ Upload.onProgessEvent = function(event) {
   // TODO
 };
 
+/** @returns true if event was consumed */
+Upload.onMemeClick = function(event, meme) {
+  if ($('.upload').css('display') == 'none') {
+    return false;
+  }
+  var src = meme.model.get('src')
+  var blobKey = meme.model.get('blobKey');
+
+  $('#uploadHelperText').hide();
+  $('img#preview').attr('src', src);
+  $('form [name="blobKey"]').val(blobKey);
+  return true;
+};
+
 /** @param event {ChangeEvent} */
 Upload.onFileFieldChange = function(event) {
   if (!XMLHttpRequestUpload) {
@@ -40,7 +54,6 @@ Upload.onFileFieldChange = function(event) {
     $('img#preview').attr('src', src);
     $('#uploadUrl').val(data.newUploadUrl);
     $('form [name="blobKey"]').val(blobKey);
-    $('form [name="src"]').val(src);
   });
 };
 
