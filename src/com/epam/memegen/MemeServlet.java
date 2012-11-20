@@ -15,6 +15,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -22,6 +24,9 @@ import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class MemeServlet extends HttpServlet {
+	
+  private MemcacheService cache = MemcacheServiceFactory.getMemcacheService();		
+	
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("application/json");
     resp.setCharacterEncoding("UTF-8");
@@ -79,7 +84,7 @@ public class MemeServlet extends HttpServlet {
     }
 
     datastore.put(entity);
-
+    cache.clearAll();
     resp.setStatus(HttpServletResponse.SC_OK);
     resp.sendRedirect("/");
   }
@@ -105,6 +110,7 @@ public class MemeServlet extends HttpServlet {
     }
     entity.setProperty("deleted", true);
     datastore.put(entity);
+    cache.clearAll();
     resp.setStatus(200);
   }
 
