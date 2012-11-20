@@ -27,7 +27,8 @@ var MemeView = Backbone.View.extend({
     var output = '';
 
     _.each(obj.messages, function(message) {
-        output += '<div class="message ' + message.css + '">' + message.text + '</div>';
+      var longCss = message.text.length > 15 ? ' long' : ''; 
+      output += '<div class="message ' + message.css + longCss + '">' + message.text + '</div>';
     });
 
     output += '<img src="' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';

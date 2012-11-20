@@ -90,10 +90,9 @@ a {
   font-family: Impact;
   font-size: 30px;
   -webkit-text-fill-color: white;
-  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-color: #444;
   -webkit-text-stroke-width: 1px;
   white-space: nowrap;
-  margin-left: 10px;
   display: none;
   cursor: pointer;  
 }
@@ -101,6 +100,10 @@ a {
 .meme.memeBig .message {
   -webkit-text-stroke-width: 2px;
 }
+
+.meme.memeBig .message.long {
+  -webkit-text-stroke-width: 1px;
+  }
 
 .meme .top-left {
   position: absolute;
