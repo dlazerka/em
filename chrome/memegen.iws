@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fa3c4ddd-af01-4750-b754-849899c7cbb0" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/memegen.iws" afterPath="$PROJECT_DIR$/memegen.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/MemeServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/MemeServlet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/MemesServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/MemesServlet.java" />
-    </list>
+    <list default="true" id="fa3c4ddd-af01-4750-b754-849899c7cbb0" name="Default" comment="" />
     <ignored path="memegen.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
