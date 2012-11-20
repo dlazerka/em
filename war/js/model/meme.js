@@ -60,8 +60,9 @@ var MemeView = Backbone.View.extend({
 
     var element = this.$el;
     fontSize = fontSize || this.fontSize;
-
+    $(element).hide();
     $('img', element).load(function() {
+      $(element).show();
       $('div', element).map(function() {
         var parentWidth = $(element).width();
         $(this).css('display', 'block');
