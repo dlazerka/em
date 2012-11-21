@@ -19,7 +19,7 @@ var Memes = Backbone.Collection.extend({
 });
 
 var MemeView = Backbone.View.extend({
-  tagName: 'span',
+  tagName: 'div',
   className: 'meme',
   fontSize: 30,
 
