@@ -9,9 +9,6 @@
         <img src="<%= image %>" alt="<%= text %>" title="<%= text %>"/>
         <span>by <%= author %></span>
     </script>
-
-    <!-- JavaScript and HTML must be in separate files for security. -->
-    <link type="text/css" href="css/main.css">
     <style>
         body {
             min-width: 300px;
@@ -42,14 +39,15 @@
         }
 
         .meme .message {
-            display: none;
-            color: #fff;
-            font-family: Impact;
-            font-size: 30px;
-            text-shadow: 0 0 0.2em #000;
-            letter-spacing: 2px;
-            white-space: nowrap;
-            margin-left: 10px;
+		    color: #fff;
+		    font-family: Impact;
+		    font-size: 30px;
+		    -webkit-text-fill-color: white;
+		    -webkit-text-stroke-color: #222;
+		    -webkit-text-stroke-width: 1px;
+		    white-space: nowrap;
+		    display: none;
+		    cursor: pointer;  
         }
 
         .meme .top-left {
