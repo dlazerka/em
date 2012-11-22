@@ -1,6 +1,5 @@
 package com.epam.memegen;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,18 +24,31 @@ import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class MemesServlet extends HttpServlet {
-	
-  private MemcacheService cache = MemcacheServiceFactory.getMemcacheService();	
-	
+
+  private MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
+    resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
+
+    // Lookup memcache
+    String key = req.getRequestURI();
+    String cachedValue = (String)cache.get(key);
+    if (cachedValue != null) {
+      resp.getWriter().write(cachedValue);
+      return;
+    }
+    // Cache missed
+
     Query q = new Query("Meme");
     q.addSort("date", SortDirection.DESCENDING);
 
     String since = req.getParameter("since");
-    if (since != null) {	
+    if (since != null) {
       Date date = new Date(Long.valueOf(since));
-      q.addFilter("date", FilterOperator.GREATER_THAN, date);
+      q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, date));
     }
 
     FetchOptions options = FetchOptions.Builder.withDefaults();
@@ -45,22 +57,10 @@ public class MemesServlet extends HttpServlet {
       int t = Integer.parseInt(top);
       options.limit(t);
     }
-    
+
     PreparedQuery prepared = datastore.prepare(q);
     Iterable<Entity> iterable = prepared.asIterable(options);
 
-    resp.setContentType("application/json");
-    resp.setCharacterEncoding("UTF-8");
-    resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
-
-    // Lookup cache
-    String key = q.toString();
-    String cachedValue = (String) cache.get(key);
-    if (cachedValue != null) {
-      resp.getWriter().write(cachedValue);
-      return;
-    }
-    // Cache missed - fetching from DB
     StringWriter out = new StringWriter();
     JsonWriter w = new JsonWriter(new PrintWriter(out));
     w.setIndent("  ");
@@ -74,7 +74,7 @@ public class MemesServlet extends HttpServlet {
     w.endArray();
     w.close();
     String value = out.toString();
-    resp.getWriter().write(value); 
+    resp.getWriter().write(value);
     cache.put(key, value);
   }
 }
