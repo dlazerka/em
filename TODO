@@ -1,5 +1,6 @@
++ Fix bug when sometimes Memcache has just "[]".
 > Upload with preview
-* ImageServlet cache
+* ImageServlet httpResponse.setHeader("Cache-Control", "max-age=32000000, must-revalidate");
 * Fix select file right after one was uploaded (new uploadUrl)
 * Remove page reload on create and on delete.
 * Use Drag & Drop

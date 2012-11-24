@@ -1,10 +1,3 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
-<%
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-%>
-
 <!DOCTYPE HTML>
 
 <html>
@@ -46,7 +39,7 @@
             </div>
             <input id="uploadFile" class="uploadFile" type="file">
             <input type="hidden" id="uploadUrl"
-                value="<%= blobstoreService.createUploadUrl("/upload")%>">
+                value="###UPLOAD_URL###">
             <br/>
             <button id="uploadCancel" style="margin-top: 2px; display: none;"
                 onclick="location.href='/'">
@@ -81,6 +74,9 @@
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
+    </script>
+    <script>
+    var MEMES_JSON = '###MEMES_JSON###';
     </script>
   </body>
 </html>

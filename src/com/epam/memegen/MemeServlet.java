@@ -1,32 +1,18 @@
 package com.epam.memegen;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class MemeServlet extends HttpServlet {
-	
-  private MemcacheService cache = MemcacheServiceFactory.getMemcacheService();		
-	
+  private final MemeDao memeDao = new MemeDao();
+
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("application/json");
     resp.setCharacterEncoding("UTF-8");
@@ -43,17 +29,12 @@ public class MemeServlet extends HttpServlet {
     }
     long id = Long.valueOf(idStr);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey("Meme", id);
-    Entity entity;
-    try {
-      entity = datastore.get(key);
-      JsonWriter w = new JsonWriter(resp.getWriter());
-      w.setIndent("  ");
-      Util.memeToJson(entity, w);
-    } catch (EntityNotFoundException e) {
+    String json = memeDao.getAsJson(id);
+    if (json == null) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
     }
+    resp.getWriter().write(json);
   }
 
   @Override
@@ -69,22 +50,7 @@ public class MemeServlet extends HttpServlet {
       return;
     }
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity entity = new Entity("Meme");
-    entity.setProperty("blobKey", new BlobKey(blobKey));
-    entity.setProperty("date", new Date());
-    if (!Util.isNullOrEmpty(topText)) {
-      entity.setProperty("topText", topText);
-    }
-    if (!Util.isNullOrEmpty(centerText)) {
-      entity.setProperty("centerText", centerText);
-    }
-    if (!Util.isNullOrEmpty(bottomText)) {
-      entity.setProperty("bottomText", bottomText);
-    }
-
-    datastore.put(entity);
-    cache.clearAll();
+    memeDao.create(blobKey, topText, centerText, bottomText);
     resp.setStatus(HttpServletResponse.SC_OK);
     resp.sendRedirect("/");
   }
@@ -99,20 +65,12 @@ public class MemeServlet extends HttpServlet {
     }
     long id = Long.valueOf(idStr);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey("Meme", id);
-    Entity entity;
     try {
-      entity = datastore.get(key);
+      memeDao.delete(id);
     } catch (EntityNotFoundException e) {
       resp.sendError(404, "No such meme");
       return;
     }
-    entity.setProperty("deleted", true);
-    datastore.put(entity);
-    cache.clearAll();
-    resp.setStatus(200);
   }
-
 
 }
