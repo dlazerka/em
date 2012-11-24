@@ -25,7 +25,7 @@ public class MainServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     try {
-      FileInputStream fr = new FileInputStream("index.jsp");
+      FileInputStream fr = new FileInputStream("index.html");
       welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
     } catch (FileNotFoundException e) {
       throw new ServletException(e);
