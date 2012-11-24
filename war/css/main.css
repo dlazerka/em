@@ -117,9 +117,7 @@ img.preview {
   color: #fff;
   font-family: Impact;
   font-size: 30px;
-  -webkit-text-fill-color: white;
-  -webkit-text-stroke-color: #444;
-  -webkit-text-stroke-width: 1px;
+  text-shadow: 2px 2px 0px black, -2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black;
   white-space: nowrap;
   display: none;
   cursor: pointer;  
