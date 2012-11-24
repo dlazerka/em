@@ -62,6 +62,7 @@ Upload.setPreview_ = function(src, blobKey) {
   $('.preview').css('min-width', '1px');
   $('form [name="blobKey"]').val(blobKey);
   $('#uploadCancel').show();
+  Create.setPreview(src, blobKey);
 };
 
 Upload.onFileDrop = function (event) {

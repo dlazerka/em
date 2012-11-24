@@ -4,7 +4,7 @@ var Meme = Backbone.Model.extend({
   defaults: {
     id: 0,
     blobKey: null,
-    src: 'empty.gif',
+    src: '',
     date: (new Date),
     template: 'template1',
     messages: [{text: '', css: 'top-center'}],
