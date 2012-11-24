@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 @SuppressWarnings("serial")
 public class MainServlet extends HttpServlet {
@@ -40,6 +41,7 @@ public class MainServlet extends HttpServlet {
 
     String uploadUrl = util.createUploadUrl(this);
     String allMemesJson = memeDao.getAllAsJson(req);
+    allMemesJson = StringEscapeUtils.escapeEcmaScript(allMemesJson);
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
     resp.setContentType("text/html");
