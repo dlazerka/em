@@ -120,7 +120,8 @@ img.preview {
   text-shadow: 2px 0px 0px black, -2px 0px 0px black, 0px 2px 0px black, 0px -2px 0px black, 2px 2px 0px black, -2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black;
   white-space: nowrap;
   display: none;
-  cursor: pointer;  
+  cursor: pointer; 
+  -webkit-transform: translate3d( 0, 0, 0); /* Force anti aliasing */ 
 }
 
 .meme .top-left {
