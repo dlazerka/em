@@ -117,19 +117,11 @@ img.preview {
   color: #fff;
   font-family: Impact;
   font-size: 30px;
-  text-shadow: 2px 2px 0px black, -2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black;
+  text-shadow: 2px 0px 0px black, -2px 0px 0px black, 0px 2px 0px black, 0px -2px 0px black, 2px 2px 0px black, -2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black;
   white-space: nowrap;
   display: none;
   cursor: pointer;  
 }
-
-.meme.memeBig .message {
-  -webkit-text-stroke-width: 2px;
-}
-
-.meme.memeBig .message.long {
-  -webkit-text-stroke-width: 1px;
-  }
 
 .meme .top-left {
   position: absolute;
