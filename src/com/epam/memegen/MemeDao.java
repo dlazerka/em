@@ -106,7 +106,8 @@ public class MemeDao {
 
     StringWriter out = new StringWriter();
     JsonWriter w = new JsonWriter(out);
-    w.setIndent("  ");
+    // Embedding json into welcome page needs one-liner.
+    // w.setIndent("  ");
     w.beginArray();
     for (Entity entity : iterable) {
       if (entity.getProperty("deleted") != null) {
@@ -142,7 +143,6 @@ public class MemeDao {
       entity = datastore.get(key);
       StringWriter out = new StringWriter(1000);
       JsonWriter w = new JsonWriter(out);
-      w.setIndent("  ");
       toJson(entity, w);
       json = out.toString();
     } catch (EntityNotFoundException e) {
@@ -155,7 +155,6 @@ public class MemeDao {
   private String toJson(Entity meme) throws IOException {
     StringWriter sw = new StringWriter(1000);
     JsonWriter w = new JsonWriter(sw);
-    w.setIndent("  ");
     toJson(meme, w);
     return sw.toString();
   }
