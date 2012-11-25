@@ -28,7 +28,8 @@ var MemeView = Backbone.View.extend({
 
     _.each(obj.messages, function(message) {
       var longCss = message.text.length > 15 ? ' long' : ''; 
-      output += '<div class="message ' + message.css + longCss + '">' + message.text + '</div>';
+      output += '<div class="message ' + message.css + longCss + '">' + 
+          message.text + '</div>';
     });
 
     output += '<img src="' + obj.src + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
@@ -58,22 +59,23 @@ var MemeView = Backbone.View.extend({
         messages: this.model.get('messages')
       }));
 
-    var element = this.$el;
-    fontSize = fontSize || this.fontSize;
-    $(element).hide();
-    $('img', element).load(function() {
-      $(element).show();
-      $('div', element).map(function() {
-        var parentWidth = $(element).width();
-        $(this).css('display', 'block');
-        var width = $(this).width();
-        if (parentWidth < width) {
-          $(this).css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
-        }
-        $(this).width(parentWidth);
-      });
-    });
+    this.fontSize = fontSize || this.fontSize;
+    $(this.$el).hide();
+    $('img', this.$el).load($.proxy(function() {
+      $(this.$el).show();
+      $('div', this.$el).map($.proxy(this.alignText_, this));
+    }, this));
 
     return this;
   },
+
+  alignText_: function(index, textElement) {
+    var parentWidth = $(this.$el).width();
+    $(textElement).css('display', 'block');
+    var width = $(textElement).width();
+    if (parentWidth < width) {
+      $(textElement).css('font-size', Math.floor(this.fontSize * (parentWidth - 20) / width));
+    }
+    $(textElement).width(parentWidth);    
+  }
 });

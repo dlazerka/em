@@ -121,7 +121,7 @@ img.preview {
   white-space: nowrap;
   display: none;
   cursor: pointer; 
-  -webkit-transform: translate3d( 0, 0, 0); /* Force anti aliasing */ 
+  -webkit-transform: translate3d(0, 0, 0); /* Force anti aliasing */ 
 }
 
 .meme .top-left {
