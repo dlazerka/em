@@ -94,7 +94,6 @@ img.preview {
   margin-right: 20px;
   margin-bottom: 20px;
   position: relative;
-  height: 200px;
 }
 
 .memePreview {
@@ -107,7 +106,8 @@ img.preview {
 }
 
 .meme.memeSmall {
-    cursor: pointer;
+  cursor: pointer;
+  height: 200px;
 }
 
 .meme img {

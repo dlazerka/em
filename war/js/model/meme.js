@@ -37,8 +37,9 @@ var MemeView = Backbone.View.extend({
     }
   },
 
-  positionMessages: function(fontSize, opt_w, opt_h) {
+  positionMessages: function(fontSize) {
     var parentWidth = this.$el.width();
+    var parentHeigth = this.$el.width();
     this.$('.message').map(function(i, el) {
       el = $(el);
       var width = el.width();
