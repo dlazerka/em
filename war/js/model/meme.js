@@ -57,8 +57,9 @@ var MemeView = Backbone.View.extend({
       var message = messages[i];
       var messageEl = $('<div class="message"></div>');
       messageEl.addClass(message.css);
-      var escaped = message.text.replace('<', '&lt;').replace('>', '&gt;');
-      var lines = escaped.split('\n');
+      // MemeDao has already escaped them, just to be sure.
+      var text = message.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      var lines = text.split('\n');
       messageEl.html(lines.join('<br/>'));
       result.push(messageEl);
     }
@@ -66,9 +67,14 @@ var MemeView = Backbone.View.extend({
   },
 
   createImg: function() {
-    var text = _.map(this.model.get('messages'), function (el) {return el.text}).join(' ');
     var img = $('<img/>');
-    img.attr('src', this.model.get('src'));
+    // MemeDao must have not composed it with <>, just to be sure.
+    var src = this.model.get('src');
+    var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    img.attr('src', src);
+    var text = _.map(this.model.get('messages'), function (el) {return el.text}).join(' ');
+    // MemeDao has already escaped them, just to be sure.
+    text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('alt', text);
     img.attr('title', text);
     return img;

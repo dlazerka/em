@@ -7,11 +7,6 @@ import com.google.appengine.api.blobstore.UploadOptions;
 public class Util {
   private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-  public static String sanitize(String str) {
-    if (str == null) return null;
-    return str.replaceAll("[^a-zA-Z0-9\\._-]", "");
-  }
-
   public static String getIdFromPathInfo(String pathInfo) {
     pathInfo = pathInfo.substring(1); // remove /
     pathInfo = pathInfo.replaceFirst("/.*$", "");

@@ -29,6 +29,7 @@ import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
 import com.google.appengine.api.memcache.MemcacheServiceException;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gson.stream.JsonWriter;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Memcache contains JSONs for:
@@ -170,17 +171,17 @@ public class MemeDao {
     String fileName = (String) meme.getProperty("fileName");
     String src = "/image/" + id;
     if (fileName != null) {
-      fileName = Util.sanitize(fileName);
+      fileName = StringEscapeUtils.escapeHtml4(fileName);
       src = src + "/" + fileName;
     }
-    w.name("src").value(src);
 
     BlobKey blobKey = (BlobKey) meme.getProperty("blobKey");
     if (blobKey == null) {
       throw new IllegalStateException();
     }
-    w.name("blobKey").value(blobKey.getKeyString());
-    w.name("src").value("/image/meme" + id + "?blobKey=" + blobKey.getKeyString());
+    String escaped = StringEscapeUtils.escapeHtml4(blobKey.getKeyString());
+    w.name("blobKey").value(escaped);
+    w.name("src").value("/image/meme" + id + "?blobKey=" + escaped);
 
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
@@ -191,19 +192,19 @@ public class MemeDao {
     String bottomText = (String) meme.getProperty("bottomText");
     if (topText != null) {
       w.beginObject();
-      w.name("text").value(topText);
+      w.name("text").value(StringEscapeUtils.escapeHtml4(topText));
       w.name("css").value("top-center");
       w.endObject();
     }
     if (bottomText != null) {
       w.beginObject();
-      w.name("text").value(bottomText);
+      w.name("text").value(StringEscapeUtils.escapeHtml4(bottomText));
       w.name("css").value("bottom-center");
       w.endObject();
     }
     if (centerText != null) {
       w.beginObject();
-      w.name("text").value(centerText);
+      w.name("text").value(StringEscapeUtils.escapeHtml4(centerText));
       w.name("css").value("center-center");
       w.endObject();
     }
