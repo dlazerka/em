@@ -28,18 +28,17 @@
       <div>
         <div class="upload" style="display: none;">
           <div class="imageWithUpload">
-            <img id="preview" class="preview"/>
+            <div id="preview" class="preview"></div>
             <div id="uploadHelperText" class="uploadHelperText">
                 <a href="javascript:$('#uploadFile').click()"
                     >Загрузить</a> новую картину,<br/>
                 или кликни по любому мему.<!-- ,<br/>
-                или перетащи со стола.<br/> 
+                или перетащи со стола.<br/>
                 Сделай хоть что-нибудь.
                 -->
             </div>
             <input id="uploadFile" class="uploadFile" type="file">
-            <input type="hidden" id="uploadUrl"
-                value="###UPLOAD_URL###">
+            <input type="hidden" id="uploadUrl" value="###UPLOAD_URL###">
             <br/>
             <button id="uploadCancel" style="margin-top: 2px; display: none;"
                 onclick="location.href='/'">
@@ -47,11 +46,11 @@
             </button>
           </div>
           <form action="/meme" method="POST">
-              <textarea name="topText"></textarea>
+              <textarea id="topText" name="topText"></textarea>
               <br/>
-              <textarea name="centerText"></textarea>
+              <textarea id="centerText" name="centerText"></textarea>
               <br/>
-              <textarea name="bottomText"></textarea>
+              <textarea id="bottomText" name="bottomText"></textarea>
               <br/>
               <input type="hidden" name="blobKey"/>
               <input type="submit" value="Заслать">
@@ -67,7 +66,7 @@
     </script>
     <script type="text/javascript" src="js/model/meme.js"></script>
     <script type="text/javascript" src="js/model/app.js"></script>
-    <script type="text/javascript" src="js/model/upload.js"></script>
+    <script type="text/javascript" src="js/model/create.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-36410794-1']);

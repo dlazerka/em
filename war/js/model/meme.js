@@ -4,7 +4,7 @@ var Meme = Backbone.Model.extend({
   defaults: {
     id: 0,
     blobKey: null,
-    src: 'empty.gif',
+    src: '',
     date: (new Date),
     template: 'template1',
     messages: [{text: '', css: 'top-center'}],
@@ -23,59 +23,72 @@ var MemeView = Backbone.View.extend({
   className: 'meme',
   fontSize: 30,
 
-  template: function(obj) {
-    var output = '';
-
-    _.each(obj.messages, function(message) {
-      var longCss = message.text.length > 15 ? ' long' : ''; 
-      output += '<div class="message ' + message.css + longCss + '">' + 
-          message.text + '</div>';
-    });
-
-    output += '<img src="' + obj.src + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
-
-    return output;
-  },
-
   initialize: function () {
-    this.render();
   },
 
   events: {
-    'click' : 'onclick' 
+    'click' : 'onclick'
   },
 
   onclick: function(event) {
-    if (!Upload.onMemeClick(event, this)) {
+    // Go to meme only if meme creation dialog is inactive.
+    if (!Create.onMemeClick(event, this)) {
       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
     }
   },
 
-  render: function(fontSize) {
-    this.$el.html(
-      this.template({
-        src: this.model.get('src'),
-        text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
-        messages: this.model.get('messages')
-      }));
+  positionMessages: function(fontSize) {
+    fontSize = fontSize || this.fontSize;
+    var parentWidth = this.$el.width();
+    this.$('.message').map(function(i, el) {
+      el = $(el);
+      var width = el.width();
+      if (parentWidth < width) {
+        el.css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
+      }
+      el.width(parentWidth);
+    });
+  },
 
-    this.fontSize = fontSize || this.fontSize;
-    $(this.$el).hide();
-    $('img', this.$el).load($.proxy(function() {
-      $(this.$el).show();
-      $('div', this.$el).map($.proxy(this.alignText_, this));
+  createMessages: function() {
+    var result = [];
+    var messages = this.model.get('messages')
+    for (var i = 0; i < messages.length; i++) {
+      var message = messages[i];
+      var messageEl = $('<div class="message"></div>');
+      messageEl.addClass(message.css);
+      var escaped = message.text.replace('<', '&lt;').replace('>', '&gt;');
+      var lines = escaped.split('\n');
+      messageEl.html(lines.join('<br/>'));
+      result.push(messageEl);
+    }
+    return result;
+  },
+
+  createImg: function() {
+    var text = _.map(this.model.get('messages'), function (el) {return el.text}).join(' ');
+    var img = $('<img/>');
+    img.attr('src', this.model.get('src'));
+    img.attr('alt', text);
+    img.attr('title', text);
+    return img;
+  },
+
+  render: function(fontSize) {
+    this.$el.empty();
+
+    var messageEls = this.createMessages();
+
+    var img = this.createImg();
+    this.$el.hide();
+    img.load($.proxy(function() {
+      this.$el.show();
+      this.positionMessages();
     }, this));
+
+    this.$el.append(messageEls);
+    this.$el.append(img);
 
     return this;
   },
-
-  alignText_: function(index, textElement) {
-    var parentWidth = $(this.$el).width();
-    $(textElement).css('display', 'block');
-    var width = $(textElement).width();
-    if (parentWidth < width) {
-      $(textElement).css('font-size', Math.floor(this.fontSize * (parentWidth - 20) / width));
-    }
-    $(textElement).width(parentWidth);    
-  }
 });

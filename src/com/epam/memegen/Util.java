@@ -1,7 +1,5 @@
 package com.epam.memegen;
 
-import javax.servlet.http.HttpServlet;
-
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;
@@ -25,10 +23,10 @@ public class Util {
     return str == null || str.trim().equals("");
   }
 
-  public String createUploadUrl(HttpServlet servlet) {
+  public String createUploadUrl() {
     UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 20);
-    String contextPath = servlet.getServletContext().getContextPath();
-    String uploadUrl = blobstoreService.createUploadUrl(contextPath, uploadOptions);
+    // Success path doesn't matter because we're uploading by AJAX.
+    String uploadUrl = blobstoreService.createUploadUrl("/upload", uploadOptions);
     return uploadUrl;
   }
 }

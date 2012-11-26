@@ -58,10 +58,11 @@ Upload.onFileFieldChange = function(event) {
 
 Upload.setPreview_ = function(src, blobKey) {
   $('#uploadHelperText').hide();
-  $('#preview').attr('src', src);
+  $('img#preview').attr('src', src);
   $('.preview').css('min-width', '1px');
   $('form [name="blobKey"]').val(blobKey);
   $('#uploadCancel').show();
+  Create.setPreview(src, blobKey);
 };
 
 Upload.onFileDrop = function (event) {

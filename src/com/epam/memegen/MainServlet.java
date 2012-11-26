@@ -36,7 +36,10 @@ public class MainServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    String uploadUrl = util.createUploadUrl(this);
+    FileInputStream fr = new FileInputStream("index.html");
+    welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
+
+    String uploadUrl = util.createUploadUrl();
     String allMemesJson = memeDao.getAllAsJson(req);
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
