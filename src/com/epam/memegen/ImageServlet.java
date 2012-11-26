@@ -16,6 +16,8 @@ public class ImageServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setHeader("Cache-Control", "max-age=604800");// 1 week
+
     String blobKey = req.getParameter("blobKey");
     if (Util.isNullOrEmpty(blobKey)) {
       resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No 'blobKey' param");
