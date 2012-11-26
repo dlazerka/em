@@ -38,8 +38,8 @@ var MemeView = Backbone.View.extend({
   },
 
   positionMessages: function(fontSize) {
+    fontSize = fontSize || this.fontSize;
     var parentWidth = this.$el.width();
-    var parentHeigth = this.$el.width();
     this.$('.message').map(function(i, el) {
       el = $(el);
       var width = el.width();
@@ -57,10 +57,9 @@ var MemeView = Backbone.View.extend({
       var message = messages[i];
       var messageEl = $('<div class="message"></div>');
       messageEl.addClass(message.css);
-      if (message.text.length > 15) {
-        messageEl.addClass('long');
-      }
-      messageEl.text(message.text);
+      var escaped = message.text.replace('<', '&lt;').replace('>', '&gt;');
+      var lines = escaped.split('\n');
+      messageEl.html(lines.join('<br/>'));
       result.push(messageEl);
     }
     return result;
@@ -78,14 +77,13 @@ var MemeView = Backbone.View.extend({
   render: function(fontSize) {
     this.$el.empty();
 
-    fontSize = fontSize || this.fontSize;
-    var messageEls = this.createMessages(fontSize);
+    var messageEls = this.createMessages();
 
     var img = this.createImg();
     this.$el.hide();
     img.load($.proxy(function() {
       this.$el.show();
-      this.positionMessages(fontSize);
+      this.positionMessages();
     }, this));
 
     this.$el.append(messageEls);
