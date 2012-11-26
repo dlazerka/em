@@ -27,7 +27,7 @@ var MemeView = Backbone.View.extend({
   },
 
   events: {
-    'click' : 'onclick' 
+    'click' : 'onclick'
   },
 
   onclick: function(event) {
@@ -90,7 +90,6 @@ var MemeView = Backbone.View.extend({
 
     this.$el.append(messageEls);
     this.$el.append(img);
-
 
     return this;
   },

@@ -39,7 +39,7 @@ public class MainServlet extends HttpServlet {
     FileInputStream fr = new FileInputStream("index.html");
     welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
 
-    String uploadUrl = util.createUploadUrl(this);
+    String uploadUrl = util.createUploadUrl();
     String allMemesJson = memeDao.getAllAsJson(req);
     allMemesJson = StringEscapeUtils.escapeEcmaScript(allMemesJson);
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);

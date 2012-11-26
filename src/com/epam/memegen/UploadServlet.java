@@ -24,7 +24,7 @@ public class UploadServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("text/plain");
-    String uploadUrl = util.createUploadUrl(this);
+    String uploadUrl = util.createUploadUrl();
     resp.getWriter().write(uploadUrl);
   }
 
@@ -42,7 +42,7 @@ public class UploadServlet extends HttpServlet {
     JsonWriter jsonWriter = new JsonWriter(resp.getWriter());
     jsonWriter.setIndent("  ");
     jsonWriter.beginObject();
-    String uploadUrl = util.createUploadUrl(this);
+    String uploadUrl = util.createUploadUrl();
     jsonWriter.name("newUploadUrl").value(uploadUrl);
     jsonWriter.name("uploads");
     jsonWriter.beginArray();
