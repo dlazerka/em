@@ -26,6 +26,7 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
+import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
 import com.google.appengine.api.memcache.MemcacheServiceException;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gson.stream.JsonWriter;
@@ -128,7 +129,9 @@ public class MemeDao {
     if (top == null && since == null) {
       memcache.put(ALL, value, expiration);
     }
-    memcache.put(LAST_TS, youngest.getTime(), expiration);
+    if (youngest != null) {
+      memcache.put(LAST_TS, youngest.getTime(), expiration);
+    }
     return value;
   }
 
@@ -240,6 +243,7 @@ public class MemeDao {
     memcache.delete(ALL);
 
     // Set LAST_TS, taking care of for race conditions.
+    long timestamp = justCreatedDate.getTime();
     boolean result = false;
     int i = 0;
     while (!result) {
@@ -248,11 +252,15 @@ public class MemeDao {
         break;
       }
       IdentifiableValue ident = memcache.getIdentifiable(LAST_TS);
-      Long lastDateInMemcache = (Long) ident.getValue();
-      if (lastDateInMemcache != null && lastDateInMemcache >= justCreatedDate.getTime()) {
-        break;
+      if (ident != null) {
+        Long lastDateInMemcache = (Long) ident.getValue();
+        if (lastDateInMemcache != null && lastDateInMemcache >= timestamp) {
+          break;
+        }
+        result = memcache.putIfUntouched(LAST_TS, ident, justCreatedDate);
+      } else {
+        result = memcache.put(LAST_TS, timestamp, expiration, SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
       }
-      result = memcache.putIfUntouched(LAST_TS, ident, justCreatedDate);
     }
   }
 
