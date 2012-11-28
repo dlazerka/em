@@ -45,6 +45,8 @@ public class MemeDao {
   private static final String LAST_TS = "LAST_TS";
   private static final String ALL = "ALL";
 
+  private final Key allKey = KeyFactory.createKey(KIND, "ALL");
+
   private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -89,7 +91,7 @@ public class MemeDao {
     }
 
     Date youngest = null;
-    Query q = new Query(KIND);
+    Query q = new Query(KIND, allKey);
     q.addSort("date", SortDirection.DESCENDING);
 
     if (since != null) {
@@ -138,7 +140,7 @@ public class MemeDao {
       return json;
     }
 
-    Key key = KeyFactory.createKey(KIND, id);
+    Key key = KeyFactory.createKey(allKey, KIND, id);
     Entity entity;
     try {
       entity = datastore.get(key);
@@ -215,7 +217,7 @@ public class MemeDao {
   public void create(String blobKey, String topText, String centerText, String bottomText)
       throws IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity entity = new Entity(KIND);
+    Entity entity = new Entity(KIND, allKey);
     entity.setProperty("blobKey", new BlobKey(blobKey));
     Date justCreatedDate = new Date();
     entity.setProperty("date", justCreatedDate);
@@ -247,7 +249,7 @@ public class MemeDao {
       }
       IdentifiableValue ident = memcache.getIdentifiable(LAST_TS);
       Date lastDateInMemcache = (Date) ident.getValue();
-      if (!lastDateInMemcache.before(justCreatedDate)) {
+      if (lastDateInMemcache != null && !lastDateInMemcache.before(justCreatedDate)) {
         break;
       }
       result = memcache.putIfUntouched(LAST_TS, ident, justCreatedDate);
@@ -256,7 +258,7 @@ public class MemeDao {
 
   public void delete(long id) throws EntityNotFoundException, IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey(KIND, id);
+    Key key = KeyFactory.createKey(allKey, KIND, id);
     Entity entity;
     entity = datastore.get(key);
     entity.setProperty("deleted", true);
