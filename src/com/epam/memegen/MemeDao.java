@@ -73,13 +73,13 @@ public class MemeDao {
 
   public String getAllAsJson(HttpServletRequest req) throws IOException {
     String sinceS = req.getParameter("since");
-    Date since = sinceS == null ? null : new Date(Long.parseLong(sinceS));
+    Long since = sinceS == null ? null : Long.parseLong(sinceS);
     String top = req.getParameter("top");
 
     // Lookup memcache
     if (since != null) {
-      Date lastTs = (Date) memcache.get(LAST_TS);
-      if (lastTs != null && !lastTs.after(since)) {
+      Long lastTs = (Long) memcache.get(LAST_TS);
+      if (lastTs != null && lastTs <= since) {
         // User asked for memes younger than the youngest.
         return "[]";
       }
@@ -128,7 +128,7 @@ public class MemeDao {
     if (top == null && since == null) {
       memcache.put(ALL, value, expiration);
     }
-    memcache.put(LAST_TS, youngest, expiration);
+    memcache.put(LAST_TS, youngest.getTime(), expiration);
     return value;
   }
 
@@ -248,8 +248,8 @@ public class MemeDao {
         break;
       }
       IdentifiableValue ident = memcache.getIdentifiable(LAST_TS);
-      Date lastDateInMemcache = (Date) ident.getValue();
-      if (lastDateInMemcache != null && !lastDateInMemcache.before(justCreatedDate)) {
+      Long lastDateInMemcache = (Long) ident.getValue();
+      if (lastDateInMemcache != null && lastDateInMemcache >= justCreatedDate.getTime()) {
         break;
       }
       result = memcache.putIfUntouched(LAST_TS, ident, justCreatedDate);
