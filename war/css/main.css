@@ -126,10 +126,10 @@ img.preview {
   color: #fff;
   font-family: Impact;
   font-size: 30px;
-  text-shadow: 2px 0px 0px black, -2px 0px 0px black, 0px 2px 0px black, 0px -2px 0px black, 2px 2px 0px black, -2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
   white-space: nowrap;
   cursor: pointer; 
-  -webkit-transform: translate3d(0, 0, 0); /* Force anti aliasing */ 
+  -webkit-font-smoothing: antialiased; 
 }
 
 .meme .top-left {
@@ -196,7 +196,6 @@ img.preview {
     bottom: 20px;
 }
 
-
 .meme.memeBig {
   height: auto;
 }
@@ -208,4 +207,3 @@ img.preview {
 .meme.memeBig .message {
   font-size: 50px;
 }
-
