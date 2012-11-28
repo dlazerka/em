@@ -129,7 +129,7 @@ img.preview {
   text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
   white-space: nowrap;
   cursor: pointer; 
-  -webkit-transform: translate3d(0, 0, 0); /* Force anti aliasing */ 
+  -webkit-font-smoothing: antialiased; 
 }
 
 .meme .top-left {
