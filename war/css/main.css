@@ -64,18 +64,18 @@ a {
   width: 300px;
   display: none;
 }
-.upload form {
+.upload .form {
   float: left;
 }
 
-.upload form textarea,
+.upload .form textarea,
 .preview {
   min-width: 300px;
   margin: 0;
   padding: 0px;
 }
 
-.upload form textarea {
+.upload .form textarea {
   padding: 2px;
   height: 57px;
   border: 1px gray solid;
@@ -128,8 +128,8 @@ img.preview {
   font-size: 30px;
   text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
   white-space: nowrap;
-  cursor: pointer; 
-  -webkit-font-smoothing: antialiased; 
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
 }
 
 .meme .top-left {

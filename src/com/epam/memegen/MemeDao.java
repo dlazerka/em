@@ -191,47 +191,38 @@ public class MemeDao {
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
 
-    w.name("messages").beginArray();
+    w.name("messages").beginObject();
     String topText = (String) meme.getProperty("topText");
     String centerText = (String) meme.getProperty("centerText");
     String bottomText = (String) meme.getProperty("bottomText");
     if (topText != null) {
-      w.beginObject();
-      w.name("text").value(StringEscapeUtils.escapeHtml4(topText));
-      w.name("css").value("top-center");
-      w.endObject();
-    }
-    if (bottomText != null) {
-      w.beginObject();
-      w.name("text").value(StringEscapeUtils.escapeHtml4(bottomText));
-      w.name("css").value("bottom-center");
-      w.endObject();
+      w.name("top").value(StringEscapeUtils.escapeHtml4(topText));
     }
     if (centerText != null) {
-      w.beginObject();
-      w.name("text").value(StringEscapeUtils.escapeHtml4(centerText));
-      w.name("css").value("center-center");
-      w.endObject();
+      w.name("center").value(StringEscapeUtils.escapeHtml4(centerText));
     }
-    w.endArray();
+    if (bottomText != null) {
+      w.name("bottom").value(StringEscapeUtils.escapeHtml4(bottomText));
+    }
+    w.endObject();
     w.endObject();
   }
 
-  public void create(String blobKey, String topText, String centerText, String bottomText)
+  public String create(String blobKey, String top, String center, String bottom)
       throws IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity(KIND, allKey);
     entity.setProperty("blobKey", new BlobKey(blobKey));
     Date justCreatedDate = new Date();
     entity.setProperty("date", justCreatedDate);
-    if (!Util.isNullOrEmpty(topText)) {
-      entity.setProperty("topText", topText);
+    if (!Util.isNullOrEmpty(top)) {
+      entity.setProperty("topText", top);
     }
-    if (!Util.isNullOrEmpty(centerText)) {
-      entity.setProperty("centerText", centerText);
+    if (!Util.isNullOrEmpty(center)) {
+      entity.setProperty("centerText", center);
     }
-    if (!Util.isNullOrEmpty(bottomText)) {
-      entity.setProperty("bottomText", bottomText);
+    if (!Util.isNullOrEmpty(bottom)) {
+      entity.setProperty("bottomText", bottom);
     }
 
     Key key = datastore.put(entity);
@@ -257,11 +248,13 @@ public class MemeDao {
         if (lastDateInMemcache != null && lastDateInMemcache >= timestamp) {
           break;
         }
-        result = memcache.putIfUntouched(LAST_TS, ident, justCreatedDate);
+        result = memcache.putIfUntouched(LAST_TS, ident, timestamp);
       } else {
         result = memcache.put(LAST_TS, timestamp, expiration, SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
       }
     }
+
+    return json;
   }
 
   public void delete(long id) throws EntityNotFoundException, IOException {

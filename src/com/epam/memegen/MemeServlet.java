@@ -1,6 +1,8 @@
 package com.epam.memegen;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,9 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 @SuppressWarnings("serial")
 public class MemeServlet extends HttpServlet {
+  private static final Logger logger = Logger.getLogger(MemeServlet.class.getName());
   private final MemeDao memeDao = new MemeDao();
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -40,19 +47,47 @@ public class MemeServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    String topText = req.getParameter("topText");
-    String centerText = req.getParameter("centerText");
-    String bottomText = req.getParameter("bottomText");
-    String blobKey = req.getParameter("blobKey");
-
-    if (Util.isNullOrEmpty(blobKey)) {
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No 'blobKey' param");
+    String top = null;
+    String center = null;
+    String bottom = null;
+    String blobKey;
+    try {
+      JsonElement element = new JsonParser().parse(req.getReader());
+      JsonObject jsonObject = element.getAsJsonObject();
+      JsonObject messages = jsonObject.getAsJsonObject("messages");
+      if (messages.has("top")) {
+        top = messages.get("top").getAsString();
+      }
+      if (messages.has("center")) {
+        center = messages.get("center").getAsString();
+      }
+      if (messages.has("bottom")) {
+        bottom = messages.get("bottom").getAsString();
+      }
+      if (jsonObject.has("blobKey")) {
+        blobKey = jsonObject.get("blobKey").getAsString();
+      } else {
+        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No 'blobKey' param");
+        return;
+      }
+    } catch (JsonParseException e) {
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    } catch (ClassCastException e) {
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    } catch (IllegalStateException e) {
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    } catch (NullPointerException e) {
+      logger.log(Level.WARNING, "Maybe just a param is not given", e);
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 
-    memeDao.create(blobKey, topText, centerText, bottomText);
+    String json = memeDao.create(blobKey, top, center, bottom);
     resp.setStatus(HttpServletResponse.SC_OK);
-    resp.sendRedirect("/");
+    resp.getWriter().write(json);
   }
 
   @Override

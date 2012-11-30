@@ -1,7 +1,7 @@
-var AppRouter = Backbone.Router.extend({
+var AppRouterClass = Backbone.Router.extend({
   routes: {
     '': 'initialize',
-    'memes': 'memes',
+    'memes': 'getMemes',
     'meme/:id': 'getMeme'
   },
 
@@ -10,7 +10,7 @@ var AppRouter = Backbone.Router.extend({
     this.onSuccessFetchAll_(memes);
   },
 
-  memes: function() {
+  getMemes: function() {
     var memes = new Memes();
     memes.fetch({success: $.proxy(this.onSuccessFetchAll_, this)});
   },
@@ -20,10 +20,15 @@ var AppRouter = Backbone.Router.extend({
     meme.fetch({success: $.proxy(this.onSuccessFetch_, this)});
   },
 
+  onMemeAdded: function(meme) {
+    var memeView = new MemeView({model: meme});
+    $('#main_area').prepend(memeView.render().$el);
+  },
+
   onSuccessFetchAll_: function(memes) {
     $('#main_area').empty();
     for (var i = 0; i < memes.length; i++) {
-      var memeView = new MemeView({model: memes.at(i), className: 'meme memeSmall'});
+      var memeView = new MemeView({model: memes.at(i)});
       $('#main_area').append(memeView.render().$el);
     }
   },
@@ -38,12 +43,12 @@ var AppRouter = Backbone.Router.extend({
   },
 
   onSuccessDestroy_: function() {
-	Backbone.history.navigate('#memes', true);
+    Backbone.history.navigate('#memes', true);
   }
 });
 
 $.ajaxSetup({cache: false});
-new AppRouter();
+var AppRouter = new AppRouterClass();
 
 // Trigger the initial route and enable HTML5 History API support
 Backbone.history.start();

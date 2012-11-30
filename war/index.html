@@ -19,9 +19,6 @@
       <button id="showCreateDialog" onclick="$('.upload').toggle()">
         Создать
       </button>
-      <br/>
-      <br/>
-      <a href="#memes">Все</a>
     </div>
 
     <div>
@@ -38,23 +35,23 @@
                 -->
             </div>
             <input id="uploadFile" class="uploadFile" type="file">
-            <input type="hidden" id="uploadUrl" value="###UPLOAD_URL###">
+            <input id="uploadUrl" type="hidden" value="###UPLOAD_URL###">
             <br/>
-            <button id="uploadCancel" style="margin-top: 2px; display: none;"
+            <button id="uploadAgain" style="margin-top: 2px; display: none;"
                 onclick="location.href='/'">
-                Отменить
+                Upload
             </button>
           </div>
-          <form action="/meme" method="POST">
-              <textarea id="topText" name="topText"></textarea>
-              <br/>
-              <textarea id="centerText" name="centerText"></textarea>
-              <br/>
-              <textarea id="bottomText" name="bottomText"></textarea>
-              <br/>
-              <input type="hidden" name="blobKey"/>
-              <input type="submit" value="Заслать">
-          </form>
+          <div class="form">
+            <textarea id="top"></textarea>
+            <br/>
+            <textarea id="center"></textarea>
+            <br/>
+            <textarea id="bottom"></textarea>
+            <br/>
+            <input type="hidden" name="blobKey"/>
+            <button id="submit">Submit</button>
+          </div>
           <div class="clear"></div>
         </div>
       </div>

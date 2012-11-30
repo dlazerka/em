@@ -2,13 +2,14 @@
 
 var Meme = Backbone.Model.extend({
   defaults: {
-    id: 0,
+    id: null,
     blobKey: null,
     src: '',
-    date: (new Date),
-    template: 'template1',
-    messages: [{text: '', css: 'top-center'}],
-    font: 'Impact'
+    messages: {
+       top: null,
+       center: null,
+       bottom: null
+    }
   },
   urlRoot: '/meme'
 });
@@ -20,7 +21,7 @@ var Memes = Backbone.Collection.extend({
 
 var MemeView = Backbone.View.extend({
   tagName: 'div',
-  className: 'meme',
+  className: 'meme memeSmall',
   fontSize: 30,
 
   initialize: function () {
@@ -52,13 +53,13 @@ var MemeView = Backbone.View.extend({
 
   createMessages: function() {
     var result = [];
-    var messages = this.model.get('messages')
-    for (var i = 0; i < messages.length; i++) {
-      var message = messages[i];
+    var messages = this.model.get('messages');
+    for (var where in messages) {
+      if (!messages[where]) continue;
       var messageEl = $('<div class="message"></div>');
-      messageEl.addClass(message.css);
+      messageEl.addClass(where + '-center');
       // MemeDao has already escaped them, just to be sure.
-      var text = message.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      var text = messages[where].replace(/</g, '&lt;').replace(/>/g, '&gt;');
       var lines = text.split('\n');
       messageEl.html(lines.join('<br/>'));
       result.push(messageEl);
@@ -72,7 +73,7 @@ var MemeView = Backbone.View.extend({
     var src = this.model.get('src');
     var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('src', src);
-    var text = _.map(this.model.get('messages'), function (el) {return el.text}).join(' ');
+    var text = _.values(this.model.get('messages')).join(' ');
     // MemeDao has already escaped them, just to be sure.
     text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('alt', text);

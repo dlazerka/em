@@ -15,9 +15,12 @@ var MemePreview = MemeView.extend({
     this.$el.empty();
     if (!this.model.get('src')) {
       this.$el.html('<div class="emptyImage"></div>');
+      $('#uploadHelperText').show();
+      $('#top,#center,#bottom').val('');
     } else {
       this.$el.append(this.createMessages());
       this.$el.append(this.createImg());
+      $('#uploadHelperText').hide();
     }
     $('#preview').html(this.$el);
   },
@@ -28,8 +31,9 @@ var Create = {
     this.meme = new Meme();
     this.memeView = new MemePreview({model: this.meme});
     this.memeView.render();
-    $('#topText,#centerText,#bottomText').keyup($.proxy(this.updateTexts, this));
+    $('#top,#center,#bottom').keyup($.proxy(this.updateTexts, this));
     $('#uploadFile').change($.proxy(this.onFileFieldChange, this));
+    $('#submit').click($.proxy(this.onSubmitClick, this));
   },
 
   /** @returns true if event was consumed */
@@ -37,7 +41,6 @@ var Create = {
     if ($('.upload').css('display') == 'none') {
       return false;
     }
-    $('#uploadHelperText').hide();
     var src = memeView.model.get('src');
     var blobKey = memeView.model.get('blobKey');
     this.setImage(src, blobKey);
@@ -56,19 +59,10 @@ var Create = {
   },
 
   updateTexts: function() {
-    var messages = [];
-    if ($('#topText').val()) {
-      messages.push({text: $('#topText').val(), css: 'top-center'});
-    }
-    if ($('#centerText').val()) {
-      messages.push({text: $('#centerText').val(), css: 'center-center'});
-    }
-    if ($('#bottomText').val()) {
-      messages.push({text: $('#bottomText').val(), css: 'bottom-center'});
-    }
-    if (messages.length) {
-      this.meme.set('messages', messages);
-    }
+    var messages = this.meme.get('messages');
+    messages['top'] = $('#top').val() || null;
+    messages['center'] = $('#center').val() || null;
+    messages['bottom'] = $('#bottom').val() || null;
     this.memeView.$('.message').remove();
     var messageEls = this.memeView.createMessages();
     this.memeView.$el.append(messageEls);
@@ -135,6 +129,35 @@ var Create = {
 
   onUploadProgessEvent: function() {
     // TODO
+  },
+
+  onSubmitClick: function() {
+    $('#submit').prop('disabled', true);
+    $('#submit').text('Saving...');
+    var meme = this.meme.clone();
+    var attrs = {};
+    var options = {
+        success: $.proxy(this.onSaved, this),
+        error: $.proxy(this.onError, this)
+    };
+    meme.save(attrs, options);
+    AppRouter.onMemeAdded(meme);
+  },
+
+  onSaved: function(model, resp) {
+    $('#submit').prop('disabled', false);
+    $('#submit').text('Submit');
+    this.meme.set('src', null);
+    this.meme.set('blobKey', null);
+    this.meme.set('top', null);
+    this.meme.set('center', null);
+    this.meme.set('bottom', null);
+    this.memeView.render();
+  },
+
+  onError: function() {
+    $('#submit').prop('disabled', false);
+    $('#submit').text('Submit');
   }
 
 };
