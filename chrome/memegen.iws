@@ -2,15 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa3c4ddd-af01-4750-b754-849899c7cbb0" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.settings/com.google.appengine.eclipse.core.prefs" afterPath="$PROJECT_DIR$/../.settings/com.google.appengine.eclipse.core.prefs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../.settings/com.google.gwt.eclipse.core.prefs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../.settings/org.eclipse.jdt.ui.prefs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../war/WEB-INF/lib/commons-lang3-3.1-sources.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../war/WEB-INF/lib/commons-lang3-3.1.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/AdhocServlet.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/MemeDao.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../war/js/create.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../war/robots.txt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/js/model/list.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/AdminUploadServlet.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../war/js/model/upload.js" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../war/index.jsp" afterPath="$PROJECT_DIR$/../war/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.settings/org.eclipse.jdt.core.prefs" afterPath="$PROJECT_DIR$/../.settings/org.eclipse.jdt.core.prefs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TODO" afterPath="$PROJECT_DIR$/../TODO" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.classpath" afterPath="$PROJECT_DIR$/../.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/background.js" afterPath="$PROJECT_DIR$/background.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/model/meme.js" afterPath="$PROJECT_DIR$/js/model/meme.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manifest.json" afterPath="$PROJECT_DIR$/manifest.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/memegen.iws" afterPath="$PROJECT_DIR$/memegen.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/popup.html" afterPath="$PROJECT_DIR$/popup.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/ImageServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/ImageServlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/MainServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/MainServlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/MemeServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/MemeServlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/MemesServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/MemesServlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/UploadServlet.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/UploadServlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/com/epam/memegen/Util.java" afterPath="$PROJECT_DIR$/../src/com/epam/memegen/Util.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../war/WEB-INF/appengine-web.xml" afterPath="$PROJECT_DIR$/../war/WEB-INF/appengine-web.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../war/index.jsp" afterPath="$PROJECT_DIR$/../war/index.jsp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../war/WEB-INF/web.xml" afterPath="$PROJECT_DIR$/../war/WEB-INF/web.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../war/css/main.css" afterPath="$PROJECT_DIR$/../war/css/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../war/js/model/app.js" afterPath="$PROJECT_DIR$/../war/js/model/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../war/js/model/meme.js" afterPath="$PROJECT_DIR$/../war/js/model/meme.js" />
     </list>
     <ignored path="memegen.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,10 +89,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="popup.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="popup.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/popup.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="112" column="15" selection-start="2781" selection-end="2781" vertical-scroll-proportion="-27.208334">
+            <state line="154" column="43" selection-start="3283" selection-end="3283" vertical-scroll-proportion="2.851852">
               <folding />
             </state>
           </provider>
@@ -98,16 +119,7 @@
       <file leaf-file-name="popup.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/popup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="26" selection-start="950" selection-end="950" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="backbone.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/lib/backbone.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="343" column="13" selection-start="12037" selection-end="12037" vertical-scroll-proportion="0.0">
+            <state line="15" column="54" selection-start="507" selection-end="507" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -140,10 +152,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="meme.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="meme.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/model/meme.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="65" selection-start="459" selection-end="459" vertical-scroll-proportion="0.40640393">
+            <state line="80" column="46" selection-start="2219" selection-end="2219" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -152,7 +164,7 @@
       <file leaf-file-name="manifest.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manifest.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="23" selection-start="598" selection-end="598" vertical-scroll-proportion="0.0">
+            <state line="2" column="20" selection-start="50" selection-end="50" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -181,9 +193,9 @@
         <option value="$PROJECT_DIR$/popup.js" />
         <option value="$PROJECT_DIR$/background.js" />
         <option value="$PROJECT_DIR$/contentscript.js" />
-        <option value="$PROJECT_DIR$/popup.html" />
         <option value="$PROJECT_DIR$/js/model/meme.js" />
         <option value="$PROJECT_DIR$/manifest.json" />
+        <option value="$PROJECT_DIR$/popup.html" />
       </list>
     </option>
   </component>
@@ -229,6 +241,9 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane">
+        <subPane />
+      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -290,9 +305,6 @@
             </PATH_ELEMENT>
           </PATH>
         </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane />
       </pane>
     </panes>
   </component>
@@ -516,11 +528,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/model/list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="30" selection-start="866" selection-end="866" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavascriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/HTML5.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1235" column="0" selection-start="21973" selection-end="21973" vertical-scroll-proportion="0.33286318" />
@@ -546,6 +553,11 @@
         <state line="2" column="43" selection-start="156" selection-end="156" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/lib/backbone.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1202" column="6" selection-start="44719" selection-end="44719" vertical-scroll-proportion="0.33251232" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/options.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="23" column="97" selection-start="588" selection-end="681" vertical-scroll-proportion="0.0" />
@@ -556,9 +568,9 @@
         <state line="35" column="8" selection-start="1093" selection-end="1093" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/lib/backbone.js">
+    <entry file="file://$PROJECT_DIR$/popup.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="343" column="13" selection-start="12037" selection-end="12037" vertical-scroll-proportion="0.0" />
+        <state line="15" column="54" selection-start="507" selection-end="507" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/lib/jquery.js">
@@ -576,30 +588,19 @@
         <state line="5" column="51" selection-start="199" selection-end="199" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/model/meme.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="46" selection-start="2219" selection-end="2219" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/manifest.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="23" selection-start="598" selection-end="598" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="2" column="20" selection-start="50" selection-end="50" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/popup.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="112" column="15" selection-start="2781" selection-end="2781" vertical-scroll-proportion="-27.208334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/popup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="26" selection-start="950" selection-end="950" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/model/meme.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="65" selection-start="459" selection-end="459" vertical-scroll-proportion="0.40640393">
+        <state line="154" column="43" selection-start="3283" selection-end="3283" vertical-scroll-proportion="2.851852">
           <folding />
         </state>
       </provider>

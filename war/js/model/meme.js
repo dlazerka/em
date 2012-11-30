@@ -2,13 +2,14 @@
 
 var Meme = Backbone.Model.extend({
   defaults: {
-    id: 0,
+    id: null,
     blobKey: null,
-    src: 'empty.gif',
-    date: (new Date),
-    template: 'template1',
-    messages: [{text: '', css: 'top-center'}],
-    font: 'Impact'
+    src: '',
+    messages: {
+       top: null,
+       center: null,
+       bottom: null
+    }
   },
   urlRoot: '/meme'
 });
@@ -19,60 +20,81 @@ var Memes = Backbone.Collection.extend({
 });
 
 var MemeView = Backbone.View.extend({
-  tagName: 'span',
-  className: 'meme',
+  tagName: 'div',
+  className: 'meme memeSmall',
   fontSize: 30,
 
-  template: function(obj) {
-    var output = '';
-
-    _.each(obj.messages, function(message) {
-      var longCss = message.text.length > 15 ? ' long' : ''; 
-      output += '<div class="message ' + message.css + longCss + '">' + message.text + '</div>';
-    });
-
-    output += '<img src="' + obj.src + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
-
-    return output;
-  },
-
   initialize: function () {
-    this.render();
   },
 
   events: {
-    'click' : 'onclick' 
+    'click' : 'onclick'
   },
 
   onclick: function(event) {
-    if (!Upload.onMemeClick(event, this)) {
+    // Go to meme only if meme creation dialog is inactive.
+    if (!Create.onMemeClick(event, this)) {
       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
     }
   },
 
-  render: function(fontSize) {
-    this.$el.html(
-      this.template({
-        src: this.model.get('src'),
-        text: _.map(this.model.get('messages'), function (el) {return el.text}).join(' '),
-        messages: this.model.get('messages')
-      }));
-
-    var element = this.$el;
+  positionMessages: function(fontSize) {
     fontSize = fontSize || this.fontSize;
-    $(element).hide();
-    $('img', element).load(function() {
-      $(element).show();
-      $('div', element).map(function() {
-        var parentWidth = $(element).width();
-        $(this).css('display', 'block');
-        var width = $(this).width();
-        if (parentWidth < width) {
-          $(this).css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
-        }
-        $(this).width(parentWidth);
-      });
+    var parentWidth = this.$el.width();
+    this.$('.message').map(function(i, el) {
+      el = $(el);
+      var width = el.width();
+      if (parentWidth < width) {
+        el.css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
+      }
+      el.width(parentWidth);
     });
+  },
+
+  createMessages: function() {
+    var result = [];
+    var messages = this.model.get('messages');
+    for (var where in messages) {
+      if (!messages[where]) continue;
+      var messageEl = $('<div class="message"></div>');
+      messageEl.addClass(where + '-center');
+      // MemeDao has already escaped them, just to be sure.
+      var text = messages[where].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      var lines = text.split('\n');
+      messageEl.html(lines.join('<br/>'));
+      result.push(messageEl);
+    }
+    return result;
+  },
+
+  createImg: function() {
+    var img = $('<img/>');
+    // MemeDao must have not composed it with <>, just to be sure.
+    var src = this.model.get('src');
+    var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    img.attr('src', src);
+    var text = _.values(this.model.get('messages')).join(' ');
+    // MemeDao has already escaped them, just to be sure.
+    text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    img.attr('alt', text);
+    img.attr('title', text);
+    return img;
+  },
+
+  render: function(fontSize) {
+    this.$el.empty();
+
+    var messageEls = this.createMessages();
+
+    var img = this.createImg();
+    this.$el.hide();
+    img.load($.proxy(function() {
+      this.$el.show();
+      this.positionMessages();
+    }, this));
+
+    this.$el.append(messageEls);
+    this.$el.append(img);
 
     return this;
   },

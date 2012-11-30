@@ -64,18 +64,18 @@ a {
   width: 300px;
   display: none;
 }
-.upload form {
+.upload .form {
   float: left;
 }
 
-.upload form textarea,
+.upload .form textarea,
 .preview {
   min-width: 300px;
   margin: 0;
   padding: 0px;
 }
 
-.upload form textarea {
+.upload .form textarea {
   padding: 2px;
   height: 57px;
   border: 1px gray solid;
@@ -90,15 +90,24 @@ img.preview {
 }
 
 .meme {
-  display: inline-block;
+  float: left;
   margin-right: 20px;
   margin-bottom: 20px;
   position: relative;
+}
+
+.memePreview {
+}
+
+.meme .emptyImage {
+  width: 300px;
   height: 200px;
+  border: 1px gray solid;
 }
 
 .meme.memeSmall {
-    cursor: pointer;
+  cursor: pointer;
+  height: 200px;
 }
 
 .meme img {
@@ -117,21 +126,11 @@ img.preview {
   color: #fff;
   font-family: Impact;
   font-size: 30px;
-  -webkit-text-fill-color: white;
-  -webkit-text-stroke-color: #444;
-  -webkit-text-stroke-width: 1px;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
   white-space: nowrap;
-  display: none;
-  cursor: pointer;  
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
 }
-
-.meme.memeBig .message {
-  -webkit-text-stroke-width: 2px;
-}
-
-.meme.memeBig .message.long {
-  -webkit-text-stroke-width: 1px;
-  }
 
 .meme .top-left {
   position: absolute;
@@ -197,7 +196,6 @@ img.preview {
     bottom: 20px;
 }
 
-
 .meme.memeBig {
   height: auto;
 }
@@ -209,4 +207,3 @@ img.preview {
 .meme.memeBig .message {
   font-size: 50px;
 }
-

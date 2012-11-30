@@ -12,19 +12,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.blobstore.UploadOptions;
 import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
-  private static final Logger logger = Logger.getLogger(AdminUploadServlet.class.getName());
-  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private static final Logger logger = Logger.getLogger(UploadServlet.class.getName());
+  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private final Util util = new Util();
 
   /** Creates and returns a new upload url. */
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("text/plain");
-    String uploadUrl = createUploadUrl();
+    String uploadUrl = util.createUploadUrl();
     resp.getWriter().write(uploadUrl);
   }
 
@@ -42,7 +42,7 @@ public class UploadServlet extends HttpServlet {
     JsonWriter jsonWriter = new JsonWriter(resp.getWriter());
     jsonWriter.setIndent("  ");
     jsonWriter.beginObject();
-    String uploadUrl = createUploadUrl();
+    String uploadUrl = util.createUploadUrl();
     jsonWriter.name("newUploadUrl").value(uploadUrl);
     jsonWriter.name("uploads");
     jsonWriter.beginArray();
@@ -57,12 +57,5 @@ public class UploadServlet extends HttpServlet {
     jsonWriter.endArray();
     jsonWriter.endObject();
     jsonWriter.close();
-  }
-
-  private String createUploadUrl() {
-    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 20);
-    String contextPath = getServletContext().getContextPath();
-    String uploadUrl = blobstoreService.createUploadUrl(contextPath, uploadOptions);
-    return uploadUrl;
   }
 }

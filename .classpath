@@ -3,8 +3,13 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+<<<<<<< HEAD
+=======
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+>>>>>>> a147ba9ba2c33ce2bff7b9c2da96ea65fc0433f5
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-io-2.4.jar" sourcepath="war/WEB-INF/lib/commons-io-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-2.2.2.jar" sourcepath="war/WEB-INF/lib/gson-2.2.2-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-lang3-3.1.jar" sourcepath="war/WEB-INF/lib/commons-lang3-3.1-sources.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
