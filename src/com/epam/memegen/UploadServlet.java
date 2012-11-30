@@ -16,7 +16,7 @@ import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class UploadServlet extends HttpServlet {
-  private static final Logger logger = Logger.getLogger(AdminUploadServlet.class.getName());
+  private static final Logger logger = Logger.getLogger(UploadServlet.class.getName());
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   private final Util util = new Util();
 

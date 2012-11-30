@@ -43,12 +43,12 @@
     <url-pattern>/upload</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>AdminUpload</servlet-name>
-    <servlet-class>com.epam.memegen.AdminUploadServlet</servlet-class>
+    <servlet-name>Adhoc</servlet-name>
+    <servlet-class>com.epam.memegen.AdhocServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AdminUpload</servlet-name>
-    <url-pattern>/admin/upload</url-pattern>
+    <servlet-name>Adhoc</servlet-name>
+    <url-pattern>/admin/adhoc</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>SystemServiceServlet</servlet-name>
@@ -62,7 +62,7 @@
     <servlet-name>SystemServiceServlet</servlet-name>
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
-  <!-- 
+  <!--
   <security-constraint>
     <web-resource-collection>
       <url-pattern>/*</url-pattern>
@@ -81,8 +81,8 @@
     <auth-constraint>
       <role-name>admin</role-name>
     </auth-constraint>
-    <user-data-constraint>
+    <!-- user-data-constraint>
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
+    </user-data-constraint-->
   </security-constraint>
 </web-app>
