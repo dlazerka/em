@@ -100,9 +100,9 @@ public class MemeDao {
     }
 
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
+    int limit = Integer.MAX_VALUE;
     if (top != null) {
-      int t = Integer.parseInt(top);
-      options.limit(t);
+      limit = Integer.parseInt(top);
     }
 
     PreparedQuery prepared = datastore.prepare(q);
@@ -116,6 +116,9 @@ public class MemeDao {
     for (Entity entity : iterable) {
       if (entity.getProperty("deleted") != null) {
         continue;
+      }
+      if (limit-- <= 0) {
+        break;
       }
       Date date = (Date) entity.getProperty("date");
       if (youngest == null || youngest.before(date)) {
