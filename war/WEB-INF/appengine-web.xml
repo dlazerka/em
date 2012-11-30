@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
   <application>epammeme</application>
-<<<<<<< HEAD
-  <version>4-plugin-install</version>
-=======
   <version>5-consistensy</version>
->>>>>>> a147ba9ba2c33ce2bff7b9c2da96ea65fc0433f5
 
   <!--
     Allows App Engine to send multiple requests to one instance in parallel:
