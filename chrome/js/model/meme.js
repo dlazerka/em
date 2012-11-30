@@ -20,14 +20,14 @@ var MemeView = Backbone.View.extend({
 	tagName: 'span',
 	className: 'meme',
 	template: function(obj) {
-        var output = '';
+        var output = '<a href="http://epammeme.appspot.com/#meme/' + this.model.get('id') + '" target="_blank">';
 
         _.each(obj.messages, function(message) {
             output += '<div class="message ' + message.css + '">' + message.text + '</div>';
         });
 
         output += '<img src="http://epammeme.appspot.com/' + obj.image + '" alt="' + obj.text + '" title="' + obj.text + '"/>';
-        output += '<span>by ' + obj.author + '</span>';
+        output += '<span>by ' + obj.author + '</span></a>';
 
         return output;
     },
@@ -35,6 +35,14 @@ var MemeView = Backbone.View.extend({
 	initialize: function () {
 		this.render();
 	},
+
+    events: {
+        'click' : 'onclick'
+    },
+
+    onclick: function(event) {
+       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
+    },
 
 	render: function() {
 
