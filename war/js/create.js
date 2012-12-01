@@ -49,7 +49,7 @@ var Create = {
     // and we cannot assign "onload" event because the image is already in cache.
     var w = memeView.$('img').width();
     var h = memeView.$('img').height();
-    var proportionalWidth = w * h / 200;
+    var proportionalWidth = w * 200 / h;
     var img = this.memeView.$('img');
     img.width(proportionalWidth);
     img.height(200);
