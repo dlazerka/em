@@ -18,7 +18,13 @@ var Meme = Backbone.Model.extend({
         'center': this.get('center'),
         'bottom': this.get('bottom')
     };
-  }
+  },
+
+  validate: function(attrs, options) {
+    if (!attrs.blobKey) {
+      return 'No image';
+    }
+  },
 });
 
 var Memes = Backbone.Collection.extend({

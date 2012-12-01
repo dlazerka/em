@@ -70,13 +70,13 @@ var Create = {
   },
 
   setImage: function(src, blobKey) {
-      $('#uploadHelperText').hide();
+    $('#uploadHelperText').hide();
 
-      this.meme.set('src', src);
-      this.meme.set('blobKey', blobKey);
-      this.memeView.render();
+    this.meme.set({'src': src, 'blobKey': blobKey});
+    this.memeView.render();
+    this.updateMessages();
 
-      $('form [name="blobKey"]').val(blobKey);
+    $('form [name="blobKey"]').val(blobKey);
   },
 
   /** @param event {ChangeEvent} */
@@ -152,14 +152,21 @@ var Create = {
   },
 
   onError: function(originalModel, resp, options) {
-    var msg = resp.statusText;
-    try {
-      msg = JSON.parse(resp.responseText).message;
-    } catch (e) {
-      window.console.log(e);
+    if (_.isString(resp)) {
+      // Validation error.
+      msg = resp;
+    } else {
+      var msg = resp.statusText;
+      try {
+        msg = JSON.parse(resp.responseText).message;
+      } catch (e) {
+        window.console.log(e);
+      }
     }
     Msg.error('Error: ' + msg);
     $('#submit').prop('disabled', false);
+    this.meme.set(this.meme.defaults);
+    this.memeView.render();
   }
 
 };
