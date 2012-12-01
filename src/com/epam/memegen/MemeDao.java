@@ -198,7 +198,6 @@ public class MemeDao {
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
 
-    w.name("messages").beginObject();
     String topText = (String) meme.getProperty("topText");
     String centerText = (String) meme.getProperty("centerText");
     String bottomText = (String) meme.getProperty("bottomText");
@@ -212,7 +211,6 @@ public class MemeDao {
       w.name("bottom").value(StringEscapeUtils.escapeHtml4(bottomText));
     }
     w.endObject();
-    w.endObject();
   }
 
   public String create(JsonElement jsonElement) throws IOException {
@@ -223,10 +221,9 @@ public class MemeDao {
 
     try {
       JsonObject jsonObject = jsonElement.getAsJsonObject();
-      JsonObject messages = jsonObject.getAsJsonObject("messages");
-      JsonElement topJE = messages.get("top");
-      JsonElement centerJE = messages.get("center");
-      JsonElement bottomJE = messages.get("bottom");
+      JsonElement topJE = jsonObject.get("top");
+      JsonElement centerJE = jsonObject.get("center");
+      JsonElement bottomJE = jsonObject.get("bottom");
       JsonElement blobKeyJE = jsonObject.get("blobKey");
       if (topJE != null && topJE.isJsonPrimitive()) {
         top = topJE.getAsString();

@@ -31,7 +31,7 @@ var Create = {
     this.meme = new Meme();
     this.memeView = new MemePreview({model: this.meme});
     this.memeView.render();
-    $('#top,#center,#bottom').keyup($.proxy(this.updateTexts, this));
+    $('#top,#center,#bottom').keyup($.proxy(this.updateMessages, this));
     $('#uploadFile').change($.proxy(this.onFileFieldChange, this));
     $('#submit').click($.proxy(this.onSubmitClick, this));
   },
@@ -58,11 +58,11 @@ var Create = {
     return true;
   },
 
-  updateTexts: function() {
+  updateMessages: function() {
     var messages = this.meme.get('messages');
-    messages['top'] = $('#top').val() || null;
-    messages['center'] = $('#center').val() || null;
-    messages['bottom'] = $('#bottom').val() || null;
+    this.meme.set('top', $('#top').val() || null);
+    this.meme.set('center', $('#center').val() || null);
+    this.meme.set('bottom', $('#bottom').val() || null);
     this.memeView.$('.message').remove();
     var messageEls = this.memeView.createMessages();
     this.memeView.$el.append(messageEls);
@@ -147,11 +147,7 @@ var Create = {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);
     $('#submit').prop('disabled', false);
-    this.meme.set('src', null);
-    this.meme.set('blobKey', null);
-    this.meme.set('top', null);
-    this.meme.set('center', null);
-    this.meme.set('bottom', null);
+    this.meme.set(this.meme.defaults);
     this.memeView.render();
   },
 
