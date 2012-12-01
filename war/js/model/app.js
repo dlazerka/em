@@ -30,6 +30,7 @@ var AppRouterClass = Backbone.Router.extend({
     button.prop('disabled', false).show();
     button.on('click', $.proxy(function() {
       $('#delete').prop('disabled', true);
+      Msg.info('Deleting...');
       meme.destroy({success: $.proxy(this.onSuccessDestroy_, this)})
     }, this))
   },
@@ -43,6 +44,7 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   onSuccessDestroy_: function(model, resp) {
+    Msg.info('Deleted!', 1500);
     this.memes.remove(model);
     Backbone.history.navigate('', true);
   }
