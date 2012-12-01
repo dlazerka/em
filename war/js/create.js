@@ -132,8 +132,8 @@ var Create = {
   },
 
   onSubmitClick: function() {
+    Msg.info('Saving...');
     $('#submit').prop('disabled', true);
-    $('#submit').text('Saving...');
     var meme = this.meme.clone();
     var attrs = {};
     var options = {
@@ -141,12 +141,12 @@ var Create = {
         error: $.proxy(this.onError, this)
     };
     meme.save(attrs, options);
-    AppRouter.onMemeAdded(meme);
   },
 
   onSaved: function(model, resp) {
+    AppRouter.onMemeAdded(model);
+    Msg.info('Saved!', 5000);
     $('#submit').prop('disabled', false);
-    $('#submit').text('Submit');
     this.meme.set('src', null);
     this.meme.set('blobKey', null);
     this.meme.set('top', null);
@@ -155,9 +155,15 @@ var Create = {
     this.memeView.render();
   },
 
-  onError: function() {
+  onError: function(originalModel, resp, options) {
+    var msg = resp.statusText;
+    try {
+      msg = JSON.parse(resp.responseText).message;
+    } catch (e) {
+      window.console.log(e);
+    }
+    Msg.error('Error: ' + msg);
     $('#submit').prop('disabled', false);
-    $('#submit').text('Submit');
   }
 
 };
