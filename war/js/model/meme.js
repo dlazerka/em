@@ -19,7 +19,6 @@ var Meme = Backbone.Model.extend({
         'bottom': this.get('bottom')
     };
   }
-
 });
 
 var Memes = Backbone.Collection.extend({

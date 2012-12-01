@@ -22,20 +22,24 @@
     </script>
   </head>
 
-  <body onload="init();">
+  <body>
 
   <div id="msg" class="msg" style="display: none;"></div>
 
-  <h1 id="header">&lt;epam:<span>m</span><span>e</span><span>m</span><span>e</span><span>s</span>&gt;</h1>
+  <h1 id="header">&lt;EPAMems&gt;</h1>
 
     <div id="epam-memegen-install-button" style="display:none;position:absolute;top:0;right:10px;font: 12px Tahoma">
       <span onclick="chrome.webstore.install()" style="text-decoration:underline;color: blue; cursor:pointer;">Don't miss a single meme - install Chrome Plugin</span>
-      <img src="chrome-icon.png" onclick="chrome.webstore.install()">
     </div>
-      
+
     <div id="side_bar">
       <button id="showCreateDialog" onclick="$('.upload').toggle()">
-        Создать
+        Create
+      </button>
+      <br/>
+      <br/>
+      <button id="delete" style="display: none;">
+        Delete
       </button>
     </div>
 
@@ -46,8 +50,8 @@
             <div id="preview" class="preview"></div>
             <div id="uploadHelperText" class="uploadHelperText">
                 <a href="javascript:$('#uploadFile').click()"
-                    >Загрузить</a> новую картину,<br/>
-                или кликни по любому мему.<!-- ,<br/>
+                    >Upload</a> new image,<br/>
+                or click on any meme.<!-- ,<br/>
                 или перетащи со стола.<br/>
                 Сделай хоть что-нибудь.
                 -->

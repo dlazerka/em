@@ -218,6 +218,7 @@ img.preview {
 
 .meme.memeBig img {
   height: auto;
+  min-height: 500px;
 }
 
 .meme.memeBig .message {
