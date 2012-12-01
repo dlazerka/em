@@ -1,16 +1,26 @@
 {
     "name": "EPAM Memegen",
-    "version": "2.9",
+    "version": "2.14",
     "manifest_version": 2,
     "icons" : {
         "128" : "troll.png"
     },
     "description": "http://epammeme.appspot.com/",
     "browser_action": {
-        "default_icon": "troll_small.png",
+        "default_icon": "troll.jpeg",
         "default_popup": "popup.html"
     },
     "options_page": "options.html",
+    "content_scripts" : [
+      {
+        "matches" : [
+          "http://epammeme.appspot.com/"
+        ],
+        "js" : ["contentscript.js"],
+        "run_at" : "document_idle",
+        "all_frames" : false
+      }
+    ],
     "background" : {
         "scripts": ["js/lib/jquery.js", "js/lib/underscore.js", "js/lib/backbone.js", "js/model/meme.js", "background.js"]
     },

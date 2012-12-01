@@ -10,106 +10,150 @@
         <span>by <%= author %></span>
     </script>
     <style>
-        body {
-            min-width: 300px;
-            overflow-x: hidden;
-        }
+    body {
+        margin: 0;
+        padding: 5px;
+        color: #333;
+        font-family: arial, sans-serif;
+        min-width: 300px;
+    }
 
-        img {
-            border: 1px solid black;
-            vertical-align: middle;
-        }
+    a {
+        color: #15c;
+    }
 
-        .meme {
-            display: inline-block;
-            margin-bottom: 20px;
-            position: relative;
-            width: 280px;
-        }
+    #main_area {
 
-        .meme img {
-            display: inline-block;
-            width: 280px;
-        }
+    }
 
-        .meme span {
-            display: none;
-            float: left;
-            padding-bottom: 20px;
-        }
+    .meme {
+        margin-bottom: 20px;
+        position: relative;
+    }
 
-        .meme .message {
-		    color: #fff;
-		    font-family: Impact;
-		    font-size: 30px;
-		    -webkit-text-fill-color: white;
-		    -webkit-text-stroke-color: #222;
-		    -webkit-text-stroke-width: 1px;
-		    white-space: nowrap;
-		    display: none;
-		    cursor: pointer;  
-        }
+    .meme .emptyImage {
+        width: 300px;
+        height: 200px;
+        border: 1px gray solid;
+    }
 
-        .meme .top-left {
-            position: absolute;
-            text-align: left;
-        }
+    .meme.memeSmall {
+        cursor: pointer;
+        height: 200px;
+    }
 
-        .meme .top-center {
-            position: absolute;
-            text-align: center;
-        }
+    .meme img {
+        display: inline-block;
+        height: 200px;
+        border: 1px gray solid;
+    }
 
-        .meme .top-right {
-            position: absolute;
-            text-align: left;
-        }
+    .meme span {
+        display: none;
+        float: left;
+        padding-bottom: 20px;
+    }
 
-        .meme .center-left {
-            position: absolute;
-            text-align: left;
-            top: 50%;
-        }
+    .meme .message {
+        color: #fff;
+        font-family: Impact;
+        font-size: 30px;
+        text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
+        white-space: nowrap;
+        cursor: pointer;
+        -webkit-font-smoothing: antialiased;
+    }
 
-        .meme .center-center {
-            position: absolute;
-            text-align: center;
-            top: 50%;
-        }
+    .meme .top-left {
+        position: absolute;
+        text-align: left;
+        top: 5px;
+    }
 
-        .meme .center-right {
-            position: absolute;
-            text-align: left;
-            top: 50%;
-        }
+    .meme .top-center {
+        position: absolute;
+        text-align: center;
+        top: 5px;
+    }
 
-        .meme .bottom-left {
-            position: absolute;
-            text-align: left;
-            bottom: 0;
-        }
+    .meme .top-right {
+        position: absolute;
+        text-align: left;
+        top: 5px;
+    }
 
-        .meme .bottom-center {
-            position: absolute;
-            text-align: center;
-            bottom: 0;
-        }
+    .meme .center-left {
+        position: absolute;
+        text-align: left;
+        top: 50%;
+        margin-top: -15px;
+        line-height: 30px;
+    }
 
-        .meme .bottom-right {
-            position: absolute;
-            text-align: left;
-            bottom: 0;
-        }
+    .meme .center-center {
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        margin-top: -15px;
+        line-height: 30px;
+    }
+
+    .meme .center-right {
+        position: absolute;
+        text-align: left;
+        top: 50%;
+        margin-top: -15px;
+        line-height: 30px;
+    }
+
+    .meme .bottom-left {
+        position: absolute;
+        text-align: left;
+        bottom: 5px;
+    }
+
+    .meme .bottom-center {
+        position: absolute;
+        text-align: center;
+        bottom: 5px;
+    }
+
+    .meme .bottom-right {
+        position: absolute;
+        text-align: left;
+        bottom: 5px;
+    }
+
+    .meme.memeBig .bottom-center {
+        bottom: 20px;
+    }
+
+    .meme.memeBig {
+        height: auto;
+    }
+
+    .meme.memeBig img {
+        height: auto;
+    }
+
+    .meme.memeBig .message {
+        font-size: 50px;
+    }
+
     </style>
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/underscore.js"></script>
     <script src="js/lib/backbone.js"></script>
 </head>
 <body>
+<div>
 <a href="http://epammeme.appspot.com" target="_blank" style="color: #0000cd;">View all</a> |
 <a href="http://epammeme.appspot.com" target="_blank" style="color: #0000cd;">Create meme</a>
+</div>
 <div id="main_area" style="padding-top: 10px;"></div>
 <script src="js/model/meme.js"></script>
 <script src="popup.js"></script>
+<br/>
+<a href="http://epammeme.appspot.com" target="_blank" style="color: #0000cd;">Login to see all memes</a>
 </body>
 </html>

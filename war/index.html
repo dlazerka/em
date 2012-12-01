@@ -8,14 +8,31 @@
     <script type="text/javascript" src="js/lib/underscore.js"></script>
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/backbone.js"></script>
+    <link rel="chrome-webstore-item"
+    href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
+    <script type="text/javascript">
+      function init() {
+    	setTimeout(function() {
+      	  if (document.getElementById('epam-memegen-extension-is-installed')) {
+      		alert("installed");
+      	  } else {
+      		document.getElementById('epam-memegen-install-button').style.removeProperty("display");
+      	  }}, 1000);
+      }
+    </script>
   </head>
 
-  <body>
+  <body onload="init();">
 
   <div id="msg" class="msg" style="display: none;"></div>
 
   <h1 id="header">&lt;epam:<span>m</span><span>e</span><span>m</span><span>e</span><span>s</span>&gt;</h1>
 
+    <div id="epam-memegen-install-button" style="display:none;position:absolute;top:0;right:10px;font: 12px Tahoma">
+      <span onclick="chrome.webstore.install()" style="text-decoration:underline;color: blue; cursor:pointer;">Don't miss a single meme - install Chrome Plugin</span>
+      <img src="chrome-icon.png" onclick="chrome.webstore.install()">
+    </div>
+      
     <div id="side_bar">
       <button id="showCreateDialog" onclick="$('.upload').toggle()">
         Создать
