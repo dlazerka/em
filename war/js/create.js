@@ -145,7 +145,7 @@ var Create = {
 
   onSaved: function(model, resp) {
     AppRouter.onMemeAdded(model);
-    Msg.info('Saved!', 5000);
+    Msg.info('Saved!', 1500);
     $('#submit').prop('disabled', false);
     this.meme.set('src', null);
     this.meme.set('blobKey', null);

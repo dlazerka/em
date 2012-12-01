@@ -14,6 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
 public class MemeServlet extends HttpServlet {
@@ -47,47 +48,18 @@ public class MemeServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    String top = null;
-    String center = null;
-    String bottom = null;
-    String blobKey;
     try {
-      JsonElement element = new JsonParser().parse(req.getReader());
-      JsonObject jsonObject = element.getAsJsonObject();
-      JsonObject messages = jsonObject.getAsJsonObject("messages");
-      if (messages.has("top")) {
-        top = messages.get("top").getAsString();
-      }
-      if (messages.has("center")) {
-        center = messages.get("center").getAsString();
-      }
-      if (messages.has("bottom")) {
-        bottom = messages.get("bottom").getAsString();
-      }
-      if (jsonObject.has("blobKey")) {
-        blobKey = jsonObject.get("blobKey").getAsString();
-      } else {
-        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No 'blobKey' param");
-        return;
-      }
-    } catch (JsonParseException e) {
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-      return;
-    } catch (ClassCastException e) {
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-      return;
-    } catch (IllegalStateException e) {
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-      return;
-    } catch (NullPointerException e) {
-      logger.log(Level.WARNING, "Maybe just a param is not given", e);
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-      return;
+      JsonElement jsonElement = new JsonParser().parse(req.getReader());
+      String json = memeDao.create(jsonElement);
+      resp.setStatus(HttpServletResponse.SC_OK);
+      resp.getWriter().write(json);
+    } catch (IllegalArgumentException e) {
+      logger.log(Level.WARNING, e.getMessage(), e);
+      writeError(400, e.getMessage(), resp);
+    } catch (IOException e) {
+      logger.log(Level.SEVERE, e.getMessage(), e);
+      writeError(400, e.getMessage(), resp);
     }
-
-    String json = memeDao.create(blobKey, top, center, bottom);
-    resp.setStatus(HttpServletResponse.SC_OK);
-    resp.getWriter().write(json);
   }
 
   @Override
@@ -108,4 +80,12 @@ public class MemeServlet extends HttpServlet {
     }
   }
 
+  private void writeError(int statusCode, String message, HttpServletResponse resp) throws IOException {
+    resp.setStatus(statusCode);
+    resp.setContentType("application/json");
+
+    JsonWriter w = new JsonWriter(resp.getWriter());
+    w.beginObject().name("message").value(message).endObject();
+    w.close();
+  }
 }

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -29,6 +30,9 @@ import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
 import com.google.appengine.api.memcache.MemcacheServiceException;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonWriter;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -209,6 +213,48 @@ public class MemeDao {
     }
     w.endObject();
     w.endObject();
+  }
+
+  public String create(JsonElement jsonElement) throws IOException {
+    String top = null;
+    String center = null;
+    String bottom = null;
+    String blobKey = null;
+
+    try {
+      JsonObject jsonObject = jsonElement.getAsJsonObject();
+      JsonObject messages = jsonObject.getAsJsonObject("messages");
+      JsonElement topJE = messages.get("top");
+      JsonElement centerJE = messages.get("center");
+      JsonElement bottomJE = messages.get("bottom");
+      JsonElement blobKeyJE = jsonObject.get("blobKey");
+      if (topJE != null && topJE.isJsonPrimitive()) {
+        top = topJE.getAsString();
+      }
+      if (centerJE != null && centerJE.isJsonPrimitive()) {
+        center = centerJE.getAsString();
+      }
+      if (bottomJE != null && bottomJE.isJsonPrimitive()) {
+        bottom = bottomJE.getAsString();
+      }
+      if (blobKeyJE != null && blobKeyJE.isJsonPrimitive()) {
+        blobKey = blobKeyJE.getAsString();
+      }
+    } catch (JsonParseException e) {
+      throw new IllegalArgumentException(e);
+    } catch (ClassCastException e) {
+      throw new IllegalArgumentException(e);
+    } catch (IllegalStateException e) {
+      throw new IllegalArgumentException(e);
+    } catch (UnsupportedOperationException e) {
+      throw new IOException(e);
+    }
+
+    if (blobKey == null) {
+      throw new IllegalArgumentException("No 'blobKey' param");
+    }
+
+    return create(blobKey, top, center, bottom);
   }
 
   public String create(String blobKey, String top, String center, String bottom)
