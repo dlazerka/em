@@ -111,8 +111,8 @@ var Create = {
 
   onUploadDone: function(data) {
       // Set new upload URL so we can re-upload.
-      // doesn't work currently
       $('#uploadUrl').val(data.newUploadUrl);
+      Msg.info('Uploaded!', 1500);
 
       var src = data.uploads[0].src;
       var blobKey = data.uploads[0].blobKey;
@@ -127,8 +127,13 @@ var Create = {
       }
   },
 
-  onUploadProgessEvent: function() {
-    // TODO
+  onUploadProgessEvent: function(event) {
+    var msg = 'Uploading...'
+    if (event.lengthComputable) {
+      var percent = Math.round(100 * event.loaded / event.total);
+      msg += ' ' + percent + '%';
+    }
+    Msg.info(msg);
   },
 
   onSubmitClick: function() {
