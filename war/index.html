@@ -9,27 +9,81 @@
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <link rel="chrome-webstore-item"
-    href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
+          href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
     <script type="text/javascript">
+      var PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
+
+      $.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
+
       function init() {
     	setTimeout(function() {
-      	  if (document.getElementById('epam-memegen-extension-is-installed')) {
-      		alert("installed");
+          // Check if plugin is installed by searching for element with id "epam-memegen-extension-is-installed".
+          // If not found - show button.
+      	  if ($('#epam-memegen-extension-is-installed').length) {
+            console.log("EPAM memegen plugin is installed");
       	  } else {
-      		document.getElementById('epam-memegen-install-button').style.removeProperty("display");
+      		$('#epam-memegen-install-button').get(0).style.removeProperty("display");
       	  }}, 1000);
+      }
+
+      function installPlugin() {
+        if ($.browser.chrome) {
+          console.log("This is Chrome, proceeding with inline-install");
+          installPluginChrome();
+        } else {
+          console.log("This is not Chrome, simply redirecting to Chrome Store's page of the plugin");
+          window.location = PLUGIN_URL;
+        }
+      }
+
+      function installPluginChrome() {
+        // This works only in Chrome
+        chrome.webstore.install(
+          PLUGIN_URL,
+          function() {
+            $('#epam-memegen-install-button').hide();
+          },
+          function(err) {
+            // Show error message to user (may be this should be turned off)
+            alert(err);
+          }
+        )
       }
     </script>
   </head>
 
-  <body>
+  <body onload="init();">
 
   <div id="msg" class="msg" style="display: none;"></div>
 
   <h1 id="header">&lt;EPAMems&gt;</h1>
 
-    <div id="epam-memegen-install-button" style="display:none;position:absolute;top:0;right:10px;font: 12px Tahoma">
-      <span onclick="chrome.webstore.install()" style="text-decoration:underline;color: blue; cursor:pointer;">Don't miss a single meme - install Chrome Plugin</span>
+    <style>
+      .plugin-button {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        font: 12px Tahoma;
+      }
+
+      .plugin-link {
+        text-decoration: underline;
+        color: blue;
+        cursor: pointer;
+        vertical-align: middle;
+      }
+
+      .plugin-img {
+        height: 32px;
+        width: 32px;
+        vertical-align: middle;
+      }
+    </style>
+    <div id="epam-memegen-install-button" style="display:none;" class="plugin-button">
+      <img src="chrome-icon.png" class="plugin-img"/>
+      <span onclick="installPlugin();" class="plugin-link">
+          Don't miss a single meme - install Chrome Plugin
+      </span>
     </div>
 
     <div id="side_bar">

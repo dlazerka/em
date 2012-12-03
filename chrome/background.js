@@ -17,8 +17,8 @@ var fetchFreq = 60000;
 var lastSeen = localStorage.getItem("lastSeen") || 0;
 console.log("lastSeen=" + lastSeen);
 
-getMemes();
-setInterval(getMemes, fetchFreq);
+//getMemes();
+//setInterval(getMemes, fetchFreq);
 
 function getMemes() {
     var memes = new Memes();

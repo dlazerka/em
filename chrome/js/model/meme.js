@@ -47,10 +47,7 @@ var MemeView = Backbone.View.extend({
     },
 
     onclick: function(event) {
-        // Go to meme only if meme creation dialog is inactive.
-        if (!Create.onMemeClick(event, this)) {
-            Backbone.history.navigate('http://epammeme.appspot.com/#meme/' + this.model.get('id'), true);
-        }
+        window.open('http://epammeme.appspot.com/#meme/' + this.model.get('id'));
     },
 
     positionMessages: function(fontSize) {
