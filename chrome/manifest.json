@@ -1,6 +1,6 @@
 {
     "name": "EPAM Memegen",
-    "version": "2.16",
+    "version": "2.20",
     "manifest_version": 2,
     "icons" : {
         "128" : "troll_128.png"
@@ -14,7 +14,7 @@
     "content_scripts" : [
       {
         "matches" : [
-            "http://*/"
+            "http://epammeme.appspot.com/"
         ],
         "js" : ["contentscript.js"],
         "run_at" : "document_idle",
