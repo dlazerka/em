@@ -13,13 +13,20 @@ var Meme = Backbone.Model.extend({
         id: null,
         blobKey: null,
         src: '',
-        messages: {
-            top: null,
-            center: null,
-            bottom: null
-        }
+        top: null,
+        center: null,
+        bottom: null
     },
-	urlRoot: 'http://epammeme.appspot.com/meme'
+
+    urlRoot: 'http://epammeme.appspot.com/meme',
+
+    getMessagesMap: function() {
+        return {
+            'top': this.get('top'),
+            'center': this.get('center'),
+            'bottom': this.get('bottom')
+        };
+    }
 });
 
 var Memes = Backbone.Collection.extend({
@@ -58,7 +65,7 @@ var MemeView = Backbone.View.extend({
 
     createMessages: function() {
         var result = [];
-        var messages = this.model.get('messages');
+        var messages = this.model.getMessagesMap();
         for (var where in messages) {
             if (!messages[where]) continue;
             var messageEl = $('<div class="message"></div>');
@@ -78,7 +85,7 @@ var MemeView = Backbone.View.extend({
         var src = 'http://epammeme.appspot.com' + this.model.get('src');
         var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         img.attr('src', src);
-        var text = _.values(this.model.get('messages')).join(' ');
+        var text = _.values(this.model.getMessagesMap()).join(' ');
         // MemeDao has already escaped them, just to be sure.
         text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         img.attr('alt', text);

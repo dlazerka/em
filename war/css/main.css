@@ -9,6 +9,22 @@ div.clear {
   clear: both;
 }
 
+.msg {
+  position: fixed;
+  top: -3px;
+  /** left is calculated by js */
+  border-radius: 3px;
+  background-color: orange;
+  border: 1px gray solid;
+  padding: 3px 10px 1px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.msg.error {
+  background-color: red;
+}
+
 h1#header {
   font-weight: normal;
   font-family: Impact;
@@ -202,6 +218,7 @@ img.preview {
 
 .meme.memeBig img {
   height: auto;
+  min-height: 500px;
 }
 
 .meme.memeBig .message {

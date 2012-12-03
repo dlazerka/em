@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -29,6 +30,9 @@ import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
 import com.google.appengine.api.memcache.MemcacheServiceException;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonWriter;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -100,9 +104,9 @@ public class MemeDao {
     }
 
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
+    int limit = Integer.MAX_VALUE;
     if (top != null) {
-      int t = Integer.parseInt(top);
-      options.limit(t);
+      limit = Integer.parseInt(top);
     }
 
     PreparedQuery prepared = datastore.prepare(q);
@@ -116,6 +120,9 @@ public class MemeDao {
     for (Entity entity : iterable) {
       if (entity.getProperty("deleted") != null) {
         continue;
+      }
+      if (limit-- <= 0) {
+        break;
       }
       Date date = (Date) entity.getProperty("date");
       if (youngest == null || youngest.before(date)) {
@@ -191,7 +198,6 @@ public class MemeDao {
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
 
-    w.name("messages").beginObject();
     String topText = (String) meme.getProperty("topText");
     String centerText = (String) meme.getProperty("centerText");
     String bottomText = (String) meme.getProperty("bottomText");
@@ -205,7 +211,47 @@ public class MemeDao {
       w.name("bottom").value(StringEscapeUtils.escapeHtml4(bottomText));
     }
     w.endObject();
-    w.endObject();
+  }
+
+  public String create(JsonElement jsonElement) throws IOException {
+    String top = null;
+    String center = null;
+    String bottom = null;
+    String blobKey = null;
+
+    try {
+      JsonObject jsonObject = jsonElement.getAsJsonObject();
+      JsonElement topJE = jsonObject.get("top");
+      JsonElement centerJE = jsonObject.get("center");
+      JsonElement bottomJE = jsonObject.get("bottom");
+      JsonElement blobKeyJE = jsonObject.get("blobKey");
+      if (topJE != null && topJE.isJsonPrimitive()) {
+        top = topJE.getAsString();
+      }
+      if (centerJE != null && centerJE.isJsonPrimitive()) {
+        center = centerJE.getAsString();
+      }
+      if (bottomJE != null && bottomJE.isJsonPrimitive()) {
+        bottom = bottomJE.getAsString();
+      }
+      if (blobKeyJE != null && blobKeyJE.isJsonPrimitive()) {
+        blobKey = blobKeyJE.getAsString();
+      }
+    } catch (JsonParseException e) {
+      throw new IllegalArgumentException(e);
+    } catch (ClassCastException e) {
+      throw new IllegalArgumentException(e);
+    } catch (IllegalStateException e) {
+      throw new IllegalArgumentException(e);
+    } catch (UnsupportedOperationException e) {
+      throw new IOException(e);
+    }
+
+    if (blobKey == null) {
+      throw new IllegalArgumentException("No 'blobKey' param");
+    }
+
+    return create(blobKey, top, center, bottom);
   }
 
   public String create(String blobKey, String top, String center, String bottom)

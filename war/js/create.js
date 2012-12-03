@@ -31,7 +31,7 @@ var Create = {
     this.meme = new Meme();
     this.memeView = new MemePreview({model: this.meme});
     this.memeView.render();
-    $('#top,#center,#bottom').keyup($.proxy(this.updateTexts, this));
+    $('#top,#center,#bottom').keyup($.proxy(this.updateMessages, this));
     $('#uploadFile').change($.proxy(this.onFileFieldChange, this));
     $('#submit').click($.proxy(this.onSubmitClick, this));
   },
@@ -49,7 +49,7 @@ var Create = {
     // and we cannot assign "onload" event because the image is already in cache.
     var w = memeView.$('img').width();
     var h = memeView.$('img').height();
-    var proportionalWidth = w * h / 200;
+    var proportionalWidth = w * 200 / h;
     var img = this.memeView.$('img');
     img.width(proportionalWidth);
     img.height(200);
@@ -58,11 +58,11 @@ var Create = {
     return true;
   },
 
-  updateTexts: function() {
+  updateMessages: function() {
     var messages = this.meme.get('messages');
-    messages['top'] = $('#top').val() || null;
-    messages['center'] = $('#center').val() || null;
-    messages['bottom'] = $('#bottom').val() || null;
+    this.meme.set('top', $('#top').val() || null);
+    this.meme.set('center', $('#center').val() || null);
+    this.meme.set('bottom', $('#bottom').val() || null);
     this.memeView.$('.message').remove();
     var messageEls = this.memeView.createMessages();
     this.memeView.$el.append(messageEls);
@@ -70,13 +70,13 @@ var Create = {
   },
 
   setImage: function(src, blobKey) {
-      $('#uploadHelperText').hide();
+    $('#uploadHelperText').hide();
 
-      this.meme.set('src', src);
-      this.meme.set('blobKey', blobKey);
-      this.memeView.render();
+    this.meme.set({'src': src, 'blobKey': blobKey});
+    this.memeView.render();
+    this.updateMessages();
 
-      $('form [name="blobKey"]').val(blobKey);
+    $('form [name="blobKey"]').val(blobKey);
   },
 
   /** @param event {ChangeEvent} */
@@ -132,8 +132,8 @@ var Create = {
   },
 
   onSubmitClick: function() {
+    Msg.info('Saving...');
     $('#submit').prop('disabled', true);
-    $('#submit').text('Saving...');
     var meme = this.meme.clone();
     var attrs = {};
     var options = {
@@ -141,23 +141,32 @@ var Create = {
         error: $.proxy(this.onError, this)
     };
     meme.save(attrs, options);
-    AppRouter.onMemeAdded(meme);
   },
 
   onSaved: function(model, resp) {
+    AppRouter.onMemeAdded(model);
+    Msg.info('Saved!', 1500);
     $('#submit').prop('disabled', false);
-    $('#submit').text('Submit');
-    this.meme.set('src', null);
-    this.meme.set('blobKey', null);
-    this.meme.set('top', null);
-    this.meme.set('center', null);
-    this.meme.set('bottom', null);
+    this.meme.set(this.meme.defaults);
     this.memeView.render();
   },
 
-  onError: function() {
+  onError: function(originalModel, resp, options) {
+    if (_.isString(resp)) {
+      // Validation error.
+      msg = resp;
+    } else {
+      var msg = resp.statusText;
+      try {
+        msg = JSON.parse(resp.responseText).message;
+      } catch (e) {
+        window.console.log(e);
+      }
+    }
+    Msg.error('Error: ' + msg);
     $('#submit').prop('disabled', false);
-    $('#submit').text('Submit');
+    this.meme.set(this.meme.defaults);
+    this.memeView.render();
   }
 
 };

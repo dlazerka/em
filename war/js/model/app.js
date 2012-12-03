@@ -1,23 +1,19 @@
 var AppRouterClass = Backbone.Router.extend({
+  memes: new Memes(MEMES_JSON),
+
   routes: {
     '': 'initialize',
-    'memes': 'getMemes',
-    'meme/:id': 'getMeme'
+    'meme/:id': 'showOneMeme'
   },
 
   initialize: function() {
-    var memes = new Memes(MEMES_JSON);
-    this.onSuccessFetchAll_(memes);
+    this.showAllMemes_();
+    $('#delete').hide();
   },
 
   getMemes: function() {
-    var memes = new Memes();
-    memes.fetch({success: $.proxy(this.onSuccessFetchAll_, this)});
-  },
-
-  getMeme: function(id) {
-    var meme = new Meme({id: id});
-    meme.fetch({success: $.proxy(this.onSuccessFetch_, this)});
+    this.memes = new Memes();
+    this.memes.fetch({success: $.proxy(this.onSuccessFetchAll_, this)});
   },
 
   onMemeAdded: function(meme) {
@@ -25,25 +21,30 @@ var AppRouterClass = Backbone.Router.extend({
     $('#main_area').prepend(memeView.render().$el);
   },
 
-  onSuccessFetchAll_: function(memes) {
+  showOneMeme: function(id) {
+    var meme = this.memes.get(id);
+    var memeView = new MemeView({model: meme, className: 'meme memeBig'});
+    $('#main_area').html(memeView.render(50).$el);
+    $('#main_area').append('<br/>');
+    var button = $('#delete');
+    button.prop('disabled', false).show();
+    button.on('click', $.proxy(function() {
+      $('#delete').prop('disabled', true);
+      meme.destroy({success: $.proxy(this.onSuccessDestroy_, this)})
+    }, this))
+  },
+
+  showAllMemes_: function() {
     $('#main_area').empty();
-    for (var i = 0; i < memes.length; i++) {
-      var memeView = new MemeView({model: memes.at(i)});
+    for (var i = 0; i < this.memes.length; i++) {
+      var memeView = new MemeView({model: this.memes.at(i)});
       $('#main_area').append(memeView.render().$el);
     }
   },
 
-  onSuccessFetch_: function(meme) {
-    var memeView = new MemeView({model: meme, className: 'meme memeBig'});
-    $('#main_area').html(memeView.render(50).$el);
-    $('#main_area').append('<br/>');
-    $('<button class="delete">Delete</button>').on('click', $.proxy(function() {
-      meme.destroy({success: this.onSuccessDestroy_})
-    }, this)).appendTo($('#main_area'));
-  },
-
-  onSuccessDestroy_: function() {
-    Backbone.history.navigate('#memes', true);
+  onSuccessDestroy_: function(model, resp) {
+    this.memes.remove(model);
+    Backbone.history.navigate('', true);
   }
 });
 
