@@ -14,7 +14,7 @@
     "content_scripts" : [
       {
         "matches" : [
-          "http://epammeme.appspot.com/"
+            "http://*/"
         ],
         "js" : ["contentscript.js"],
         "run_at" : "document_idle",
