@@ -10,3 +10,4 @@
 * Draw text on image (try to do it purely client-side, like here http://www.nihilogic.dk/labs/canvas2image/).
 * Voting
 * Add Analytics events.
+>Display link to chrome plugin (if not installed)
