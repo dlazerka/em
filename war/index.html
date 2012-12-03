@@ -103,20 +103,12 @@
           <div class="imageWithUpload">
             <div id="preview" class="preview"></div>
             <div id="uploadHelperText" class="uploadHelperText">
-                <a href="javascript:$('#uploadFile').click()"
-                    >Upload</a> new image,<br/>
-                or click on any meme.<!-- ,<br/>
-                или перетащи со стола.<br/>
-                Сделай хоть что-нибудь.
-                -->
+                <a id="uploadLink" href="#">Upload</a> new image,<br/>
+                or click on any meme.
             </div>
             <input id="uploadFile" class="uploadFile" type="file">
             <input id="uploadUrl" type="hidden" value="###UPLOAD_URL###">
             <br/>
-            <button id="uploadAgain" style="margin-top: 2px; display: none;"
-                onclick="location.href='/'">
-                Upload
-            </button>
           </div>
           <div class="form">
             <textarea id="top"></textarea>

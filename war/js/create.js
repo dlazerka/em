@@ -34,7 +34,12 @@ var Create = {
     $('#top,#center,#bottom').keyup($.proxy(this.updateMessages, this));
     $('#uploadFile').change($.proxy(this.onFileFieldChange, this));
     $('#submit').click($.proxy(this.onSubmitClick, this));
-  },
+    $('#uploadLink').click(function(event) {
+      $('#uploadFile').click();
+      event.preventDefault();
+      return false;
+    });
+},
 
   /** @returns true if event was consumed */
   onMemeClick: function(event, memeView) {
