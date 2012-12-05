@@ -100,7 +100,7 @@ public class MemeDao {
     q.addSort("date", SortDirection.DESCENDING);
 
     if (since != null) {
-      q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, since));
+      q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
     }
 
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
