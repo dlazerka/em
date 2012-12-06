@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -28,19 +29,35 @@ public class AdhocServlet extends HttpServlet {
   private static final Logger logger = Logger.getLogger(AdhocServlet.class.getName());
   private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private Key allKey = KeyFactory.createKey("Meme", "ALL");
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    PreparedQuery pq = datastore.prepare(new Query("Meme"));
-    List<Key> keys = new ArrayList<Key>();
-    for (Entity entity : pq.asIterable()) {
-      Key key = entity.getKey();
-      if (key.getParent() != null) continue;
-      keys.add(entity.getKey());
+    if (true) throw new IllegalStateException("Task Done");
+
+    PreparedQuery pq = datastore.prepare(new Query("Meme", allKey));
+//    List<Key> keys = new ArrayList<Key>();
+    List<Entity> entities = new ArrayList<Entity>();
+    int wereNull = 0;
+    int wereTrue = 0;
+    int wereFalse = 0;
+    for (Entity entity : pq.asIterable(FetchOptions.Builder.withChunkSize(100))) {
+      Boolean deleted = (Boolean) entity.getProperty("deleted");
+      if (deleted == null) {
+        wereNull++;
+        entity.setProperty("deleted", false);
+      } else {
+        if (deleted) wereTrue++;
+        else wereFalse++;
+      }
+      entities.add(entity);
     }
-    datastore.delete(keys);
+    datastore.put(entities);
     resp.setContentType("text/plain");
-    resp.getWriter().append("" + keys.size());
+    resp.getWriter().append("\n" + entities.size());
+    resp.getWriter().append("\n wereNull: " + wereNull);
+    resp.getWriter().append("\n wereTrue: " + wereTrue);
+    resp.getWriter().append("\n wereFalse: " + wereFalse);
   }
 }

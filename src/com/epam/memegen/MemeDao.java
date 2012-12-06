@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -78,8 +79,19 @@ public class MemeDao {
 
   public String getAllAsJson(HttpServletRequest req) throws IOException {
     String sinceS = req.getParameter("since");
-    Long since = sinceS == null ? null : Long.parseLong(sinceS);
-    String top = req.getParameter("top");
+    Long since;
+    try {
+      since = sinceS == null ? null : Long.parseLong(sinceS);
+    } catch (NumberFormatException e) {
+      since = null;
+    }
+    String limitS = req.getParameter("top");
+    Integer limit;
+    try {
+      limit = limitS == null ? null : Integer.parseInt(limitS);
+    } catch (NumberFormatException e) {
+      limit = null;
+    }
 
     // Lookup memcache
     if (since != null) {
@@ -88,7 +100,7 @@ public class MemeDao {
         // User asked for memes younger than the youngest.
         return "[]";
       }
-    } else if (top == null) {
+    } else if (limit == null) {
       String json = (String) memcache.get(ALL);
       if (json != null) {
         return json;
@@ -98,15 +110,15 @@ public class MemeDao {
     Date youngest = null;
     Query q = new Query(KIND, allKey);
     q.addSort("date", SortDirection.DESCENDING);
+    q.setFilter(new FilterPredicate("deleted", FilterOperator.EQUAL, false));
 
     if (since != null) {
       q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
     }
 
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
-    int limit = Integer.MAX_VALUE;
-    if (top != null) {
-      limit = Integer.parseInt(top);
+    if (limit != null) {
+      options.limit(limit);
     }
 
     PreparedQuery prepared = datastore.prepare(q);
@@ -118,12 +130,6 @@ public class MemeDao {
     w.setIndent("  ");
     w.beginArray();
     for (Entity entity : iterable) {
-      if (entity.getProperty("deleted") != null) {
-        continue;
-      }
-      if (limit-- <= 0) {
-        break;
-      }
       Date date = (Date) entity.getProperty("date");
       if (youngest == null || youngest.before(date)) {
         youngest = date;
@@ -133,7 +139,7 @@ public class MemeDao {
     w.endArray();
     w.close();
     String value = out.toString();
-    if (top == null && since == null) {
+    if (limit == null && since == null) {
       memcache.put(ALL, value, expiration);
     }
     if (youngest != null) {
@@ -272,7 +278,14 @@ public class MemeDao {
       entity.setProperty("bottomText", bottom);
     }
 
-    Key key = datastore.put(entity);
+    Key key;
+    try {
+      key = datastore.put(entity);
+    } catch (DatastoreFailureException e) {
+      // May be like "the id allocated for a new entity was already in use, please try again".
+      // I think retry once is OK.
+      key = datastore.put(entity);
+    }
 
     // Put to memcache.
     String json = toJson(entity);
