@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.appengine.api.utils.SystemProperty;
+import com.google.appengine.api.utils.SystemProperty.Environment;
+
 @SuppressWarnings("serial")
 public class MainServlet extends HttpServlet {
   @SuppressWarnings("unused")
@@ -25,8 +28,7 @@ public class MainServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     try {
-      FileInputStream fr = new FileInputStream("index.html");
-      welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
+      readFile();
     } catch (FileNotFoundException e) {
       throw new ServletException(e);
     } catch (IOException e) {
@@ -35,9 +37,9 @@ public class MainServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    FileInputStream fr = new FileInputStream("index.html");
-    welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
-
+    if (SystemProperty.environment.value() == Environment.Value.Development) {
+      readFile();
+    }
     String uploadUrl = util.createUploadUrl();
     String allMemesJson = memeDao.getAllAsJson(req);
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
@@ -45,5 +47,10 @@ public class MainServlet extends HttpServlet {
     resp.setContentType("text/html");
     resp.setCharacterEncoding("UTF-8");
     resp.getWriter().write(replaced);
+  }
+
+  private void readFile() throws FileNotFoundException, IOException {
+    FileInputStream fr = new FileInputStream("index.html");
+    welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
   }
 }
