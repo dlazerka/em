@@ -39,6 +39,26 @@ h1#header {
   letter-spacing: 1px;
 }
 
+.plugin-button {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font: 12px Tahoma;
+}
+
+.plugin-link {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.plugin-img {
+  height: 32px;
+  width: 32px;
+  vertical-align: middle;
+}
+
 #side_bar {
   width: 150px;
   float: left;
