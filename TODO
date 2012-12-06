@@ -6,11 +6,11 @@
 + Remove page reload on meme delete.
 + Fix select file right after one was uploaded (new uploadUrl)
 + Spaces should stretch the message (no space eating).
-> deleted = False
++ deleted = False
 * Use background-size css
 * Draw text on image (try to do it purely client-side, like here http://www.nihilogic.dk/labs/canvas2image/).
 * Voting
 - Use Drag & Drop (Chrome doesn't catch 'drop' event, putting to long box)
 * Add Analytics events.
 
->Display link to chrome plugin (if not installed)
++ Display link to chrome plugin (if not installed)
