@@ -73,6 +73,7 @@ var MemeView = Backbone.View.extend({
       messageEl.addClass(where + '-center');
       // MemeDao has already escaped them, just to be sure.
       var text = messages[where].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      text = text.replace(/ /g, '&nbsp;');
       var lines = text.split('\n');
       messageEl.html(lines.join('<br/>'));
       result.push(messageEl);

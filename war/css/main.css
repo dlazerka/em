@@ -166,7 +166,6 @@ img.preview {
   white-space: nowrap;
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
-  white-space: pre-wrap;
 }
 
 .meme .top-left {
