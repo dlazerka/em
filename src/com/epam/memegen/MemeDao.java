@@ -258,6 +258,7 @@ public class MemeDao {
       throws IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity(KIND, allKey);
+    entity.setProperty("deleted", false);
     entity.setProperty("blobKey", new BlobKey(blobKey));
     Date justCreatedDate = new Date();
     entity.setProperty("date", justCreatedDate);
