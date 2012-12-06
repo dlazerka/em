@@ -52,6 +52,7 @@ public class MemeServlet extends HttpServlet {
       JsonElement jsonElement = new JsonParser().parse(req.getReader());
       String json = memeDao.create(jsonElement);
       resp.setStatus(HttpServletResponse.SC_OK);
+      resp.setCharacterEncoding("UTF-8");
       resp.getWriter().write(json);
     } catch (IllegalArgumentException e) {
       logger.log(Level.WARNING, e.getMessage(), e);
@@ -67,7 +68,7 @@ public class MemeServlet extends HttpServlet {
       throws ServletException, IOException {
     String idStr = req.getPathInfo().replaceAll("[^0-9]+", "");
     if (idStr.equals("")) {
-      resp.sendError(404);
+      writeError(404, "Not Found", resp);
       return;
     }
     long id = Long.valueOf(idStr);
@@ -75,7 +76,7 @@ public class MemeServlet extends HttpServlet {
     try {
       memeDao.delete(id);
     } catch (EntityNotFoundException e) {
-      resp.sendError(404, "No such meme");
+      writeError(404, "No such meme", resp);
       return;
     }
   }
@@ -83,6 +84,7 @@ public class MemeServlet extends HttpServlet {
   private void writeError(int statusCode, String message, HttpServletResponse resp) throws IOException {
     resp.setStatus(statusCode);
     resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
 
     JsonWriter w = new JsonWriter(resp.getWriter());
     w.beginObject().name("message").value(message).endObject();
