@@ -52,7 +52,11 @@ var AppRouterClass = Backbone.Router.extend({
   }
 });
 
-$.ajaxSetup({cache: false});
+$.ajaxSetup({
+  'cache': false,
+  // doesn't actually work, because of backbone bug https://github.com/documentcloud/backbone/issues/1875
+  'contentType': 'application/json; charset=UTF-8'
+});
 var AppRouter = new AppRouterClass();
 
 // Trigger the initial route and enable HTML5 History API support

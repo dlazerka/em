@@ -148,7 +148,8 @@ var Create = {
     var attrs = {};
     var options = {
         success: $.proxy(this.onSaved, this),
-        error: $.proxy(this.onError, this)
+        error: $.proxy(this.onError, this),
+        contentType: 'application/json; charset=utf-8'
     };
     meme.save(attrs, options);
   },
