@@ -48,14 +48,19 @@ public class MainServlet extends HttpServlet {
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
 
-    boolean userLoggedIn = util.isAuthenticated();
-    replaced = replaced.replace("###IS_LOGGED_IN###", "" + userLoggedIn);
+    boolean userAuthenticated = util.isAuthenticated();
+    replaced = replaced.replace("###IS_AUTHENTICATED###", "" + userAuthenticated);
 
-    if (!userLoggedIn) {
-      replaced = replaced.replace("###MEMES_JSON###", "[]");
+    if (!userAuthenticated) {
       StringBuffer returnUrl = req.getRequestURL();
       String createLoginURL = userService.createLoginURL(returnUrl.toString());
       replaced = replaced.replace("###LOGIN_URL###", createLoginURL);
+
+      String msg = "";
+      if (userService.isUserLoggedIn()) {
+        msg = ", but your email is <b>" + userService.getCurrentUser().getEmail() + "</b>";
+      }
+      replaced = replaced.replace("###WRONG_EMAIL_MSG###", msg);
     }
 
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
