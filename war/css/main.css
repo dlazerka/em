@@ -43,12 +43,13 @@ h1#header {
   position: absolute;
   top: 0;
   right: 10px;
-  font: 12px Tahoma;
+  font-size: 12px;
+  font-family: arial, sans-serif;
 }
 
 .plugin-link {
   text-decoration: underline;
-  color: blue;
+  color: #15c;
   cursor: pointer;
   vertical-align: middle;
 }
@@ -59,7 +60,7 @@ h1#header {
   vertical-align: middle;
 }
 
-#side_bar {
+#sidePane {
   width: 150px;
   float: left;
   margin: 1em 0 0 1em;
@@ -88,7 +89,7 @@ a {
   color: #15c;
 }
 
-#main_area {
+#contentPane {
   margin: 1em 0 0 170px;
 }
 
@@ -168,21 +169,9 @@ img.preview {
   -webkit-font-smoothing: antialiased;
 }
 
-.meme .top-left {
-  position: absolute;
-  text-align: left;
-  top: 5px;
-}
-
 .meme .top-center {
   position: absolute;
   text-align: center;
-  top: 5px;
-}
-
-.meme .top-right {
-  position: absolute;
-  text-align: left;
   top: 5px;
 }
 
@@ -202,29 +191,9 @@ img.preview {
   line-height: 30px;
 }
 
-.meme .center-right {
-  position: absolute;
-  text-align: left;
-  top: 50%;
-  margin-top: -15px;
-  line-height: 30px;
-}
-
-.meme .bottom-left {
-  position: absolute;
-  text-align: left;
-  bottom: 5px;
-}
-
 .meme .bottom-center {
   position: absolute;
   text-align: center;
-  bottom: 5px;
-}
-
-.meme .bottom-right {
-  position: absolute;
-  text-align: left;
   bottom: 5px;
 }
 

@@ -1,5 +1,6 @@
 var AppRouterClass = Backbone.Router.extend({
   memes: new Memes(MEMES_JSON),
+  memesListEl: $('#memesList'),
 
   routes: {
     '': 'initialize',
@@ -19,14 +20,14 @@ var AppRouterClass = Backbone.Router.extend({
   onMemeAdded: function(meme) {
     this.memes.unshift(meme);
     var memeView = new MemeView({model: meme});
-    $('#main_area').prepend(memeView.render().$el);
+    this.memesListEl.prepend(memeView.render().$el);
   },
 
   showOneMeme: function(id) {
     var meme = this.memes.get(id);
     var memeView = new MemeView({model: meme, className: 'meme memeBig'});
-    $('#main_area').html(memeView.render(50).$el);
-    $('#main_area').append('<br/>');
+    this.memesListEl.html(memeView.render(50).$el);
+    this.memesListEl.append('<br/>');
     var button = $('#delete');
     button.prop('disabled', false).show();
     button.on('click', $.proxy(function() {
@@ -37,10 +38,10 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   showAllMemes_: function() {
-    $('#main_area').empty();
+    this.memesListEl.empty();
     for (var i = 0; i < this.memes.length; i++) {
       var memeView = new MemeView({model: this.memes.at(i)});
-      $('#main_area').append(memeView.render().$el);
+      this.memesListEl.append(memeView.render().$el);
     }
   },
 

@@ -13,13 +13,13 @@ function go() {
                 max = ts;
             }
             var memeView = new MemeView({model:m.at(i)});
-            $('#main_area').append(memeView.render().$el);
+            $('#memesList').append(memeView.render().$el);
         }
         console.log("max=" + max);
         bg.lastSeen = max;
         localStorage.setItem("lastSeen", bg.lastSeen);
     }, data:{ top:5}, error:function () {
-        $('#main_area').append('<div><a href="http://epammeme.appspot.com" target="_blank" style="color: #0000cd; font-size: 16px">Login to track memes</a></div>');
+        $('#memesList').append('<div><a href="http://epammeme.appspot.com" target="_blank" style="color: #0000cd; font-size: 16px">Login to track memes</a></div>');
     }});
 }
 
