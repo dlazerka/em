@@ -56,7 +56,7 @@
 
     <div id="msg" class="msg" style="display: none;"></div>
 
-    <h1 id="header">&lt;EPAMems&gt;</h1>
+    <h1 id="header">&lt;memegen&gt;</h1>
 
     <div id="epam-memegen-install-button" style="display:none;" class="plugin-button">
       <img src="chrome-icon.png" class="plugin-img"/>
@@ -65,7 +65,7 @@
       </span>
     </div>
 
-    <div id="sidePane">
+    <div id="sidePane" class="isLoggedIn_###IS_LOGGED_IN###">
       <button id="showCreateDialog" onclick="$('.upload').toggle()">
         Create
       </button>
@@ -101,6 +101,12 @@
           </div>
           <div class="clear"></div>
         </div>
+      </div>
+
+      <div class="pleaseLoginMessage isLoggedIn_###IS_LOGGED_IN###">
+        <a href="###LOGIN_URL###">Please login</a>.
+        From now on only accounts <b>@epam.com</b> are allowed.
+        Sorry for inconvenience.
       </div>
 
       <div id="memesList"></div>

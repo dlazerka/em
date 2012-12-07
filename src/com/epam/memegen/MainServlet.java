@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.api.utils.SystemProperty.Environment;
 
@@ -22,6 +24,7 @@ public class MainServlet extends HttpServlet {
   private static final Logger logger = Logger.getLogger(MainServlet.class.getName());
   private final Util util = new Util();
   private final MemeDao memeDao = new MemeDao();
+  private final UserService userService = UserServiceFactory.getUserService();
 
   private String welcomeFileContent;
 
@@ -43,6 +46,18 @@ public class MainServlet extends HttpServlet {
     String uploadUrl = util.createUploadUrl();
     String allMemesJson = memeDao.getAllAsJson(req);
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
+    replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
+
+    boolean userLoggedIn = util.isAuthenticated();
+    replaced = replaced.replace("###IS_LOGGED_IN###", "" + userLoggedIn);
+
+    if (!userLoggedIn) {
+      replaced = replaced.replace("###MEMES_JSON###", "[]");
+      StringBuffer returnUrl = req.getRequestURL();
+      String createLoginURL = userService.createLoginURL(returnUrl.toString());
+      replaced = replaced.replace("###LOGIN_URL###", createLoginURL);
+    }
+
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
     resp.setContentType("text/html");
     resp.setCharacterEncoding("UTF-8");

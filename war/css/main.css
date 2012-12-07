@@ -66,6 +66,10 @@ h1#header {
   margin: 1em 0 0 1em;
 }
 
+#sidePane.isLoggedIn_false {
+  visibility: hidden;
+}
+
 .uploadHelperText {
   position: absolute;
   top: 56px;
@@ -91,6 +95,10 @@ a {
 
 #contentPane {
   margin: 1em 0 0 170px;
+}
+
+.pleaseLoginMessage.isLoggedIn_true {
+  display: none;
 }
 
 .upload {

@@ -55,8 +55,9 @@ public class MemeDao {
 
   private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final Util util = new Util();
 
-  Expiration expiration = Expiration.byDeltaSeconds(666); // 11 minutes
+  private final Expiration expiration = Expiration.byDeltaSeconds(666); // 11 minutes
 
   public MemeDao() {
     memcache.setErrorHandler(new ConsistentErrorHandler() {
@@ -78,6 +79,9 @@ public class MemeDao {
   }
 
   public String getAllAsJson(HttpServletRequest req) throws IOException {
+    if (!util.isAuthenticated()) {
+      return "[]";
+    }
     String sinceS = req.getParameter("since");
     Long since;
     try {
@@ -150,6 +154,9 @@ public class MemeDao {
 
 
   public String getAsJson(long id) throws IOException {
+    if (!util.isAuthenticated()) {
+      return "{}";
+    }
     // Lookup memcache
     String json = (String) memcache.get(id);
     if (json != null) {
@@ -220,6 +227,10 @@ public class MemeDao {
   }
 
   public String create(JsonElement jsonElement) throws IOException {
+    if (!util.isAuthenticated()) {
+      return "{}";
+    }
+
     String top = null;
     String center = null;
     String bottom = null;
@@ -260,7 +271,7 @@ public class MemeDao {
     return create(blobKey, top, center, bottom);
   }
 
-  public String create(String blobKey, String top, String center, String bottom)
+  private String create(String blobKey, String top, String center, String bottom)
       throws IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity(KIND, allKey);
@@ -318,6 +329,10 @@ public class MemeDao {
   }
 
   public void delete(long id) throws EntityNotFoundException, IOException {
+    if (!util.isAuthenticated()) {
+      return;
+    }
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key key = KeyFactory.createKey(allKey, KIND, id);
     Entity entity;

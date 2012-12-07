@@ -157,6 +157,7 @@ var Create = {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);
     $('#submit').prop('disabled', false);
+    $('.upload').hide();
     this.meme.set(this.meme.defaults, {silent: true});
     this.memeView.render();
   },
