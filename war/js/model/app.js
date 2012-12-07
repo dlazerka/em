@@ -17,6 +17,7 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   onMemeAdded: function(meme) {
+    this.memes.unshift(meme);
     var memeView = new MemeView({model: meme});
     $('#main_area').prepend(memeView.render().$el);
   },

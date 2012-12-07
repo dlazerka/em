@@ -7,6 +7,7 @@
 + Fix select file right after one was uploaded (new uploadUrl)
 + Spaces should stretch the message (no space eating).
 + deleted = False
++ Fix bug with clicking on just created meme.
 * Use background-size css
 * Draw text on image (try to do it purely client-side, like here http://www.nihilogic.dk/labs/canvas2image/).
 * Voting
