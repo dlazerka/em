@@ -52,15 +52,24 @@ public class MainServlet extends HttpServlet {
     replaced = replaced.replace("###IS_AUTHENTICATED###", "" + userAuthenticated);
 
     if (!userAuthenticated) {
-      StringBuffer returnUrl = req.getRequestURL();
-      String createLoginURL = userService.createLoginURL(returnUrl.toString());
-      replaced = replaced.replace("###LOGIN_URL###", createLoginURL);
-
       String msg = "";
       if (userService.isUserLoggedIn()) {
         msg = ", but your email is <b>" + userService.getCurrentUser().getEmail() + "</b>";
       }
       replaced = replaced.replace("###WRONG_EMAIL_MSG###", msg);
+
+      String returnUrl = req.getRequestURL().toString();
+      String loginURL = userService.createLoginURL(returnUrl);
+
+      if (userService.isUserLoggedIn()) {
+        // createLogoutURL(createLoginURL(returnUrl)) doesn't work (generated URLs are wrong)
+        loginURL = userService.createLogoutURL(returnUrl + "?redirectToLogin=1");
+      } else if (req.getParameter("redirectToLogin") != null) {
+        resp.sendRedirect(loginURL);
+        return;
+      }
+
+      replaced = replaced.replace("###LOGIN_URL###", loginURL);
     }
 
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
