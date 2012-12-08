@@ -1,5 +1,6 @@
 package com.epam.memegen;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,25 @@ public class AdhocServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    if (true) throw new IllegalStateException("Task Done");
+
+    byte[] bb = new byte[156224];
+//    byte[] bb = new byte[1000];
+//    String[] ss = new String[156224];
+    FileInputStream fis = new FileInputStream("template-gangnam.gif");
+    fis.read(bb, 0, 3000);
+
+    StringBuilder sb = new StringBuilder(156224 * 2);
+    String s;
+    for (int i = 0; i < bb.length ; i++ ) {
+      byte b = bb[i];
+
+      s = Integer.toHexString(b > 0 ? b : (b & 0x7F | 0x80)).toUpperCase();
+      if (s.length() < 2) {
+        sb.append('0');
+      }
+      sb.append(s).append('_');
+    }
+    if (true) return;
 
     PreparedQuery pq = datastore.prepare(new Query("Meme", allKey));
 //    List<Key> keys = new ArrayList<Key>();
