@@ -48,6 +48,11 @@ public class MainServlet extends HttpServlet {
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
 
+
+    // Check authentication.
+    // If not logged in, send him to login url.
+    // If logged in, but email doesn't end on @epam.com, send to google.com/a/epam.com.
+    // We shouldn't send to logout url, because it logs user out of internal services.
     boolean userAuthenticated = util.isAuthenticated();
     replaced = replaced.replace("###IS_AUTHENTICATED###", "" + userAuthenticated);
 
@@ -59,17 +64,13 @@ public class MainServlet extends HttpServlet {
       replaced = replaced.replace("###WRONG_EMAIL_MSG###", msg);
 
       String returnUrl = req.getRequestURL().toString();
-      String loginURL = userService.createLoginURL(returnUrl);
+      String loginUrl = userService.createLoginURL(returnUrl);
 
       if (userService.isUserLoggedIn()) {
-        // createLogoutURL(createLoginURL(returnUrl)) doesn't work (generated URLs are wrong)
-        loginURL = userService.createLogoutURL(returnUrl + "?redirectToLogin=1");
-      } else if (req.getParameter("redirectToLogin") != null) {
-        resp.sendRedirect(loginURL);
-        return;
+        loginUrl = "http://google.com/a/epam.com/";
       }
 
-      replaced = replaced.replace("###LOGIN_URL###", loginURL);
+      replaced = replaced.replace("###LOGIN_URL###", loginUrl);
     }
 
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);

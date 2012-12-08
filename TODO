@@ -10,10 +10,14 @@
 + Fix bug with clicking on just created meme.
 + Display link to chrome plugin (if not installed)
 > Add Analytics events.
+> Still GIFs.
+* Clean upload form on hide.
 
 * Draw text on image (try to do it purely client-side, like here http://www.nihilogic.dk/labs/canvas2image/).
 * Voting
 * Context
 * Pagination
+* Author
+* Send Feedback
 
 - Use Drag & Drop (Chrome doesn't catch 'drop' event, putting to long box)
