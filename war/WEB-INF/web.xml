@@ -31,6 +31,14 @@
     <url-pattern>/memes</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>Vote</servlet-name>
+    <servlet-class>com.epam.memegen.VoteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Vote</servlet-name>
+    <url-pattern>/vote</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>Image</servlet-name>
     <servlet-class>com.epam.memegen.ImageServlet</servlet-class>
   </servlet>

@@ -7,10 +7,23 @@ var Meme = Backbone.Model.extend({
     src: '',
     top: null,
     center: null,
-    bottom: null
+    bottom: null,
+    rating: 0
   },
 
   urlRoot: '/meme',
+
+  vote: null,
+
+  initialize: function() {
+    this.vote = new Vote({
+      id: this.id, 
+      rating: this.get('rating')
+    });
+    this.vote.on('change', function () {
+      this.set('rating', this.vote.get('rating'));
+    }, this);
+  },
 
   getMessagesMap: function() {
     return {
@@ -107,8 +120,10 @@ var MemeView = Backbone.View.extend({
       this.positionMessages();
     }, this));
 
+    var voteView = new VoteView({model: this.model.vote});
     this.$el.append(messageEls);
     this.$el.append(img);
+    this.$el.append(voteView.render().$el);
 
     return this;
   },

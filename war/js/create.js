@@ -39,7 +39,7 @@ var Create = {
       event.preventDefault();
       return false;
     });
-},
+  },
 
   /** @returns true if event was consumed */
   onMemeClick: function(event, memeView) {

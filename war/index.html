@@ -12,47 +12,11 @@
           href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
     <script type="text/javascript">
       var PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
-
-      $.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
-
-      function init() {
-    	setTimeout(function() {
-          // Check if plugin is installed by searching for element with id "epam-memegen-extension-is-installed".
-          // If not found - show button.
-      	  if ($('#epam-memegen-extension-is-installed').length) {
-            console.log("EPAM memegen plugin is installed");
-      	  } else {
-      		$('#epam-memegen-install-button').get(0).style.removeProperty("display");
-      	  }}, 1000);
-      }
-
-      function installPlugin() {
-        if ($.browser.chrome) {
-          console.log("This is Chrome, proceeding with inline-install");
-          installPluginChrome();
-        } else {
-          console.log("This is not Chrome, simply redirecting to Chrome Store's page of the plugin");
-          window.location = PLUGIN_URL;
-        }
-      }
-
-      function installPluginChrome() {
-        // This works only in Chrome
-        chrome.webstore.install(
-          PLUGIN_URL,
-          function() {
-            $('#epam-memegen-install-button').hide();
-          },
-          function(err) {
-            // Show error message to user (may be this should be turned off)
-            alert(err);
-          }
-        )
-      }
     </script>
+    <script type="text/javascript" src="js/analytics.js"></script>
   </head>
 
-  <body onload="init();">
+  <body>
 
     <div id="msg" class="msg" style="display: none;"></div>
 
@@ -60,13 +24,13 @@
 
     <div id="epam-memegen-install-button" style="display:none;" class="plugin-button">
       <img src="chrome-icon.png" class="plugin-img"/>
-      <span onclick="installPlugin();" class="plugin-link">
+      <span class="plugin-link">
           Don't miss a single meme - install Chrome Plugin
       </span>
     </div>
 
     <div id="sidePane" class="isLoggedIn_###IS_AUTHENTICATED###">
-      <button id="showCreateDialog" onclick="$('.upload').toggle()">
+      <button id="showCreateDialog" onclick="$('.upload').toggle(); ga.trackCreate();">
         Create
       </button>
       <br/>
@@ -120,19 +84,11 @@
     <script>
     var MEMES_JSON = ###MEMES_JSON###;
     </script>
+    <script type="text/javascript" src="js/model/vote.js"></script>
     <script type="text/javascript" src="js/model/meme.js"></script>
     <script type="text/javascript" src="js/model/app.js"></script>
     <script type="text/javascript" src="js/create.js"></script>
     <script type="text/javascript" src="js/msg.js"></script>
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-36410794-1']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
+    <script type="text/javascript" src="js/plugin.js"></script>
     </body>
 </html>

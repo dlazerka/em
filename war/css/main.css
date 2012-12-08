@@ -221,3 +221,37 @@ img.preview {
 .meme.memeBig .message {
   font-size: 50px;
 }
+
+.vote {
+  background: #888;
+  border-radius: 10px 0 0 10px;
+  bottom: 0;
+  display: none;
+  height: 80px;
+  position: absolute;
+  right: 0;
+  width: 30px;
+}
+
+.vote .like {
+  background: url(/img/good.png) no-repeat 50% 50%;
+  height: 30px;
+  width: 30px;
+}
+
+.vote .dislike {
+  background: url(/img/bad.png) no-repeat 50% 50%;
+  height: 30px;
+  width: 30px;
+}
+
+.vote .text {
+  color: #fff;
+  font-weight: bold;
+  line-height: 20px;
+  text-align: center;
+}
+
+.meme:hover .vote {
+  display: block;
+}

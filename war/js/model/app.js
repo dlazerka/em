@@ -3,11 +3,15 @@ var AppRouterClass = Backbone.Router.extend({
   memesListEl: $('#memesList'),
 
   routes: {
-    '': 'initialize',
+    '': 'start',
     'meme/:id': 'showOneMeme'
   },
 
   initialize: function() {
+    $('#delete').hide();
+  },
+
+  start: function() {
     this.showAllMemes_();
     $('#delete').hide();
   },
@@ -24,6 +28,7 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   showOneMeme: function(id) {
+    ga.trackPage('/meme/' + id);
     var meme = this.memes.get(id);
     var memeView = new MemeView({model: meme, className: 'meme memeBig'});
     this.memesListEl.html(memeView.render(50).$el);
@@ -38,6 +43,7 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   showAllMemes_: function() {
+    ga.trackPage();
     this.memesListEl.empty();
     for (var i = 0; i < this.memes.length; i++) {
       var memeView = new MemeView({model: this.memes.at(i)});
