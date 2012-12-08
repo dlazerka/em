@@ -61,12 +61,10 @@ public class MemeDao {
 
   public MemeDao() {
     memcache.setErrorHandler(new ConsistentErrorHandler() {
-      @Override
       public void handleServiceError(MemcacheServiceException ex) {
         logger.log(Level.WARNING, "MemcacheServiceException", ex);
       }
 
-      @Override
       public void handleDeserializationError(InvalidValueException ivx) {
         throw ivx;
       }

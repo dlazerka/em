@@ -107,8 +107,11 @@ var MemeView = Backbone.View.extend({
       this.positionMessages();
     }, this));
 
+    var vote = new Vote({id: this.model.id, choose: 5});
+    var voteView = new VoteView({model: vote});
     this.$el.append(messageEls);
     this.$el.append(img);
+    this.$el.append(voteView.render().$el);
 
     return this;
   },
