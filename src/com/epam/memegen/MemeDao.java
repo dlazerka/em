@@ -221,6 +221,12 @@ public class MemeDao {
     if (bottomText != null) {
       w.name("bottom").value(StringEscapeUtils.escapeHtml4(bottomText));
     }
+
+    if (meme.hasProperty("rating")) {
+      long rating = (Long) meme.getProperty("rating");
+      w.name("rating").value(rating);
+    }
+
     w.endObject();
   }
 
