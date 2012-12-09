@@ -17,7 +17,7 @@ var _gaq = _gaq || [];
   }
 
   function trackLike(memeId, choice) {
-    _gaq.push(['_trackEvent', choice == 1 ? 'Like' : 'Dislike', 'memeId', '', memeId]);
+    _gaq.push(['_trackEvent', choice == 1 ? 'Like' : 'Dislike', memeId.toString(), '', 1]);
   }
 
   function trackCreate(memeId) {

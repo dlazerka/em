@@ -4,6 +4,9 @@ var AppRouterClass = Backbone.Router.extend({
 
   routes: {
     '': 'start',
+    'popular': 'popular',
+    'all': 'all',
+    'top': 'top',
     'meme/:id': 'showOneMeme'
   },
 
@@ -14,6 +17,24 @@ var AppRouterClass = Backbone.Router.extend({
   start: function() {
     this.showAllMemes_();
     $('#delete').hide();
+  },
+
+  all: function() {
+    this.memes.fetch({
+      data: {filter: 'all'}, 
+      success: _.bind(this.start, this)});
+  },
+
+  popular: function() {
+    this.memes.fetch({
+      data: {filter: 'popular'}, 
+      success: _.bind(this.start, this)});
+  },
+
+  top: function() {
+    this.memes.fetch({
+      data: {filter: 'top'}, 
+      success: _.bind(this.start, this)});
   },
 
   getMemes: function() {

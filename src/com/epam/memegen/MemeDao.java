@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -41,6 +42,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * Memcache contains JSONs for:
  * <li>Every meme by its long id.
  * <li>All memes by key "ALL".
+ * <li>Popular memes by key "POPULAR".
+ * <li>Top memes by key "TOP".
  * <li>Last meme Date by key "LAST_TS".
  */
 public class MemeDao {
@@ -48,8 +51,10 @@ public class MemeDao {
 
   private static final String KIND = "Meme";
 
-  private static final String LAST_TS = "LAST_TS";
-  private static final String ALL = "ALL";
+  public static final String LAST_TS = "LAST_TS";
+  public static final String ALL = "ALL";
+  public static final String POPULAR = "POPULAR";
+  public static final String TOP = "TOP";
 
   private final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
@@ -76,7 +81,7 @@ public class MemeDao {
     return key;
   }
 
-  public String getAllAsJson(HttpServletRequest req) throws IOException {
+  public String getAllAsJson(HttpServletRequest req, String filter) throws IOException {
     if (!util.isAuthenticated()) {
       return "[]";
     }
@@ -103,7 +108,14 @@ public class MemeDao {
         return "[]";
       }
     } else if (limit == null) {
-      String json = (String) memcache.get(ALL);
+      String json = null;
+      if (filter.equals("all")) {
+        json = (String) memcache.get(ALL);
+      } else if (filter.equals("popular")) {
+        json = (String) memcache.get(POPULAR);
+      } else if (filter.equals("top")) {
+        json = (String) memcache.get(TOP);
+      }
       if (json != null) {
         return json;
       }
@@ -111,8 +123,22 @@ public class MemeDao {
 
     Date youngest = null;
     Query q = new Query(KIND, allKey);
-    q.addSort("date", SortDirection.DESCENDING);
-    q.setFilter(new FilterPredicate("deleted", FilterOperator.EQUAL, false));
+    if (filter.equals("all")) {
+      q.addSort("date", SortDirection.DESCENDING);
+      q.setFilter(FilterOperator.EQUAL.of("deleted", false));
+    }
+
+    if (filter.equals("popular")) {
+      q.addSort("date", SortDirection.DESCENDING);
+      q.setFilter(CompositeFilterOperator.and(
+          FilterOperator.EQUAL.of("deleted", false),
+          FilterOperator.EQUAL.of("isPositive", true)));
+    }
+
+    if (filter.equals("top")) {
+      q.addSort("rating", SortDirection.DESCENDING);
+      q.setFilter(FilterOperator.EQUAL.of("deleted", false));
+    }
 
     if (since != null) {
       q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
@@ -142,7 +168,13 @@ public class MemeDao {
     w.close();
     String value = out.toString();
     if (limit == null && since == null) {
-      memcache.put(ALL, value, expiration);
+      if (filter.equals("all")) {
+        memcache.put(ALL, value, expiration);
+      } else if (filter.equals("popular")) {
+        memcache.put(POPULAR, value, expiration);
+      } else if (filter.equals("top")) {
+        memcache.put(TOP, value, expiration);
+      }
     }
     if (youngest != null) {
       memcache.put(LAST_TS, youngest.getTime(), expiration);
@@ -283,6 +315,8 @@ public class MemeDao {
     entity.setProperty("blobKey", new BlobKey(blobKey));
     Date justCreatedDate = new Date();
     entity.setProperty("date", justCreatedDate);
+    entity.setProperty("rating", 0);
+    entity.setProperty("isPositive", true);
     if (!Util.isNullOrEmpty(top)) {
       entity.setProperty("topText", top);
     }
@@ -307,6 +341,8 @@ public class MemeDao {
     memcache.put(key.getId(), json);
 
     memcache.delete(ALL);
+    memcache.delete(POPULAR);
+    memcache.delete(TOP);
 
     // Set LAST_TS, taking care of for race conditions.
     long timestamp = justCreatedDate.getTime();

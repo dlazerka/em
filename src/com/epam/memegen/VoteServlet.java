@@ -19,7 +19,8 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.urlfetch.FetchOptions;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -102,7 +103,15 @@ public class VoteServlet extends HttpServlet {
       Key key = KeyFactory.createKey(KeyFactory.createKey("Meme", "ALL"), "Meme", id);
       Entity meme = datastore.get(key);
       meme.setProperty("rating", rating);
+      meme.setProperty("isPositive", rating >= 0);
       datastore.put(meme);
+
+      MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
+
+      memcache.delete(MemeDao.ALL);
+      memcache.delete(MemeDao.POPULAR);
+      memcache.delete(MemeDao.TOP);
+
     } catch(EntityNotFoundException e) {
       throw new ServletException(e.getMessage());
     }

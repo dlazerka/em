@@ -19,7 +19,12 @@ public class MemesServlet extends HttpServlet {
     resp.setCharacterEncoding("UTF-8");
     resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
 
-    String json = memeDao.getAllAsJson(req);
+    String filter = req.getParameter("filter");
+    if (filter.isEmpty()) {
+      filter = "popular";
+    }
+
+    String json = memeDao.getAllAsJson(req, filter);
     resp.getWriter().write(json);
   }
 }
