@@ -255,7 +255,8 @@ public class MemeDao {
     }
 
     if (meme.hasProperty("rating")) {
-      long rating = (Long) meme.getProperty("rating");
+      // Dev SDK is buggy, reads Integer as Long.
+      Number rating = (Number) meme.getProperty("rating");
       w.name("rating").value(rating);
     }
 
