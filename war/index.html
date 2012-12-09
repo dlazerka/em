@@ -29,7 +29,7 @@
       </span>
     </div>
 
-    <div id="sidePane" class="isLoggedIn_###IS_AUTHENTICATED###">
+    <div id="sidePane" class="visible_###IS_AUTHENTICATED###">
       <button id="showCreateDialog" onclick="$('.upload').toggle(); ga.trackCreate();">
         Create
       </button>
@@ -67,9 +67,15 @@
         </div>
       </div>
 
-      <div class="pleaseLoginMessage isLoggedIn_###IS_AUTHENTICATED###">
+      <div class="notDisplay_###IS_AUTHENTICATED###">
         <a href="###LOGIN_URL###">Please login</a> (now without logout).
-        Only accounts <b>@epam.com</b> are allowed###WRONG_EMAIL_MSG###.
+        Only accounts <b>@epam.com</b> are allowed.
+        <span class="display_###IS_LOGGED_IN###">
+        But your email is <b>###USER_EMAIL###</b>.
+        If it keeps logging you into <b>###USER_EMAIL###</b> then you have to
+        <a href="###LOGOUT_URL###">logout</a> (logs you out of all google services).
+        </span>
+
         <br/>
         <br/>
         Most people already have an account at <a href="http://google.com/a/epam.com">google.com/a/epam.com</a>,

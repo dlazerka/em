@@ -9,6 +9,17 @@ div.clear {
   clear: both;
 }
 
+.visible_false,
+.notVisible_true {
+  visibility: hidden;
+}
+
+.display_false,
+.notDisplay_true {
+  display: none;
+}
+
+
 .msg {
   position: fixed;
   top: -3px;
@@ -64,10 +75,6 @@ h1#header {
   width: 150px;
   float: left;
   margin: 1em 0 0 1em;
-}
-
-#sidePane.isLoggedIn_false {
-  visibility: hidden;
 }
 
 .uploadHelperText {
