@@ -64,6 +64,9 @@ $.ajaxSetup({
   'contentType': 'application/json; charset=UTF-8'
 });
 var AppRouter = new AppRouterClass();
+if (IS_AUTHENTICATED === false) {
+  ga.trackNoAuth();
+}
 
 // Trigger the initial route and enable HTML5 History API support
 Backbone.history.start();

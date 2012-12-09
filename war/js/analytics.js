@@ -28,6 +28,10 @@ var _gaq = _gaq || [];
     _gaq.push(['_trackEvent', 'Plugin install', '', '', 0]);
   }
 
+  function trackNoAuth() {
+    _gaq.push(['_trackEvent', 'NoAuth']);
+  }
+
   function trackError(msg) {
     _gaq.push(['_trackEvent', 'JS Error', msg, '', 0]);
   }
