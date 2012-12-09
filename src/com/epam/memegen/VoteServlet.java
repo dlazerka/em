@@ -123,6 +123,7 @@ public class VoteServlet extends HttpServlet {
     w.beginObject();
     w.name("rating").value(rating);
     w.endObject();
+    w.close();
 
     return out.toString();
   }
