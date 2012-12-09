@@ -4,6 +4,9 @@ var AppRouterClass = Backbone.Router.extend({
 
   routes: {
     '': 'start',
+    'popular': 'popular',
+    'all': 'all',
+    'top': 'top',
     'meme/:id': 'showOneMeme'
   },
 
@@ -12,8 +15,30 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   start: function() {
+    ga.trackPage();
     this.showAllMemes_();
     $('#delete').hide();
+  },
+
+  all: function() {
+    ga.trackPage('/all');
+    this.memes.fetch({
+      data: {filter: 'all'}, 
+      success: _.bind(this.start, this)});
+  },
+
+  popular: function() {
+    ga.trackPage('/popular');
+    this.memes.fetch({
+      data: {filter: 'popular'}, 
+      success: _.bind(this.start, this)});
+  },
+
+  top: function() {
+    ga.trackPage('/top');
+    this.memes.fetch({
+      data: {filter: 'top'}, 
+      success: _.bind(this.start, this)});
   },
 
   getMemes: function() {
@@ -43,7 +68,6 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   showAllMemes_: function() {
-    ga.trackPage();
     this.memesListEl.empty();
     for (var i = 0; i < this.memes.length; i++) {
       var memeView = new MemeView({model: this.memes.at(i)});
@@ -64,6 +88,9 @@ $.ajaxSetup({
   'contentType': 'application/json; charset=UTF-8'
 });
 var AppRouter = new AppRouterClass();
+if (IS_AUTHENTICATED === false) {
+  ga.trackNoAuth();
+}
 
 // Trigger the initial route and enable HTML5 History API support
 Backbone.history.start();

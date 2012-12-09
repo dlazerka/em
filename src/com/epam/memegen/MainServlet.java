@@ -44,7 +44,7 @@ public class MainServlet extends HttpServlet {
       readFile();
     }
     String uploadUrl = util.createUploadUrl();
-    String allMemesJson = memeDao.getAllAsJson(req);
+    String allMemesJson = memeDao.getAllAsJson(req, "popular");
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
 
@@ -54,23 +54,18 @@ public class MainServlet extends HttpServlet {
     // If logged in, but email doesn't end on @epam.com, send to google.com/a/epam.com.
     // We shouldn't send to logout url, because it logs user out of internal services.
     boolean userAuthenticated = util.isAuthenticated();
+    String returnUrl = req.getRequestURL().toString();
+    String logoutUrl = userService.createLogoutURL(returnUrl);
+    // there's no point redirecting user to real login page, because it will login him automatically.
+    String loginUrl = userService.createLoginURL(returnUrl);
+
     replaced = replaced.replace("###IS_AUTHENTICATED###", "" + userAuthenticated);
-
-    if (!userAuthenticated) {
-      String msg = "";
-      if (userService.isUserLoggedIn()) {
-        msg = ", but your email is <b>" + userService.getCurrentUser().getEmail() + "</b>";
-      }
-      replaced = replaced.replace("###WRONG_EMAIL_MSG###", msg);
-
-      String returnUrl = req.getRequestURL().toString();
-      String loginUrl = userService.createLoginURL(returnUrl);
-
-      if (userService.isUserLoggedIn()) {
-        loginUrl = "http://google.com/a/epam.com/";
-      }
-
-      replaced = replaced.replace("###LOGIN_URL###", loginUrl);
+    replaced = replaced.replace("###IS_LOGGED_IN###", "" + userService.isUserLoggedIn());
+    replaced = replaced.replace("###LOGIN_URL###", loginUrl);
+    replaced = replaced.replace("###LOGOUT_URL###", logoutUrl);
+    if (userService.isUserLoggedIn()) {
+      String email = userService.getCurrentUser().getEmail();
+      replaced = replaced.replace("###USER_EMAIL###", email);
     }
 
     replaced = replaced.replace("###MEMES_JSON###", allMemesJson);

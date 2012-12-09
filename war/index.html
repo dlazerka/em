@@ -29,15 +29,20 @@
       </span>
     </div>
 
-    <div id="sidePane" class="isLoggedIn_###IS_AUTHENTICATED###">
+    <div id="sidePane" class="visible_###IS_AUTHENTICATED###">
       <button id="showCreateDialog" onclick="$('.upload').toggle(); ga.trackCreate();">
         Create
       </button>
       <br/>
       <br/>
+<!--
       <button id="delete" style="display: none;">
         Delete
       </button>
+ -->
+      <a href="#popular">Popular Memes</a>
+      <a href="#all">All Memes</a>
+      <a href="#top">Top Memes</a>
     </div>
 
     <div id="contentPane">
@@ -67,9 +72,16 @@
         </div>
       </div>
 
-      <div class="pleaseLoginMessage isLoggedIn_###IS_AUTHENTICATED###">
-        <a href="###LOGIN_URL###">Please login</a> (now without logout).
-        Only accounts <b>@epam.com</b> are allowed###WRONG_EMAIL_MSG###.
+      <div class="notDisplay_###IS_AUTHENTICATED###">
+        <a href="###LOGIN_URL###">Please login</a>.
+        Only accounts <b>@epam.com</b> are allowed<span class="display_###IS_LOGGED_IN###">,
+        but your email is <b>###USER_EMAIL###</b>.
+        <br/>
+        <br/>
+
+        If it keeps logging you into <b>###USER_EMAIL###</b> then you have to
+        <a href="###LOGOUT_URL###">logout</a> (logs you out of all google services)</span>.
+
         <br/>
         <br/>
         Most people already have an account at <a href="http://google.com/a/epam.com">google.com/a/epam.com</a>,
@@ -83,6 +95,7 @@
 
     <script>
     var MEMES_JSON = ###MEMES_JSON###;
+    var IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
     </script>
     <script type="text/javascript" src="js/model/vote.js"></script>
     <script type="text/javascript" src="js/model/meme.js"></script>

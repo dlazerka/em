@@ -17,7 +17,7 @@ var _gaq = _gaq || [];
   }
 
   function trackLike(memeId, choice) {
-    _gaq.push(['_trackEvent', choice == 1 ? 'Like' : 'Dislike', 'memeId', '', memeId]);
+    _gaq.push(['_trackEvent', choice == 1 ? 'Like' : 'Dislike', memeId.toString(), '', 1]);
   }
 
   function trackCreate(memeId) {
@@ -26,6 +26,10 @@ var _gaq = _gaq || [];
 
   function trackInstallPlugin() {
     _gaq.push(['_trackEvent', 'Plugin install', '', '', 0]);
+  }
+
+  function trackNoAuth() {
+    _gaq.push(['_trackEvent', 'NoAuth']);
   }
 
   function trackError(msg) {
