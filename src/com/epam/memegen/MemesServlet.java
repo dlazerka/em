@@ -20,7 +20,7 @@ public class MemesServlet extends HttpServlet {
     resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
 
     String filter = req.getParameter("filter");
-    if (filter.isEmpty()) {
+    if (Util.isNullOrEmpty(filter)) {
       filter = "popular";
     }
 
