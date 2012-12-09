@@ -57,9 +57,7 @@ public class MainServlet extends HttpServlet {
     String returnUrl = req.getRequestURL().toString();
     String logoutUrl = userService.createLogoutURL(returnUrl);
     // there's no point redirecting user to real login page, because it will login him automatically.
-    String loginUrl = userService.isUserLoggedIn()
-        ? "http://google.com/a/epam.com/"
-        : userService.createLoginURL(returnUrl);
+    String loginUrl = userService.createLoginURL(returnUrl);
 
     replaced = replaced.replace("###IS_AUTHENTICATED###", "" + userAuthenticated);
     replaced = replaced.replace("###IS_LOGGED_IN###", "" + userService.isUserLoggedIn());
