@@ -42,17 +42,33 @@ public class AdhocServlet extends HttpServlet {
     FileInputStream fis = new FileInputStream("template-gangnam.gif");
     fis.read(bb, 0, 3000);
 
+    int frames = 0;
+    for (int i = 0; i < bb.length - 10; i++) {
+      if (bb[i] == 0
+          && bb[i+1] == 0x21
+          && bb[i+2] == -7 // 0xF9
+          && bb[i+3] == 0x04
+          && bb[i+8] == 0x2C
+          && bb[i+9] == 0x21
+          ) {
+        if (++frames >= 2) {
+          break;
+        }
+      }
+    }
+
     StringBuilder sb = new StringBuilder(156224 * 2);
     String s;
     for (int i = 0; i < bb.length ; i++ ) {
       byte b = bb[i];
 
-      s = Integer.toHexString(b > 0 ? b : (b & 0x7F | 0x80)).toUpperCase();
+      s = Integer.toHexString(b >= 0 ? b : (b & 0x7F | 0x80)).toUpperCase();
       if (s.length() < 2) {
         sb.append('0');
       }
       sb.append(s).append('_');
     }
+    sb.toString().indexOf("00_21_F9");
     if (true) return;
 
     PreparedQuery pq = datastore.prepare(new Query("Meme", allKey));

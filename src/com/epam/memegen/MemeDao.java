@@ -2,6 +2,7 @@ package com.epam.memegen;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -36,6 +39,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonWriter;
+
+import org.apache.commons.lang3.CharSet;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -60,6 +65,8 @@ public class MemeDao {
 
   private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+
   private final Util util = new Util();
 
   private final Expiration expiration = Expiration.byDeltaSeconds(666); // 11 minutes
@@ -310,6 +317,9 @@ public class MemeDao {
 
   private String create(String blobKey, String top, String center, String bottom)
       throws IOException {
+
+    boolean isAnimated = isAnimated(blobKey);
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity(KIND, allKey);
     entity.setProperty("deleted", false);
@@ -367,6 +377,42 @@ public class MemeDao {
     }
 
     return json;
+  }
+
+  private boolean isAnimated(String blobKey) {
+    byte[] bb = blobstoreService.fetchData(new BlobKey(blobKey), 0, BlobstoreService.MAX_BLOB_FETCH_SIZE);
+    if (bb.length < 10) return false;
+    // GIF89a
+    if (bb[0] != 0x47 ||
+        bb[1] != 0x49 ||
+        bb[2] != 0x46 ||
+        bb[3] != 0x38 ||
+        bb[4] != 0x39 ||
+        bb[5] != 0x61
+      ) {
+      return false;
+    }
+
+    int frames = 0;
+    for (int i = 0; i < bb.length - 10; i++) {
+      if (bb[i] == 0 &&
+          bb[i+1] == 0x21 &&
+          bb[i+2] == -7 && // 0xF9
+          bb[i+3] == 0x04 &&
+          bb[i+8] == 0x2C &&
+          bb[i+9] == 0x21
+          ) {
+        if (++frames >= 2) {
+          break;
+        }
+      }
+    }
+
+    if (frames >= 2) {
+      return true;
+    }
+
+    return false;
   }
 
   public void delete(long id) throws EntityNotFoundException, IOException {
