@@ -12,15 +12,15 @@
 + Add Analytics events.
 + Voting
 + Add Analytics events.
++ Page with positive memes
++ Page with high rankend memes
 > Still GIFs.
 * Clean upload form on hide.
 
 * Context
 * Pagination
-* Author
+* Author (We can save userId (like in votes) and allow author to edit his meme.)
 * Send Feedback
-* Page with positive memes
-* Page with high rankend memes
 
 * Draw text on image (Canvas cannot draw on animated GIFs).
 - Use Drag & Drop (Chrome doesn't catch 'drop' event, putting to long box)
