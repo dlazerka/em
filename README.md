@@ -1,6 +1,4 @@
-EPAM Memegens
+Meme Generator
 =============
 
-App Engine application allows users to see and create memes.
-
-Project was created during EPAM Mountain View Hackathon.
+App Engine application that allows users to upload a funny image and draw a text on it. Good for company internal entertainment.
