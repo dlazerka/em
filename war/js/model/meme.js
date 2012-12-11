@@ -69,14 +69,16 @@ var MemeView = Backbone.View.extend({
 
   positionMessages: function(fontSize) {
     fontSize = fontSize || this.fontSize;
-    var parentWidth = this.$el.width();
-    this.$('.message').map(function(i, el) {
+    var w = Number(this.model.get('width'));
+    var h = Number(this.model.get('height'));
+    var pw = Math.round(w * 200 / h);
+    this.$('.message').each(function(i, el) {
       el = $(el);
       var width = el.width();
-      if (parentWidth < width) {
-        el.css('font-size', Math.floor(fontSize * (parentWidth - 20) / width));
+      if (pw < width) {
+        el.css('font-size', Math.floor(fontSize * (pw - 20) / width));
       }
-      el.width(parentWidth);
+      el.width(pw);
     });
   },
 
@@ -143,13 +145,13 @@ var MemeView = Backbone.View.extend({
 
     this.$el.hide();
     img.load($.proxy(function() {
-      this.positionMessages();
       if (canvas) {
         img.hide();
         var context = canvas[0].getContext('2d');
         context.drawImage(img[0], 0, 0, pw, 200);
       }
       this.$el.show();
+      this.positionMessages();
     }, this));
 
     var voteView = new VoteView({model: this.model.vote});
