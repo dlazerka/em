@@ -27,6 +27,9 @@ import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.images.Image;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.memcache.ConsistentErrorHandler;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.InvalidValueException;
@@ -66,6 +69,7 @@ public class MemeDao {
   private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private final ImagesService imagesService = ImagesServiceFactory.getImagesService();
 
   private final Util util = new Util();
 
@@ -245,6 +249,14 @@ public class MemeDao {
     w.name("blobKey").value(escaped);
     w.name("src").value("/image/meme" + id + "?blobKey=" + escaped);
 
+
+    Boolean animated = (Boolean) meme.getProperty("animated");
+    Number height = (Number) meme.getProperty("height");
+    Number width = (Number) meme.getProperty("width");
+    if (animated != null) w.name("animated").value(animated);
+    if (height != null) w.name("height").value(height);
+    if (width != null) w.name("width").value(width);
+
     Date date = (Date) meme.getProperty("date");
     if (date != null) w.name("timestamp").value(date.getTime());
 
@@ -315,17 +327,23 @@ public class MemeDao {
     return create(blobKey, top, center, bottom);
   }
 
-  private String create(String blobKey, String top, String center, String bottom)
+  private String create(String blobKeyS, String top, String center, String bottom)
       throws IOException {
+    BlobKey blobKey = new BlobKey(blobKeyS);
 
-    boolean isAnimated = isAnimated(blobKey);
+    byte[] imageData = blobstoreService.fetchData(blobKey, 0, BlobstoreService.MAX_BLOB_FETCH_SIZE - 1);
+    Image image = ImagesServiceFactory.makeImage(imageData);
+    boolean animated = isAnimated(imageData);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity(KIND, allKey);
     entity.setProperty("deleted", false);
-    entity.setProperty("blobKey", new BlobKey(blobKey));
+    entity.setProperty("blobKey", blobKey);
     Date justCreatedDate = new Date();
     entity.setProperty("date", justCreatedDate);
+    entity.setProperty("width", image.getWidth());
+    entity.setProperty("height", image.getHeight());
+    entity.setProperty("animated", animated);
     entity.setProperty("rating", 0);
     entity.setProperty("isPositive", true);
     if (!Util.isNullOrEmpty(top)) {
@@ -379,8 +397,8 @@ public class MemeDao {
     return json;
   }
 
-  private boolean isAnimated(String blobKey) {
-    byte[] bb = blobstoreService.fetchData(new BlobKey(blobKey), 0, BlobstoreService.MAX_BLOB_FETCH_SIZE);
+  /** Determines if it's a GIF image and it has more than one frame. */
+  private boolean isAnimated(byte[] bb) {
     if (bb.length < 10) return false;
     // GIF89a
     if (bb[0] != 0x47 ||
@@ -394,13 +412,13 @@ public class MemeDao {
     }
 
     int frames = 0;
-    for (int i = 0; i < bb.length - 10; i++) {
+    for (int i = 0; i < bb.length - 11; i++) {
       if (bb[i] == 0 &&
           bb[i+1] == 0x21 &&
           bb[i+2] == -7 && // 0xF9
           bb[i+3] == 0x04 &&
-          bb[i+8] == 0x2C &&
-          bb[i+9] == 0x21
+          bb[i+8] == 0 &&
+          bb[i+9] == 0x2C
           ) {
         if (++frames >= 2) {
           break;

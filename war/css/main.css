@@ -166,12 +166,22 @@ img.preview {
 .meme.memeSmall {
   cursor: pointer;
   height: 200px;
+  border: 1px gray solid;
 }
 
-.meme img {
+.memeSmall .img,
+.meme .canvas {
   display: inline-block;
   height: 200px;
-  border: 1px gray solid;
+}
+
+.videoIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  max-width: 50%;
+  max-height: 50%;
 }
 
 .meme span {

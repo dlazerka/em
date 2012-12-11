@@ -5,6 +5,9 @@ var Meme = Backbone.Model.extend({
     id: null,
     blobKey: null,
     src: '',
+    animated: false,
+    height: null,
+    width: null,
     top: null,
     center: null,
     bottom: null,
@@ -17,7 +20,7 @@ var Meme = Backbone.Model.extend({
 
   initialize: function() {
     this.vote = new Vote({
-      id: this.id, 
+      id: this.id,
       rating: this.get('rating')
     });
     this.vote.on('change', function () {
@@ -95,34 +98,67 @@ var MemeView = Backbone.View.extend({
   },
 
   createImg: function() {
-    var img = $('<img/>');
+    var img = $('<img class="img"/>');
     // MemeDao must have not composed it with <>, just to be sure.
     var src = this.model.get('src');
     var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('src', src);
-    var text = _.values(this.model.getMessagesMap()).join(' ');
+    var text = _.values(this.model.getMessagesMap()).join(' ').trim();
     // MemeDao has already escaped them, just to be sure.
     text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('alt', text);
-    img.attr('title', text);
+    if (text) {
+      img.attr('title', text);
+    }
     return img;
   },
 
   render: function(fontSize) {
     this.$el.empty();
+    var w = Number(this.model.get('width'));
+    var h = Number(this.model.get('height'));
+    var pw = Math.round(w * 200 / h);
 
     var messageEls = this.createMessages();
 
     var img = this.createImg();
+    if (this.model.get('animated') && this.className.indexOf('memeSmall') > -1) {
+      var canvas = $('<canvas class="canvas">');
+      var videoIcon = $('<img src="img/video.svg" class="videoIcon" alt="video"/>')
+      canvas.attr('width', pw);
+      canvas.attr('height', 200);
+      this.$el.mouseover(function () {
+        canvas.hide();
+        videoIcon.hide();
+        img.show();
+      });
+      this.$el.mouseout(function () {
+        var context = canvas[0].getContext('2d');
+        context.drawImage(img[0], 0, 0, pw, 200);
+        canvas.show();
+        videoIcon.show();
+        img.hide();
+      });
+    }
+
     this.$el.hide();
     img.load($.proxy(function() {
-      this.$el.show();
       this.positionMessages();
+      if (canvas) {
+        img.hide();
+        var context = canvas[0].getContext('2d');
+        context.drawImage(img[0], 0, 0, pw, 200);
+      }
+      this.$el.show();
     }, this));
 
     var voteView = new VoteView({model: this.model.vote});
     this.$el.append(messageEls);
     this.$el.append(img);
+    if (canvas) {
+      this.$el.append(canvas);
+      this.$el.append(videoIcon);
+    }
     this.$el.append(voteView.render().$el);
 
     return this;
