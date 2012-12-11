@@ -111,7 +111,9 @@ var Create = {
           xhr.upload.addEventListener("progress", progressListener, false);
           return xhr;
         },
-    }).done($.proxy(this.onUploadDone, this));
+    })
+    .done($.proxy(this.onUploadDone, this))
+    .error($.proxy(this.onUploadError, this));
   },
 
   onUploadDone: function(data) {
@@ -130,6 +132,10 @@ var Create = {
           this.memeView.positionMessages();
         }, this));
       }
+  },
+
+  onUploadError: function(jqXhr, status, message) {
+    Msg.error('Error: ' + message);
   },
 
   onUploadProgessEvent: function(event) {

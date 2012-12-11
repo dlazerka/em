@@ -30,6 +30,7 @@ div.clear {
   padding: 3px 10px 1px;
   font-weight: bold;
   font-size: 0.9em;
+  z-index: 10;
 }
 
 .msg.error {
