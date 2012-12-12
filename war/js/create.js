@@ -18,8 +18,12 @@ var MemePreview = MemeView.extend({
       $('#uploadHelperText').show();
       $('#top,#center,#bottom').val('');
     } else {
+      var img = this.createImg();
       this.$el.append(this.createMessages());
-      this.$el.append(this.createImg());
+      this.$el.append(img);
+      img.css('width', this.getDesiredWidth());
+      img.css('height', this.getDesiredHeight());
+
       $('#uploadHelperText').hide();
     }
     $('#preview').html(this.$el);
@@ -46,20 +50,8 @@ var Create = {
     if ($('.upload').css('display') == 'none') {
       return false;
     }
-    var src = memeView.model.get('src');
-    var blobKey = memeView.model.get('blobKey');
-    this.setImage(src, blobKey);
-
-    // Set width/height from clicked meme, because image is not drawn yet,
-    // and we cannot assign "onload" event because the image is already in cache.
-    var w = memeView.$('img').width();
-    var h = memeView.$('img').height();
-    var proportionalWidth = w * 200 / h;
-    var img = this.memeView.$('img');
-    img.width(proportionalWidth);
-    img.height(200);
-
-    this.memeView.positionMessages();
+    this.meme.set(memeView.model);
+    this.setImage();
     return true;
   },
 
@@ -74,14 +66,10 @@ var Create = {
     this.memeView.positionMessages();
   },
 
-  setImage: function(src, blobKey) {
+  setImage: function() {
     $('#uploadHelperText').hide();
-
-    this.meme.set({'src': src, 'blobKey': blobKey});
-    this.memeView.render();
     this.updateMessages();
-
-    $('form [name="blobKey"]').val(blobKey);
+    this.memeView.render();
   },
 
   /** @param event {ChangeEvent} */
@@ -117,21 +105,26 @@ var Create = {
   },
 
   onUploadDone: function(data) {
-      // Set new upload URL so we can re-upload.
-      $('#uploadUrl').val(data.newUploadUrl);
-      Msg.info('Uploaded!', 1500);
+    // Set new upload URL so we can re-upload.
+    $('#uploadUrl').val(data.newUploadUrl);
+    Msg.info('Uploaded!', 1500);
 
-      var src = data.uploads[0].src;
-      var blobKey = data.uploads[0].blobKey;
-      this.setImage(src, blobKey);
-      var img = this.memeView.$('img');
-      if (img[0].complete) {
-        this.memeView.positionMessages();
-      } else {
-        img.load($.proxy(function() {
-          this.memeView.positionMessages();
-        }, this));
-      }
+    this.meme.set({
+      'src': data.uploads[0].src,
+      'blobKey': data.uploads[0].blobKey});
+
+    this.setImage();
+
+    var img = this.memeView.$('img');
+    function onComplete() {
+      this.meme.set('width', img.width());
+      this.meme.set('height', img.height());
+    }
+    if (img[0].complete) {
+      onComplete();
+    } else {
+      img.load($.proxy(onComplete, this));
+    }
   },
 
   onUploadError: function(jqXhr, status, message) {

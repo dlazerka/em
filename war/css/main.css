@@ -177,7 +177,7 @@ img.preview {
 
 .videoIcon {
   position: absolute;
-  top: 0;
+  top: 20%;
   left: 0;
   width: 50px;
   max-width: 50%;
@@ -229,7 +229,7 @@ img.preview {
 }
 
 .meme.memeBig .bottom-center {
-    bottom: 20px;
+  bottom: 20px;
 }
 
 .meme.memeBig {
@@ -238,7 +238,6 @@ img.preview {
 
 .meme.memeBig img {
   height: auto;
-  min-height: 500px;
 }
 
 .meme.memeBig .message {
