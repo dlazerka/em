@@ -2,13 +2,13 @@ package com.epam.memegen;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -42,9 +42,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonWriter;
-
-import org.apache.commons.lang3.CharSet;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Memcache contains JSONs for:
@@ -333,6 +330,11 @@ public class MemeDao {
 
     byte[] imageData = blobstoreService.fetchData(blobKey, 0, BlobstoreService.MAX_BLOB_FETCH_SIZE - 1);
     Image image = ImagesServiceFactory.makeImage(imageData);
+    try {
+      image.getFormat();
+    } catch (IllegalArgumentException e) {
+      throw new IOException("Invalid image format", e);
+    }
     boolean animated = isAnimated(imageData);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
