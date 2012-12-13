@@ -40,6 +40,9 @@ var _gaq = _gaq || [];
   window.ga.trackLike = trackLike;
   window.ga.trackCreate = trackCreate;
   window.ga.trackError = trackError;
-
+  window.ga.trackInstallPlugin = trackInstallPlugin;
+  window.ga.trackNoAuth = trackNoAuth;
+  window.ga.trackError = trackError;
+  
   init();
 })();
