@@ -235,7 +235,8 @@ img.preview {
 .meme.memeBig {
   height: auto;
   float: none;
-  margin: 0;
+  margin: 0 0 10px;
+  display: inline-block;
 }
 
 .meme.memeBig img {

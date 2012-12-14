@@ -59,7 +59,7 @@ var CommentsView = Backbone.View.extend({
     var memeId = this.memeId;
     var model = this.model;
     var newComment = $('<textarea id="commentText" class="addCommentTextArea"></textarea>');
-    var submitComment = $('<input type="button" class="addCommentButton" value="Submit"/>');
+    var submitComment = $('<input type="button" class="addCommentButton" value="Add comment"/>');
     submitComment.on('click', function() {
       var newCommentTextArea = $('#commentText')[0];
       var text = newCommentTextArea.value;
