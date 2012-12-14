@@ -280,10 +280,13 @@ img.preview {
   display: block;
 }
 
+.comments {
+  min-width: 620px;
+  font-family: arial, sans-serif;
+}
+
 .comment {
   clear: both;
-  min-width: 600px;
-  font-family: arial, sans-serif;
 }
 
 .comment .avatar {
@@ -314,4 +317,18 @@ img.preview {
   color: #aaa;
   font-size: 10px;
   font-weight: 100;
+}
+
+.comments .addCommentTextArea {
+  float: left;
+  clear: left;
+  width: 300px;
+  height: 100px;
+}
+
+.comments .addCommentButton {
+  float: left;
+  margin-left: 10px;
+  width: 100px;
+  height: 50px;
 }

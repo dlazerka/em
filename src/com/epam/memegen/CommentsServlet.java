@@ -1,13 +1,15 @@
 package com.epam.memegen;
 
 import com.epam.memegen.model.Comment;
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.labs.repackaged.com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import javax.servlet.ServletException;
@@ -19,6 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import static com.epam.memegen.Util.isNullOrEmpty;
 
 /**
  * @author Andrey Mormysh
@@ -42,6 +46,9 @@ public class CommentsServlet extends HttpServlet {
     JsonElement jsonElement = new JsonParser().parse(req.getReader());
     Comment comment = new Gson().fromJson(jsonElement, Comment.class);
     String user = getUserEmail();
+    if (isNullOrEmpty(comment.getText())) {
+      return;
+    }
     comment.setUser(user);
     comment.setTimestamp(new Date().getTime());
     saveComment(comment);
@@ -55,7 +62,7 @@ public class CommentsServlet extends HttpServlet {
     Query commentsQuery = new Query(Comment.KIND).setFilter(
         Query.FilterOperator.EQUAL.of(Comment.MEME_ID, memeId));
     List<Comment> comments = Lists.newArrayList();
-    for(Entity entity : datastore.prepare(commentsQuery).asIterable()) {
+    for (Entity entity : datastore.prepare(commentsQuery).asIterable()) {
       comments.add(fromEntity(entity));
     }
     Collections.sort(comments, new Comparator<Comment>() {
@@ -85,10 +92,10 @@ public class CommentsServlet extends HttpServlet {
   }
 
   private Comment fromEntity(Entity entity) {
-    long memeId = (Long)entity.getProperty(Comment.MEME_ID);
+    long memeId = (Long) entity.getProperty(Comment.MEME_ID);
     String text = (String) entity.getProperty(Comment.TEXT);
-    long timestamp = (Long)entity.getProperty(Comment.TIMESTAMP);
-    String user = (String)entity.getProperty(Comment.USER);
+    long timestamp = (Long) entity.getProperty(Comment.TIMESTAMP);
+    String user = (String) entity.getProperty(Comment.USER);
     return new Comment(memeId, text, timestamp, user);
   }
 

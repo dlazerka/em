@@ -58,10 +58,16 @@ var CommentsView = Backbone.View.extend({
     }
     var memeId = this.memeId;
     var model = this.model;
-    var newComment = $('<textarea id="commentText"></textarea>');
-    var submitComment = $('<input type="button" value="Submit"/>');
+    var newComment = $('<textarea id="commentText" class="addCommentTextArea"></textarea>');
+    var submitComment = $('<input type="button" class="addCommentButton" value="Submit"/>');
     submitComment.on('click', function() {
-      model.addComment(memeId, $('#commentText')[0].value);
+      var newCommentTextArea = $('#commentText')[0];
+      var text = newCommentTextArea.value;
+      model.addComment(memeId, text);
+      newCommentTextArea.value = "";
+      submitComment.disabled = true;
+        // todo: refresh just comments
+      setTimeout(function() { window.location.reload(true) }, 1000);
     });
 
     this.$el.append(newComment);
