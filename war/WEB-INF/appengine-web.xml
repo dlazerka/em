@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
   <application>epammeme</application>
-  <version>16-fix-missing-ga-functions</version>
+  <version>17-improve-styles</version>
 
-  <!--
-    Allows App Engine to send multiple requests to one instance in parallel:
-  -->
+  <static-files>
+    <include path="/favicon.ico" expiration="1d" />
+    <include path="/robots.txt" expiration="1d" />
+    <include path="/**.css" expiration="666s" />
+    <include path="/**.png" expiration="666s" />
+    <include path="/**.svg" expiration="666s" />
+    <include path="/**.js" expiration="666s" />
+  </static-files>
+
+  <resource-files>
+    <include path="/index.html" />
+  </resource-files>
+
   <threadsafe>true</threadsafe>
 
   <!-- Configure java.util.logging -->
