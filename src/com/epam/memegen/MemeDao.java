@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -89,7 +90,7 @@ public class MemeDao {
     return key;
   }
 
-  public String getAllAsJson(HttpServletRequest req, String filter) throws IOException {
+  public String getAllAsJson(HttpServletRequest req, String which) throws IOException {
     if (!util.isAuthenticated()) {
       return "[]";
     }
@@ -117,11 +118,11 @@ public class MemeDao {
       }
     } else if (limit == null) {
       String json = null;
-      if (filter.equals("all")) {
+      if (which.equals("all")) {
         json = (String) memcache.get(ALL);
-      } else if (filter.equals("popular")) {
+      } else if (which.equals("popular")) {
         json = (String) memcache.get(POPULAR);
-      } else if (filter.equals("top")) {
+      } else if (which.equals("top")) {
         json = (String) memcache.get(TOP);
       }
       if (json != null) {
@@ -131,26 +132,21 @@ public class MemeDao {
 
     Date youngest = null;
     Query q = new Query(KIND, allKey);
-    if (filter.equals("all")) {
+    Filter filter = FilterOperator.EQUAL.of("deleted", false);
+    if (which.equals("all")) {
       q.addSort("date", SortDirection.DESCENDING);
-      q.setFilter(FilterOperator.EQUAL.of("deleted", false));
-    }
-
-    if (filter.equals("popular")) {
+    } else if (which.equals("popular")) {
       q.addSort("date", SortDirection.DESCENDING);
-      q.setFilter(CompositeFilterOperator.and(
-          FilterOperator.EQUAL.of("deleted", false),
-          FilterOperator.EQUAL.of("isPositive", true)));
-    }
-
-    if (filter.equals("top")) {
+      filter = CompositeFilterOperator.and(filter, FilterOperator.EQUAL.of("isPositive", true));
+    } else if (which.equals("top")) {
       q.addSort("rating", SortDirection.DESCENDING);
-      q.setFilter(FilterOperator.EQUAL.of("deleted", false));
     }
 
     if (since != null) {
-      q.setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
+      filter = CompositeFilterOperator.and(filter, new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
     }
+
+    q.setFilter(filter);
 
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
     if (limit != null) {
@@ -176,11 +172,11 @@ public class MemeDao {
     w.close();
     String value = out.toString();
     if (limit == null && since == null) {
-      if (filter.equals("all")) {
+      if (which.equals("all")) {
         memcache.put(ALL, value, expiration);
-      } else if (filter.equals("popular")) {
+      } else if (which.equals("popular")) {
         memcache.put(POPULAR, value, expiration);
-      } else if (filter.equals("top")) {
+      } else if (which.equals("top")) {
         memcache.put(TOP, value, expiration);
       }
     }
