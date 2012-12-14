@@ -51,6 +51,7 @@ var Create = {
       return false;
     }
     this.meme.set(memeView.model);
+    this.meme.set({id: null});
     this.setImage();
     return true;
   },
