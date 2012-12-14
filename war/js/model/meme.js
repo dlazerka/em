@@ -67,18 +67,34 @@ var MemeView = Backbone.View.extend({
     }
   },
 
-  positionMessages: function(fontSize) {
-    fontSize = fontSize || this.fontSize;
+  getDesiredWidth: function() {
     var w = Number(this.model.get('width'));
     var h = Number(this.model.get('height'));
-    var pw = Math.round(w * 200 / h);
-    this.$('.message').each(function(i, el) {
-      el = $(el);
-      var width = el.width();
-      if (pw < width) {
-        el.css('font-size', Math.floor(fontSize * (pw - 20) / width));
+    if (!w || !h) return null; // width/height may be unset for just uploaded message which is not yel loaded by browser
+    var dh = this.getDesiredHeight();
+    return Math.round(w * dh / h); // proportional
+  },
+
+  getDesiredHeight: function() {
+    if (this.className.indexOf('memeBig') == -1) {
+      return 200;
+    } else {
+      return 500;
+    }
+  },
+
+  positionMessages: function(fontSize) {
+    fontSize = fontSize || this.fontSize;
+    var desiredWidth = this.getDesiredWidth();
+    if (!desiredWidth) return;
+    this.$('.message').each(function(i, messageEl) {
+      messageEl = $(messageEl);
+      var fullWidth = messageEl.width();
+      if (desiredWidth < fullWidth) {
+        var ratio = (desiredWidth - 20) / fullWidth;
+        messageEl.css('font-size', Math.floor(fontSize * ratio));
       }
-      el.width(pw);
+      messageEl.width(desiredWidth);
     });
   },
 
@@ -105,6 +121,10 @@ var MemeView = Backbone.View.extend({
     var src = this.model.get('src');
     var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('src', src);
+    if (this.getDesiredWidth()) {
+      img.attr('width', this.getDesiredWidth());
+      img.attr('height', this.getDesiredHeight());
+    }
     var text = _.values(this.model.getMessagesMap()).join(' ').trim();
     // MemeDao has already escaped them, just to be sure.
     text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -117,18 +137,18 @@ var MemeView = Backbone.View.extend({
 
   render: function(fontSize) {
     this.$el.empty();
-    var w = Number(this.model.get('width'));
-    var h = Number(this.model.get('height'));
-    var pw = Math.round(w * 200 / h);
+    var width = this.getDesiredWidth();
+    var height = this.getDesiredHeight();
 
     var messageEls = this.createMessages();
 
     var img = this.createImg();
-    if (this.model.get('animated') && this.className.indexOf('memeSmall') > -1) {
+
+    if (this.model.get('animated') && this.className.indexOf('memeBig') == -1) {
       var canvas = $('<canvas class="canvas">');
       var videoIcon = $('<img src="img/video.svg" class="videoIcon" alt="video"/>')
-      canvas.attr('width', pw);
-      canvas.attr('height', 200);
+      canvas.attr('width', width);
+      canvas.attr('height', height);
       this.$el.mouseover(function () {
         canvas.hide();
         videoIcon.hide();
@@ -136,7 +156,7 @@ var MemeView = Backbone.View.extend({
       });
       this.$el.mouseout(function () {
         var context = canvas[0].getContext('2d');
-        context.drawImage(img[0], 0, 0, pw, 200);
+        context.drawImage(img[0], 0, 0, width, height);
         canvas.show();
         videoIcon.show();
         img.hide();
@@ -148,19 +168,19 @@ var MemeView = Backbone.View.extend({
       if (canvas) {
         img.hide();
         var context = canvas[0].getContext('2d');
-        context.drawImage(img[0], 0, 0, pw, 200);
+        context.drawImage(img[0], 0, 0, width, height);
       }
       this.$el.show();
       this.positionMessages();
     }, this));
 
     var voteView = new VoteView({model: this.model.vote});
-    this.$el.append(messageEls);
     this.$el.append(img);
     if (canvas) {
       this.$el.append(canvas);
       this.$el.append(videoIcon);
     }
+    this.$el.append(messageEls);
     this.$el.append(voteView.render().$el);
 
     return this;

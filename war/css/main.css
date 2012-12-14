@@ -44,7 +44,7 @@ h1#header {
   border-bottom: 1px gray solid;
   margin: 0;
   font-style: italic;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.05);
 }
 
 h1#header {
@@ -177,7 +177,7 @@ img.preview {
 
 .videoIcon {
   position: absolute;
-  top: 0;
+  top: 20%;
   left: 0;
   width: 50px;
   max-width: 50%;
@@ -229,7 +229,7 @@ img.preview {
 }
 
 .meme.memeBig .bottom-center {
-    bottom: 20px;
+  bottom: 20px;
 }
 
 .meme.memeBig {
@@ -240,7 +240,6 @@ img.preview {
 
 .meme.memeBig img {
   height: auto;
-  min-height: 500px;
 }
 
 .meme.memeBig .message {
