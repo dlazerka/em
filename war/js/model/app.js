@@ -1,6 +1,7 @@
 var AppRouterClass = Backbone.Router.extend({
   memes: new Memes(MEMES_JSON),
   memesListEl: $('#memesList'),
+  comments: new Comments(),
 
   routes: {
     '': 'start',
@@ -41,6 +42,13 @@ var AppRouterClass = Backbone.Router.extend({
       success: _.bind(this.start, this)});
   },
 
+  getComments: function(memeId) {
+    console.log("getComments:" + memeId);
+    this.comments.fetch({
+      data: {id: memeId},
+      success: _.bind(this.showComments, this, memeId)});
+  },
+
   getMemes: function() {
     this.memes = new Memes();
     this.memes.fetch({success: $.proxy(this.onSuccessFetchAll_, this)});
@@ -50,6 +58,16 @@ var AppRouterClass = Backbone.Router.extend({
     this.memes.unshift(meme);
     var memeView = new MemeView({model: meme});
     this.memesListEl.prepend(memeView.render().$el);
+  },
+
+  showComments: function(memeId) {
+    console.log("showComments");
+    console.log(this.comments);
+
+    this.memesListEl.append(new CommentsView({
+      model: this.comments,
+      memeId: memeId
+    }).render().$el);
   },
 
   showOneMeme: function(id) {
@@ -64,7 +82,8 @@ var AppRouterClass = Backbone.Router.extend({
       $('#delete').prop('disabled', true);
       Msg.info('Deleting...');
       meme.destroy({success: $.proxy(this.onSuccessDestroy_, this)})
-    }, this))
+    }, this));
+    this.getComments(id);
   },
 
   showAllMemes_: function() {

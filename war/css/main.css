@@ -233,6 +233,9 @@ img.preview {
 
 .meme.memeBig {
   height: auto;
+  float: none;
+  margin: 0 0 10px;
+  display: inline-block;
 }
 
 .meme.memeBig img {
@@ -275,4 +278,57 @@ img.preview {
 
 .meme:hover .vote {
   display: block;
+}
+
+.comments {
+  min-width: 620px;
+  font-family: arial, sans-serif;
+}
+
+.comment {
+  clear: both;
+}
+
+.comment .avatar {
+  height: 40px;
+  width: 40px;
+  float: left;
+  margin: 10px 10px 10px 0;
+}
+
+.comment .rightSide {
+  float: left;
+  max-width: 550px;
+  margin: 10px;
+}
+
+.comment .user {
+  color: #438BC5;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.comment .text {
+  color: #000;
+  font-size: 21px;
+}
+
+.comment .timestamp {
+  color: #aaa;
+  font-size: 10px;
+  font-weight: 100;
+}
+
+.comments .addCommentTextArea {
+  float: left;
+  clear: left;
+  width: 300px;
+  height: 100px;
+}
+
+.comments .addCommentButton {
+  float: left;
+  margin-left: 10px;
+  width: 100px;
+  height: 50px;
 }
