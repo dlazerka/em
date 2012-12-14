@@ -234,6 +234,8 @@ img.preview {
 
 .meme.memeBig {
   height: auto;
+  float: none;
+  margin: 0;
 }
 
 .meme.memeBig img {
@@ -277,4 +279,40 @@ img.preview {
 
 .meme:hover .vote {
   display: block;
+}
+
+.comment {
+  clear: both;
+  min-width: 600px;
+  font-family: arial, sans-serif;
+}
+
+.comment .avatar {
+  height: 40px;
+  width: 40px;
+  float: left;
+  margin: 10px 10px 10px 0;
+}
+
+.comment .rightSide {
+  float: left;
+  max-width: 550px;
+  margin: 10px;
+}
+
+.comment .user {
+  color: #438BC5;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.comment .text {
+  color: #000;
+  font-size: 21px;
+}
+
+.comment .timestamp {
+  color: #aaa;
+  font-size: 10px;
+  font-weight: 100;
 }
