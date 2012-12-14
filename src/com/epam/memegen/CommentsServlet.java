@@ -1,10 +1,7 @@
 package com.epam.memegen;
 
 import com.epam.memegen.model.Comment;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.labs.repackaged.com.google.common.collect.Lists;
@@ -100,7 +97,7 @@ public class CommentsServlet extends HttpServlet {
   }
 
   private Entity toEntity(Comment comment) {
-    Entity entity = new Entity("Comment");
+    Entity entity = new Entity("Comment", KeyFactory.createKey(MemeDao.KIND, comment.getMemeId()));
     entity.setProperty(Comment.MEME_ID, comment.getMemeId());
     entity.setProperty(Comment.TEXT, comment.getText());
     entity.setProperty(Comment.TIMESTAMP, comment.getTimestamp());

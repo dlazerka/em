@@ -54,7 +54,7 @@ import com.google.gson.stream.JsonWriter;
 public class MemeDao {
   private static final Logger logger = Logger.getLogger(MemeDao.class.getName());
 
-  private static final String KIND = "Meme";
+  public static final String KIND = "Meme";
 
   public static final String LAST_TS = "LAST_TS";
   public static final String ALL = "ALL";
