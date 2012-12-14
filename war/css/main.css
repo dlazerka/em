@@ -44,7 +44,7 @@ h1#header {
   border-bottom: 1px gray solid;
   margin: 0;
   font-style: italic;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.05);
 }
 
 h1#header {
