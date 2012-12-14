@@ -195,7 +195,6 @@ img.preview {
   font-family: Impact;
   font-size: 30px;
   text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
-  white-space: nowrap;
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
 }

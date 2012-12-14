@@ -87,14 +87,15 @@ var MemeView = Backbone.View.extend({
     fontSize = fontSize || this.fontSize;
     var desiredWidth = this.getDesiredWidth();
     if (!desiredWidth) return;
+    var margin = 10;
     this.$('.message').each(function(i, messageEl) {
       messageEl = $(messageEl);
       var fullWidth = messageEl.width();
       if (desiredWidth < fullWidth) {
-        var ratio = (desiredWidth - 20) / fullWidth;
-        messageEl.css('font-size', Math.floor(fontSize * ratio));
+        var ratio = (desiredWidth - 2*margin) / fullWidth;
+        messageEl.css('zoom', ratio);
       }
-      messageEl.width(desiredWidth);
+      messageEl.width('100%');
     });
   },
 
