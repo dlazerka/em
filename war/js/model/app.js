@@ -113,3 +113,10 @@ if (IS_AUTHENTICATED === false) {
 
 // Trigger the initial route and enable HTML5 History API support
 Backbone.history.start();
+
+// Make header ('<epam:memegen>') a link to the home
+$('#header')
+    .css("cursor", "pointer")
+    .click(function() {
+      location = "/";
+    });
