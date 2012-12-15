@@ -77,7 +77,6 @@ var AppRouterClass = Backbone.Router.extend({
     this.memesListEl.html(memeView.render(50).$el);
     this.memesListEl.append('<br/>');
     var button = $('#delete');
-    button.prop('disabled', false).show();
     button.on('click', $.proxy(function() {
       $('#delete').prop('disabled', true);
       Msg.info('Deleting...');
