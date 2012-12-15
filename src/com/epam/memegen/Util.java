@@ -22,7 +22,7 @@ public class Util {
   }
 
   public String createUploadUrl() {
-    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 20);
+    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 22);
     // Success path doesn't matter because we're uploading by AJAX.
     String uploadUrl = blobstoreService.createUploadUrl("/upload", uploadOptions);
     return uploadUrl;
