@@ -8,6 +8,7 @@
     <include path="/robots.txt" expiration="1d" />
     <include path="/**.css" expiration="666s" />
     <include path="/**.png" expiration="666s" />
+    <include path="/**.jpg" expiration="666s" />
     <include path="/**.svg" expiration="666s" />
     <include path="/**.js" expiration="666s" />
   </static-files>
