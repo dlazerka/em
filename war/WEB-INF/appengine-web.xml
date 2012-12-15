@@ -12,7 +12,8 @@
     <include path="/**.jpg" expiration="666s" />
     <include path="/**.svg" expiration="666s" />
     <include path="/**.js" expiration="666s" />
-  </static-files>
+    <include path="/**.tpl" expiration="666s" />
+    </static-files>
 
   <resource-files>
     <include path="/index.html" />

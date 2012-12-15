@@ -22,21 +22,28 @@ var CommentView = Backbone.View.extend({
   tagName: 'div',
   className: 'comment',
 
+  /** @type {jQuery.promise} */
+  template: null, 
+  /** @type {Underscore.template} */
+  compiledTemplate: null,
+
+  initialize: function() {
+    if(!this.template) { 
+      CommentView.prototype.template = $.get('js/tmpl/comment.tpl');
+    }
+  },
+
   render: function() {
     this.$el.empty();
 
-    var user = this.model.get('user');
-    var text = this.model.get('text');
-    var timestamp = this.model.get('timestamp');
-
-    this.$el.html("" +
-        "<img src='img/avatar.jpg' class='avatar'/>" +
-        "<div class='rightSide'><div><span class='user'>" + user + "</span>" +
-        "<span class='timestamp'>" + new Date(timestamp).toString('') + "</span></div>" +
-        //"<span class='text'>" + text + "</span>" +
-        $('<span/>').text(text).html() +
-        "</div>"
-    );
+    // Done means that function will be runned when template is loaded.
+    this.template.done(_.bind(function(tpl) {
+      // Cache compiled template.
+      if (!this.compiledTemplate) {
+        CommentView.prototype.compiledTemplate = _.template(tpl);
+      }
+      this.$el.html(this.compiledTemplate(this.model.toJSON())) ; 
+    }, this));
 
     return this;
   }

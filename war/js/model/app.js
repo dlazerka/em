@@ -106,6 +106,8 @@ $.ajaxSetup({
   // doesn't actually work, because of backbone bug https://github.com/documentcloud/backbone/issues/1875
   'contentType': 'application/json; charset=UTF-8'
 });
+
+
 var AppRouter = new AppRouterClass();
 if (IS_AUTHENTICATED === false) {
   ga.trackNoAuth();
@@ -118,5 +120,5 @@ Backbone.history.start();
 $('#header')
     .css("cursor", "pointer")
     .click(function() {
-      location = "/";
+      Backbone.history.navigate('', true);
     });
