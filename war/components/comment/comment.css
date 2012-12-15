@@ -1,0 +1,45 @@
+.comments {
+  font-family: arial, sans-serif;
+  margin: 10px 20px 20px 0;
+}
+
+.comments .comment {
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.comments .comment .avatar {
+  float: left;
+  height: 40px;
+  width: 40px;
+}
+
+.comments .comment .rightSide {
+  max-width: 550px;
+  margin: 0 10px 0 60px;
+}
+
+.comments .comment .user {
+  color: #438BC5;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.comments .comment .text {
+  color: #000;
+  margin-top: 5px;
+}
+
+.comments .comment .timestamp {
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 100;
+}
+
+.comments .addCommentTextArea {
+  width: 300px;
+}
+
+.comments .addCommentButton {
+  display: block;
+}

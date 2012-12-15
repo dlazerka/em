@@ -49,6 +49,8 @@ public class CommentsServlet extends HttpServlet {
     comment.setUser(user);
     comment.setTimestamp(new Date().getTime());
     saveComment(comment);
+    comment.setUser(getUserName(comment.getUser()));
+    resp.getWriter().write(new Gson().toJson(comment));
   }
 
   private void saveComment(Comment comment) {
