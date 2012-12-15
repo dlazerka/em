@@ -70,6 +70,7 @@ var CommentForm = Backbone.View.extend({
   },
 
   addNew: function() {
+    ga.trackComment(this.model.get('memeId'));
     var text = $('.addCommentTextArea', this.$el).val();
     this.model.save('text', text, {success: _.bind(function(model) {
       this.options.list.add(model);

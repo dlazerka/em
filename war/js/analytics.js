@@ -20,8 +20,12 @@ var _gaq = _gaq || [];
     _gaq.push(['_trackEvent', choice == 1 ? 'Like' : 'Dislike', memeId.toString(), '', 1]);
   }
 
+  function trackComment(memeId) {
+    _gaq.push(['_trackEvent', 'Comment', memeId.toString(), '', 1]);
+  }
+
   function trackCreate(memeId) {
-    _gaq.push(['_trackEvent', 'Create', '', '', 0]);
+    _gaq.push(['_trackEvent', 'Create', 'New Meme', '', 1]);
   }
 
   function trackInstallPlugin() {
@@ -38,6 +42,7 @@ var _gaq = _gaq || [];
 
   window.ga.trackPage = trackPage;
   window.ga.trackLike = trackLike;
+  window.ga.trackComment = trackComment;
   window.ga.trackCreate = trackCreate;
   window.ga.trackError = trackError;
   window.ga.trackInstallPlugin = trackInstallPlugin;
