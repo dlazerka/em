@@ -33,7 +33,9 @@ var CommentView = Backbone.View.extend({
         "<img src='img/avatar.jpg' class='avatar'/>" +
         "<div class='rightSide'><div><span class='user'>" + user + "</span>" +
         "<span class='timestamp'>" + new Date(timestamp).toString('') + "</span></div>" +
-        "<span class='text'>" + text + "</span></div>"
+        //"<span class='text'>" + text + "</span>" +
+        $('<span/>').text(text).html() +
+        "</div>"
     );
 
     return this;

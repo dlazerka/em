@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
   <application>epammeme</application>
-  <version>18-improve-styles</version>
+  <version>19-escape-user-input</version>
 
   <static-files>
     <include path="/favicon.ico" expiration="1d" />
     <include path="/robots.txt" expiration="1d" />
     <include path="/**.css" expiration="666s" />
     <include path="/**.png" expiration="666s" />
+    <include path="/**.jpeg" expiration="666s" />
     <include path="/**.jpg" expiration="666s" />
     <include path="/**.svg" expiration="666s" />
     <include path="/**.js" expiration="666s" />
