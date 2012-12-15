@@ -5,4 +5,3 @@ war/WEB-INF/appengine-web.xml
 .classpath
 .project
 .settings
-.settings/com.google.appengine.eclipse.core.prefs
