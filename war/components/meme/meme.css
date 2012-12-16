@@ -1,0 +1,98 @@
+.meme {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.memePreview {
+}
+
+.meme .emptyImage {
+  width: 300px;
+  height: 200px;
+  border: 1px gray solid;
+}
+
+.meme.memeSmall {
+  cursor: pointer;
+  height: 200px;
+  border: 1px gray solid;
+}
+
+.memeSmall .img,
+.meme .canvas {
+  display: inline-block;
+  height: 200px;
+}
+
+.videoIcon {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 50px;
+  max-width: 50%;
+  max-height: 50%;
+}
+
+.meme span {
+  display: none;
+  float: left;
+  padding-bottom: 20px;
+}
+
+.meme .message {
+  color: #fff;
+  font-family: Impact;
+  font-size: 30px;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px 0 black, -2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+
+.meme .top-center {
+  position: absolute;
+  text-align: center;
+  top: 5px;
+}
+
+.meme .center-left {
+  position: absolute;
+  text-align: left;
+  top: 50%;
+  margin-top: -15px;
+  line-height: 30px;
+}
+
+.meme .center-center {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  margin-top: -15px;
+  line-height: 30px;
+}
+
+.meme .bottom-center {
+  position: absolute;
+  text-align: center;
+  bottom: 5px;
+}
+
+.meme.memeBig .bottom-center {
+  bottom: 20px;
+}
+
+.meme.memeBig {
+  height: auto;
+  float: none;
+  margin: 0 0 10px;
+  display: inline-block;
+}
+
+.meme.memeBig img {
+  height: auto;
+}
+
+.meme.memeBig .message {
+  font-size: 50px;
+}

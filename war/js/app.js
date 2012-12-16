@@ -13,12 +13,16 @@ var AppRouterClass = Backbone.Router.extend({
 
   initialize: function() {
     $('#delete').hide();
+    // Make header ('<epam:memegen>') a link to the home
+    $('#header')
+      .click(function() {
+        Backbone.history.navigate('', true);
+      });
   },
 
   start: function() {
     ga.trackPage();
     this.showAllMemes_();
-    $('#delete').hide();
   },
 
   all: function() {
@@ -114,10 +118,3 @@ if (IS_AUTHENTICATED === false) {
 
 // Trigger the initial route and enable HTML5 History API support
 Backbone.history.start();
-
-// Make header ('<epam:memegen>') a link to the home
-$('#header')
-    .css("cursor", "pointer")
-    .click(function() {
-      Backbone.history.navigate('', true);
-    });
