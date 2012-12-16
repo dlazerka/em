@@ -32,6 +32,9 @@ public class CommentsServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
+
     String memeId = req.getParameter("id");
     if (memeId != null) {
       resp.getWriter().write(new Gson().toJson(getComments(Long.parseLong(memeId))));
@@ -40,6 +43,9 @@ public class CommentsServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
+
     JsonElement jsonElement = new JsonParser().parse(req.getReader());
     Comment comment = new Gson().fromJson(jsonElement, Comment.class);
     String user = getUserEmail();
