@@ -1,6 +1,6 @@
 /**
  * Vote model and views.
- * 
+ *
  * @author jauhen@gmail.com (Jauhen Kutsuk)
  * @author Dima Lazerka
  */
@@ -88,6 +88,12 @@ var MemeView = Backbone.View.extend({
     }
   },
 
+  /**
+   * 1. If texts fits the image width, center-align.
+   * 2. If message contains many spaces -- prevent browser from eating them to one,
+   *   as specified by HTML. Users may align their messages by many spaces.
+   * 3. If message doesn't fit the width, scale down, but not more than by 2 times.
+   */
   positionMessages: function(fontSize) {
     fontSize = fontSize || this.fontSize;
     var desiredWidth = this.getDesiredWidth();
@@ -95,12 +101,21 @@ var MemeView = Backbone.View.extend({
     var margin = 10;
     this.$('.message').each(function(i, messageEl) {
       messageEl = $(messageEl);
+      // That would prevent line-breaking and space-eating .
+      var html = messageEl.html();
+      messageEl.html(html.replace(/ /g, '&nbsp;'));
       var fullWidth = messageEl.width();
       if (desiredWidth < fullWidth) {
         var ratio = (desiredWidth - 2*margin) / fullWidth;
+        if (ratio < 0.5) {
+          ratio = 0.5;
+        }
         messageEl.css('zoom', ratio);
       }
+      // Turn on line-breaks for the way too long messages.
+      messageEl.html(html.replace(/  /g, ' &nbsp;'));
       messageEl.width('100%');
+      messageEl.css('overflow', 'hidden');
     });
   },
 
@@ -113,7 +128,6 @@ var MemeView = Backbone.View.extend({
       messageEl.addClass(where + '-center');
       // MemeDao has already escaped them, just to be sure.
       var text = messages[where].replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      text = text.replace(/ /g, '&nbsp;');
       var lines = text.split('\n');
       messageEl.html(lines.join('<br/>'));
       result.push(messageEl);
