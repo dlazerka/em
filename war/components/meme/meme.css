@@ -56,20 +56,11 @@
   top: 5px;
 }
 
-.meme .center-left {
-  position: absolute;
-  text-align: left;
-  top: 50%;
-  margin-top: -15px;
-  line-height: 30px;
-}
-
 .meme .center-center {
   position: absolute;
   text-align: center;
   top: 50%;
   margin-top: -15px;
-  line-height: 30px;
 }
 
 .meme .bottom-center {
