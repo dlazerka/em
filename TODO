@@ -14,9 +14,12 @@
 + Add Analytics events.
 + Page with positive memes
 + Page with high rankend memes
-> Still GIFs.
++ Still GIFs.
 * Clean upload form on hide.
+* Fix JS exception when opening a deleted meme.
+* Avoid page reload on Back from a meme.
 
+* Upload image from link.
 * Context
 * Pagination
 * Author (We can save userId (like in votes) and allow author to edit his meme.)
