@@ -75,7 +75,7 @@ var MemeView = Backbone.View.extend({
   getDesiredWidth: function() {
     var w = Number(this.model.get('width'));
     var h = Number(this.model.get('height'));
-    if (!w || !h) return null; // width/height may be unset for just uploaded message which is not yel loaded by browser
+    if (!w || !h) return null; // width/height may be unset for just uploaded message which is not yet loaded by browser
     var dh = this.getDesiredHeight();
     return Math.round(w * dh / h); // proportional
   },
@@ -139,7 +139,7 @@ var MemeView = Backbone.View.extend({
     var img = $('<img class="img"/>');
     // MemeDao must have not composed it with <>, just to be sure.
     var src = this.model.get('src');
-    var src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     img.attr('src', src);
     if (this.getDesiredWidth()) {
       img.attr('width', this.getDesiredWidth());
