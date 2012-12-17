@@ -58,24 +58,65 @@ var MemeView = Backbone.View.extend({
   className: 'meme memeSmall',
   fontSize: 30,
 
+  /** @type {jQuery.promise} */
+  template: null, 
+  /** @type {Underscore.template} */
+  compiledTemplate: null,
+
   initialize: function () {
+    if(!this.template) {
+      MemeView.prototype.template = $.get('/components/meme/meme.tpl');
+    }
   },
 
   events: {
-    'click' : 'onclick'
+    'click': 'onClick',
+    'mouseover': 'onMouseOver',
+    'mouseout': 'onMouseOut',
   },
 
-  onclick: function(event) {
+  onClick: function(event) {
     // Go to meme only if meme creation dialog is inactive.
     if (!Create.onMemeClick(event, this)) {
       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
     }
   },
 
+  onMouseOver: function() {
+    if (this.$('.canvas').size()) {
+      this.$('.canvas').hide();
+      this.$('.videoIcon').hide();
+      this.$('.img').show();
+    }
+  },
+
+  onMouseOut: function() {
+    if (this.$('.canvas').size()) {
+      this.drawGifOnCanvas();
+      this.$('.canvas').show();
+      this.$('.videoIcon').show();
+      this.$('.img').hide();
+    }
+  },
+
+  onImageLoad: function() {
+    if (this.$('.canvas').size()) {
+      this.$('.img').hide();
+      this.drawGifOnCanvas();
+    }
+    this.$el.show();
+    this.positionMessages();
+  },
+
+  drawGifOnCanvas: function() {
+    var context = this.$('.canvas').get(0).getContext('2d');
+    context.drawImage(this.$('.img').get(0), 0, 0, this.getDesiredWidth(), this.getDesiredHeight());
+  },
+
   getDesiredWidth: function() {
     var w = Number(this.model.get('width'));
     var h = Number(this.model.get('height'));
-    if (!w || !h) return null; // width/height may be unset for just uploaded message which is not yet loaded by browser
+    if (!w || !h) return ''; // width/height may be unset for just uploaded message which is not yel loaded by browser
     var dh = this.getDesiredHeight();
     return Math.round(w * dh / h); // proportional
   },
@@ -119,89 +160,66 @@ var MemeView = Backbone.View.extend({
     });
   },
 
-  createMessages: function() {
+  getMessageData: function() {
     var result = [];
     var messages = this.model.getMessagesMap();
+
     for (var where in messages) {
       if (!messages[where]) continue;
-      var messageEl = $('<div class="message"></div>');
-      messageEl.addClass(where + '-center');
+
       // MemeDao has already escaped them, just to be sure.
       var text = messages[where].replace(/</g, '&lt;').replace(/>/g, '&gt;');
       var lines = text.split('\n');
-      messageEl.html(lines.join('<br/>'));
-      result.push(messageEl);
+
+      result.push({
+        where: where,
+        lines: lines.join('<br/>')
+      });
     }
+
     return result;
   },
 
-  createImg: function() {
-    var img = $('<img class="img"/>');
-    // MemeDao must have not composed it with <>, just to be sure.
-    var src = this.model.get('src');
-    src = src.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    img.attr('src', src);
-    if (this.getDesiredWidth()) {
-      img.attr('width', this.getDesiredWidth());
-      img.attr('height', this.getDesiredHeight());
-    }
-    var text = _.values(this.model.getMessagesMap()).join(' ').trim();
-    // MemeDao has already escaped them, just to be sure.
-    text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    img.attr('alt', text);
-    if (text) {
-      img.attr('title', text);
-    }
-    return img;
+  getImageData: function() {
+    return {
+      src: this.model.get('src'), 
+      text: _.values(this.model.getMessagesMap()).join(' ').trim(), 
+      height: this.getDesiredHeight(), 
+      width: this.getDesiredWidth()
+    };
   },
 
-  render: function(fontSize) {
-    this.$el.empty();
-    var width = this.getDesiredWidth();
-    var height = this.getDesiredHeight();
+  render: function() {
+    this.$el.empty().hide();
 
-    var messageEls = this.createMessages();
-
-    var img = this.createImg();
+    var data = {
+      image: this.getImageData(),
+      messages: this.getMessageData(),
+      canvas: null
+    };
 
     if (this.model.get('animated') && this.className.indexOf('memeBig') == -1) {
-      var canvas = $('<canvas class="canvas">');
-      var videoIcon = $('<img src="img/video.svg" class="videoIcon" alt="video"/>')
-      canvas.attr('width', width);
-      canvas.attr('height', height);
-      this.$el.mouseover(function () {
-        canvas.hide();
-        videoIcon.hide();
-        img.show();
-      });
-      this.$el.mouseout(function () {
-        var context = canvas[0].getContext('2d');
-        context.drawImage(img[0], 0, 0, width, height);
-        canvas.show();
-        videoIcon.show();
-        img.hide();
-      });
+      data.canvas = {
+        height: this.getDesiredHeight(),
+        width: this.getDesiredWidth()
+      };
     }
-
-    this.$el.hide();
-    img.load($.proxy(function() {
-      if (canvas) {
-        img.hide();
-        var context = canvas[0].getContext('2d');
-        context.drawImage(img[0], 0, 0, width, height);
-      }
-      this.$el.show();
-      this.positionMessages();
-    }, this));
 
     var voteView = new VoteView({model: this.model.vote});
-    this.$el.append(img);
-    if (canvas) {
-      this.$el.append(canvas);
-      this.$el.append(videoIcon);
-    }
-    this.$el.append(messageEls);
-    this.$el.append(voteView.render().$el);
+
+    this.template.done(_.bind(function(tpl) {
+      // Cache compiled template.
+      if (!this.compiledTemplate) {
+        MemeView.prototype.compiledTemplate = _.template(tpl);
+      }
+
+      this.$el
+          .html(this.compiledTemplate(data))
+          .append(voteView.render().$el);
+
+      // We should use direct binding because load event is not bubbled.
+      this.$('.img').load(_.bind(this.onImageLoad, this));
+    }, this));
 
     return this;
   },
