@@ -6,8 +6,7 @@ var MemePreview = MemeView.extend({
   className: 'meme memePreview',
   fontSize: 30,
 
-  initialize: function() {
-  },
+  initialize: function() {},
 
   events: {},
 
@@ -18,15 +17,18 @@ var MemePreview = MemeView.extend({
       $('#uploadHelperText').show();
       $('#top,#center,#bottom').val('');
     } else {
-      var img = this.createImg();
-      this.$el.append(this.createMessages());
-      this.$el.append(img);
-      img.css('width', this.getDesiredWidth());
-      img.css('height', this.getDesiredHeight());
-
+      var data = {
+        image: this.getImageData(),
+        messages: this.getMessageData(),
+        canvas: null
+      };
+      this.template.done(_.bind(function(tpl) {
+        this.$el.html(this.compiledTemplate(data));
+      }, this));
       $('#uploadHelperText').hide();
     }
     $('#preview').html(this.$el);
+    this.positionMessages();
   },
 });
 
@@ -50,8 +52,14 @@ var Create = {
     if ($('.upload').css('display') == 'none') {
       return false;
     }
-    this.meme.set(memeView.model);
-    this.meme.set({id: null});
+    this.meme = memeView.model.clone();
+    this.meme.unset('top');
+    this.meme.unset('center');
+    this.meme.unset('bottom');
+    this.meme.unset('id');
+
+    this.memeView.model = this.meme;
+
     this.setImage();
     return true;
   },
@@ -61,15 +69,11 @@ var Create = {
     this.meme.set('top', $('#top').val() || null);
     this.meme.set('center', $('#center').val() || null);
     this.meme.set('bottom', $('#bottom').val() || null);
-    this.memeView.$('.message').remove();
-    var messageEls = this.memeView.createMessages();
-    this.memeView.$el.append(messageEls);
-    this.memeView.positionMessages();
+    this.memeView.render();
   },
 
   setImage: function() {
     $('#uploadHelperText').hide();
-    this.updateMessages();
     this.memeView.render();
   },
 
@@ -180,5 +184,4 @@ var Create = {
     this.meme.set(this.meme.defaults);
     this.memeView.render();
   }
-
 };
