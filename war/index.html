@@ -10,10 +10,6 @@
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <link rel="chrome-webstore-item"
           href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
-    <script type="text/javascript">
-      var PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
-    </script>
-    <script type="text/javascript" src="js/analytics.js"></script>
   </head>
 
   <body>
@@ -30,7 +26,7 @@
     </div>
 
     <div id="sidePane" class="visible_###IS_AUTHENTICATED###">
-      <button id="showCreateDialog" onclick="$('.upload').toggle(); ga.trackCreate();">
+      <button id="showCreateDialog">
         Create
       </button>
       <br/>
@@ -47,7 +43,7 @@
 
     <div id="contentPane">
       <div>
-        <div class="upload" style="display: none;">
+        <div id="create" class="create" style="display: none;">
           <div class="imageWithUpload">
             <div id="preview" class="preview"></div>
             <div id="uploadHelperText" class="uploadHelperText">
@@ -94,9 +90,12 @@
     </div>
 
     <script>
-    var MEMES_JSON = ###MEMES_JSON###;
-    var IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
+      const MEMES_JSON = ###MEMES_JSON###;
+      const IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
+      const ENV = '###ENV###';
+      const PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
     </script>
+    <script type="text/javascript" src="js/analytics.js"></script>
     <script type="text/javascript" src="components/comment/comment.js"></script>
     <script type="text/javascript" src="components/vote/vote.js"></script>
     <script type="text/javascript" src="components/meme/meme.js"></script>

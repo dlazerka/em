@@ -24,7 +24,7 @@ var _gaq = _gaq || [];
     _gaq.push(['_trackEvent', 'Comment', memeId.toString(), '', 1]);
   }
 
-  function trackCreate(memeId) {
+  function trackCreate() {
     _gaq.push(['_trackEvent', 'Create', 'New Meme', '', 1]);
   }
 
@@ -44,7 +44,6 @@ var _gaq = _gaq || [];
   window.ga.trackLike = trackLike;
   window.ga.trackComment = trackComment;
   window.ga.trackCreate = trackCreate;
-  window.ga.trackError = trackError;
   window.ga.trackInstallPlugin = trackInstallPlugin;
   window.ga.trackNoAuth = trackNoAuth;
   window.ga.trackError = trackError;

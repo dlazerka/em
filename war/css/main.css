@@ -119,7 +119,7 @@ a {
   display: none;
 }
 
-.upload {
+.create {
   margin: 1em 1em 1em 0;
 }
 
@@ -127,18 +127,18 @@ a {
   width: 300px;
   display: none;
 }
-.upload .form {
+.create .form {
   float: left;
 }
 
-.upload .form textarea,
+.create .form textarea,
 .preview {
   min-width: 300px;
   margin: 0;
   padding: 0px;
 }
 
-.upload .form textarea {
+.create .form textarea {
   padding: 2px;
   height: 57px;
   border: 1px gray solid;

@@ -40,6 +40,7 @@ var Create = {
     $('#top,#center,#bottom').keyup($.proxy(this.updateMessages, this));
     $('#uploadFile').change($.proxy(this.onFileFieldChange, this));
     $('#submit').click($.proxy(this.onSubmitClick, this));
+    $('#showCreateDialog').click(function() {$('#create').toggle()});
     $('#uploadLink').click(function(event) {
       $('#uploadFile').click();
       event.preventDefault();
@@ -147,6 +148,7 @@ var Create = {
 
   onSubmitClick: function() {
     Msg.info('Saving...');
+    ga.trackCreate();
     $('#submit').prop('disabled', true);
     var meme = this.meme.clone();
     var attrs = {};

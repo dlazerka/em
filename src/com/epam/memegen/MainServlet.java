@@ -68,7 +68,7 @@ public class MainServlet extends HttpServlet {
       replaced = replaced.replace("###USER_EMAIL###", email);
     }
 
-    replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
+    replaced = replaced.replace("###ENV###", SystemProperty.environment.value().toString());
     resp.setContentType("text/html");
     resp.setCharacterEncoding("UTF-8");
     resp.getWriter().write(replaced);
