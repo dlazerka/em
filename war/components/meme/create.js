@@ -12,9 +12,10 @@ var MemePreview = MemeView.extend({
 
   render: function() {
     this.$el.empty();
+    var uploadHelperText = $('#uploadHelperText');
     if (!this.model.get('src')) {
       this.$el.html('<div class="emptyImage"></div>');
-      $('#uploadHelperText').show();
+      uploadHelperText.show();
       $('#top,#center,#bottom').val('');
     } else {
       var data = {
@@ -22,14 +23,15 @@ var MemePreview = MemeView.extend({
         messages: this.getMessageData(),
         canvas: null
       };
-      this.template.done(_.bind(function(tpl) {
+      this.template.done(_.bind(function() {
         this.$el.html(this.compiledTemplate(data));
       }, this));
-      $('#uploadHelperText').hide();
+
+      uploadHelperText.hide();
     }
     $('#preview').html(this.$el);
     this.positionMessages();
-  },
+  }
 });
 
 var Create = {
@@ -48,7 +50,7 @@ var Create = {
     });
   },
 
-  /** @returns true if event was consumed */
+  /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('.upload').css('display') == 'none') {
       return false;
@@ -80,7 +82,7 @@ var Create = {
 
   /** @param event {ChangeEvent} */
   onFileFieldChange: function(event) {
-    if (!XMLHttpRequestUpload) {
+    if (!window['XMLHttpRequestUpload']) {
       alert('Your browser doesn\'t support XMLHttpRequestUpload. Try using a modern browser');
     }
     var element = event.target;
@@ -92,7 +94,7 @@ var Create = {
     formData.append('image', element.files[0]);
 
     var uploadUrl = $('#uploadUrl').val();
-    var progressListener = this.onUploadProgessEvent;
+    var progressListener = this.onUploadProgressEvent;
     $.ajax({
         url: uploadUrl,
         data: formData,
@@ -104,10 +106,15 @@ var Create = {
           var xhr = new XMLHttpRequest();
           xhr.upload.addEventListener("progress", progressListener, false);
           return xhr;
-        },
+        }
     })
     .done($.proxy(this.onUploadDone, this))
     .error($.proxy(this.onUploadError, this));
+  },
+
+  onImageUploadComplete: function(img) {
+    this.meme.set('width', img.width());
+    this.meme.set('height', img.height());
   },
 
   onUploadDone: function(data) {
@@ -122,14 +129,10 @@ var Create = {
     this.setImage();
 
     var img = this.memeView.$('img');
-    function onComplete() {
-      this.meme.set('width', img.width());
-      this.meme.set('height', img.height());
-    }
     if (img[0].complete) {
-      onComplete();
+      this.onImageUploadComplete(img);
     } else {
-      img.load($.proxy(onComplete, this));
+      img.load(_.bind(this.onImageUploadComplete, this));
     }
   },
 
@@ -137,8 +140,8 @@ var Create = {
     Msg.error('Error: ' + message);
   },
 
-  onUploadProgessEvent: function(event) {
-    var msg = 'Uploading...'
+  onUploadProgressEvent: function(event) {
+    var msg = 'Uploading...';
     if (event.lengthComputable) {
       var percent = Math.round(100 * event.loaded / event.total);
       msg += ' ' + percent + '%';

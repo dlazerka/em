@@ -1,3 +1,5 @@
+window.Backbone = Backbone;
+
 var AppRouterClass = Backbone.Router.extend({
   memes: new Memes(MEMES_JSON),
   memesListEl: $('#memesList'),
