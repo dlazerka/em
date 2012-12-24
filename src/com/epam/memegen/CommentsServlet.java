@@ -37,7 +37,8 @@ public class CommentsServlet extends HttpServlet {
 
     String memeId = req.getParameter("id");
     if (memeId != null) {
-      resp.getWriter().write(new Gson().toJson(getComments(Long.parseLong(memeId))));
+      List<Comment> comments = getComments(Long.parseLong(memeId));
+      resp.getWriter().write(new Gson().toJson(comments));
     }
   }
 
@@ -54,42 +55,22 @@ public class CommentsServlet extends HttpServlet {
     }
     comment.setUser(user);
     comment.setTimestamp(new Date().getTime());
-    saveComment(comment);
-    comment.setUser(getUserName(comment.getUser()));
+    Entity entity = toEntity(comment);
+    datastore.put(entity);
     resp.getWriter().write(new Gson().toJson(comment));
   }
 
-  private void saveComment(Comment comment) {
-    datastore.put(toEntity(comment));
-  }
-
   private List<Comment> getComments(long memeId) {
-    Query commentsQuery = new Query(Comment.KIND).setFilter(
-        Query.FilterOperator.EQUAL.of(Comment.MEME_ID, memeId));
+    Query query = new Query(Comment.KIND, KeyFactory.createKey(MemeDao.KIND, memeId))
+        .addSort(Comment.TIMESTAMP);
     List<Comment> comments = Lists.newArrayList();
-    for (Entity entity : datastore.prepare(commentsQuery).asIterable()) {
-      comments.add(fromEntity(entity));
+    PreparedQuery preparedQuery = datastore.prepare(query);
+    for (Entity entity : preparedQuery.asIterable()) {
+      Comment comment = fromEntity(entity);
+      comments.add(comment);
     }
-    Collections.sort(comments, new Comparator<Comment>() {
-      public int compare(Comment o1, Comment o2) {
-        return (int) (o1.getTimestamp() - o2.getTimestamp());
-      }
-    });
 
     return comments;
-  }
-
-  private String getUserName(String userEmail) {
-    if (userEmail != null && userEmail.length() > 0) {
-      int atIndex = userEmail.indexOf('@');
-      if (atIndex > 0) {
-        return userEmail.substring(0, atIndex);
-      } else {
-        return userEmail;
-      }
-    } else {
-      return "Unknown";
-    }
   }
 
   private String getUserEmail() {
@@ -109,7 +90,7 @@ public class CommentsServlet extends HttpServlet {
     entity.setProperty(Comment.MEME_ID, comment.getMemeId());
     entity.setProperty(Comment.TEXT, comment.getText());
     entity.setProperty(Comment.TIMESTAMP, comment.getTimestamp());
-    entity.setProperty(Comment.USER, getUserName(comment.getUser()));
+    entity.setProperty(Comment.USER, comment.getUser());
     return entity;
   }
 }

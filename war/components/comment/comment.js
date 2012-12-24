@@ -38,19 +38,24 @@ var CommentView = Backbone.View.extend({
     if(!this.template) { 
       CommentView.prototype.template = $.get('/components/comment/comment.tpl');
     }
+    var user = this.model.get('user');
+    user = user.toLowerCase();
+    this.model.set('user', user);
   },
 
   render: function() {
-    // Done means that function will be runned when template is loaded.
-    this.template.done(_.bind(function(tpl) {
-      // Cache compiled template.
-      if (!this.compiledTemplate) {
-        CommentView.prototype.compiledTemplate = _.template(tpl);
-      }
-      this.$el.html(this.compiledTemplate(this.model.toJSON())) ; 
-    }, this));
+    // Done means that function will be run when template is loaded.
+    this.template.done(_.bind(this.onTemplateLoaded, this));
 
     return this;
+  },
+
+  onTemplateLoaded: function(tpl) {
+	// Cache compiled template.
+    if (!this.compiledTemplate) {
+      CommentView.prototype.compiledTemplate = _.template(tpl);
+    }
+    this.$el.html(this.compiledTemplate(this.model.toJSON()));
   }
 });
 
