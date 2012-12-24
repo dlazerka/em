@@ -50,7 +50,7 @@ var Create = {
 
   /** @returns true if event was consumed */
   onMemeClick: function(event, memeView) {
-    if ($('.upload').css('display') == 'none') {
+    if ($('#create').css('display') == 'none') {
       return false;
     }
     this.meme = memeView.model.clone();
