@@ -9,7 +9,7 @@
 var Comment = Backbone.Model.extend({
   defaults: {
     memeId: null,
-    user: null,
+    author: null,
     text: null,
     timestamp: null
   },
@@ -38,9 +38,9 @@ var CommentView = Backbone.View.extend({
     if(!this.template) { 
       CommentView.prototype.template = $.get('/components/comment/comment.tpl');
     }
-    var user = this.model.get('user');
-    user = user.toLowerCase();
-    this.model.set('user', user);
+    var author = this.model.get('author');
+    author = author.toLowerCase();
+    this.model.set('author', author);
   },
 
   render: function() {

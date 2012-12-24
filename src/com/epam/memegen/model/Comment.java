@@ -1,5 +1,7 @@
 package com.epam.memegen.model;
 
+import java.util.Date;
+
 /**
  * @author Andrey Mormysh
  */
@@ -7,22 +9,22 @@ public class Comment {
   public static final String KIND = "Comment";
   public static final String MEME_ID = "memeId";
   public static final String TEXT = "text";
-  public static final String TIMESTAMP = "timestamp";
-  public static final String USER = "user";
+  public static final String DATE = "date";
+  public static final String AUTHOR = "author";
 
   private long memeId;
   private String text;
   private long timestamp;
-  private String user;
+  private String author;
 
   public Comment() {
   }
 
-  public Comment(long memeId, String text, long timestamp, String user) {
+  public Comment(long memeId, String text, long timestamp, String author) {
     this.memeId = memeId;
     this.text = text;
     this.timestamp = timestamp;
-    this.user = user;
+    this.author = author;
   }
 
   public long getMemeId() {
@@ -49,11 +51,12 @@ public class Comment {
     this.timestamp = timestamp;
   }
 
-  public String getUser() {
-    return user;
+  public String getAuthor() {
+    return author;
   }
 
-  public void setUser(String user) {
-    this.user = user;
+  public void setAuthor(String author) {
+    this.author = author;
   }
+
 }

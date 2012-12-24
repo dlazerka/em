@@ -47,7 +47,6 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   getComments: function(memeId) {
-    console.log("getComments:" + memeId);
     this.comments.memeId = memeId;
     this.comments.fetch({
       data: {id: memeId},
@@ -66,9 +65,6 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   showComments: function() {
-    console.log("showComments");
-    console.log(this.comments);
-
     this.memesListEl.append(new CommentsView({
       model: this.comments,
     }).render().$el);

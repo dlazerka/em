@@ -49,20 +49,30 @@ public class CommentsServlet extends HttpServlet {
 
     JsonElement jsonElement = new JsonParser().parse(req.getReader());
     Comment comment = new Gson().fromJson(jsonElement, Comment.class);
-    String user = getUserEmail();
     if (isNullOrEmpty(comment.getText())) {
       return;
     }
-    comment.setUser(user);
-    comment.setTimestamp(new Date().getTime());
-    Entity entity = toEntity(comment);
+    String user = userService.getCurrentUser().getEmail();
+    comment.setAuthor(user);
+    Date date = new Date();
+    comment.setTimestamp(date.getTime());
+
+    Entity entity = new Entity(Comment.KIND, KeyFactory.createKey(MemeDao.KIND, comment.getMemeId()));
+    entity.setProperty(Comment.MEME_ID, comment.getMemeId());
+    entity.setProperty(Comment.TEXT, comment.getText());
+    entity.setProperty(Comment.DATE, date);
+    entity.setProperty(Comment.AUTHOR, comment.getAuthor());
+    // TODO(lazerka): For backwards compatibility, for versions 20 and below. Remove when not needed anymore.
+    entity.setProperty("user", comment.getAuthor());
+    entity.setProperty("timestamp", date.getTime());
+
     datastore.put(entity);
     resp.getWriter().write(new Gson().toJson(comment));
   }
 
   private List<Comment> getComments(long memeId) {
     Query query = new Query(Comment.KIND, KeyFactory.createKey(MemeDao.KIND, memeId))
-        .addSort(Comment.TIMESTAMP);
+        .addSort(Comment.DATE);
     List<Comment> comments = Lists.newArrayList();
     PreparedQuery preparedQuery = datastore.prepare(query);
     for (Entity entity : preparedQuery.asIterable()) {
@@ -73,24 +83,11 @@ public class CommentsServlet extends HttpServlet {
     return comments;
   }
 
-  private String getUserEmail() {
-    return userService.getCurrentUser().getEmail();
-  }
-
   private Comment fromEntity(Entity entity) {
     long memeId = (Long) entity.getProperty(Comment.MEME_ID);
     String text = (String) entity.getProperty(Comment.TEXT);
-    long timestamp = (Long) entity.getProperty(Comment.TIMESTAMP);
-    String user = (String) entity.getProperty(Comment.USER);
-    return new Comment(memeId, text, timestamp, user);
-  }
-
-  private Entity toEntity(Comment comment) {
-    Entity entity = new Entity("Comment", KeyFactory.createKey(MemeDao.KIND, comment.getMemeId()));
-    entity.setProperty(Comment.MEME_ID, comment.getMemeId());
-    entity.setProperty(Comment.TEXT, comment.getText());
-    entity.setProperty(Comment.TIMESTAMP, comment.getTimestamp());
-    entity.setProperty(Comment.USER, comment.getUser());
-    return entity;
+    Date date = (Date) entity.getProperty(Comment.DATE);
+    String author = (String) entity.getProperty(Comment.AUTHOR);
+    return new Comment(memeId, text, date.getTime(), author);
   }
 }
