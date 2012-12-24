@@ -8,8 +8,7 @@
     <script type="text/javascript" src="js/lib/underscore.js"></script>
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/backbone.js"></script>
-    <link rel="chrome-webstore-item"
-          href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
   </head>
 
   <body>
@@ -43,28 +42,7 @@
 
     <div id="contentPane">
       <div>
-        <div id="create" class="create" style="display: none;">
-          <div class="imageWithUpload">
-            <div id="preview" class="preview"></div>
-            <div id="uploadHelperText" class="uploadHelperText">
-                <a id="uploadLink" href="#">Upload</a> new image,<br/>
-                or click on any meme.
-            </div>
-            <input id="uploadFile" class="uploadFile" type="file">
-            <input id="uploadUrl" type="hidden" value="###UPLOAD_URL###">
-            <br/>
-          </div>
-          <div class="form">
-            <textarea id="top"></textarea>
-            <br/>
-            <textarea id="center"></textarea>
-            <br/>
-            <textarea id="bottom"></textarea>
-            <br/>
-            <input type="hidden" name="blobKey"/>
-            <button id="submit">Submit</button>
-          </div>
-          <div class="clear"></div>
+        <div id="create" class="create">
         </div>
       </div>
 
@@ -92,6 +70,7 @@
     <script>
       const MEMES_JSON = ###MEMES_JSON###;
       const IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
+      const UPLOAD_URL = '###UPLOAD_URL###';
       const ENV = '###ENV###';
       const PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
     </script>
@@ -103,5 +82,6 @@
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/msg.js"></script>
     <script type="text/javascript" src="js/plugin.js"></script>
-    </body>
+  </body>
+  </body>
 </html>

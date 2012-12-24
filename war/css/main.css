@@ -151,3 +151,14 @@ img.preview {
   height: 200px;
   float: left; /* to remove strange space below */
 }
+
+#pagination {
+  clear: both;
+  text-align: right;
+  margin: 10px 30px 20px;
+}
+
+#pagination span {
+  cursor: pointer;
+  margin: 0 20px;
+}

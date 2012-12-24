@@ -61,6 +61,7 @@ public class MemeDao {
   public static final String ALL = "ALL";
   public static final String POPULAR = "POPULAR";
   public static final String TOP = "TOP";
+  public static final int MEMES_PER_PAGE = 50;
 
   private final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
@@ -90,7 +91,7 @@ public class MemeDao {
     return key;
   }
 
-  public String getAllAsJson(HttpServletRequest req, String which) throws IOException {
+  public String getAllAsJson(HttpServletRequest req, int page, String which) throws IOException {
     if (!util.isAuthenticated()) {
       return "[]";
     }
@@ -116,7 +117,7 @@ public class MemeDao {
         // User asked for memes younger than the youngest.
         return "[]";
       }
-    } else if (limit == null) {
+    } else if (limit == null && page == 0) {
       String json = null;
       if (which.equals("all")) {
         json = (String) memcache.get(ALL);
@@ -150,8 +151,12 @@ public class MemeDao {
 
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
     if (limit != null) {
-      options.limit(limit);
+      options.limit(Math.max(limit, MEMES_PER_PAGE));
+    } else {
+      options.limit(MEMES_PER_PAGE);
     }
+
+    options.offset(page * MEMES_PER_PAGE);
 
     PreparedQuery prepared = datastore.prepare(q);
     Iterable<Entity> iterable = prepared.asIterable(options);
@@ -171,7 +176,7 @@ public class MemeDao {
     w.endArray();
     w.close();
     String value = out.toString();
-    if (limit == null && since == null) {
+    if (limit == null && since == null && page == 0) {
       if (which.equals("all")) {
         memcache.put(ALL, value, expiration);
       } else if (which.equals("popular")) {

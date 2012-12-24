@@ -29,9 +29,9 @@ var CommentView = Backbone.View.extend({
   tagName: 'div',
   className: 'comment',
 
-  /** @type {jQuery.promise} */
+  /** @type {$.Deferred} */
   template: null, 
-  /** @type {Underscore.template} */
+  /** @type {_.template} */
   compiledTemplate: null,
 
   initialize: function() {

@@ -1,7 +1,10 @@
+window.Backbone = Backbone;
+
 var AppRouterClass = Backbone.Router.extend({
   memes: new Memes(MEMES_JSON),
   memesListEl: $('#memesList'),
   comments: new Comments(),
+  createMemeView: new MemeCreateView(),
 
   routes: {
     '': 'start',
@@ -12,12 +15,18 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   initialize: function() {
+    $('#showCreateDialog').click(_.bind(function() {
+      this.createMemeView.render();
+    }, this));
+
     $('#delete').hide();
     // Make header ('<epam:memegen>') a link to the home
-    $('#header')
-      .click(function() {
-        Backbone.history.navigate('', true);
-      });
+    $('#header').click(function() {
+      Backbone.history.navigate('', true);
+    });
+
+    this.memesListEl.on('click', '#prev', _.bind(this.prevPage, this));
+    this.memesListEl.on('click', '#next', _.bind(this.nextPage, this));
   },
 
   start: function() {
@@ -27,22 +36,25 @@ var AppRouterClass = Backbone.Router.extend({
 
   all: function() {
     ga.trackPage('/all');
+    this.memes.setFilter('all');
     this.memes.fetch({
-      data: {filter: 'all'}, 
+      data: this.memes.getParams(),
       success: _.bind(this.start, this)});
   },
 
   popular: function() {
     ga.trackPage('/popular');
+    this.memes.setFilter('popular');
     this.memes.fetch({
-      data: {filter: 'popular'}, 
+      data: this.memes.getParams(),
       success: _.bind(this.start, this)});
   },
 
   top: function() {
     ga.trackPage('/top');
+    this.memes.setFilter('top');
     this.memes.fetch({
-      data: {filter: 'top'}, 
+      data: this.memes.getParams(),
       success: _.bind(this.start, this)});
   },
 
@@ -53,11 +65,6 @@ var AppRouterClass = Backbone.Router.extend({
       success: _.bind(this.showComments, this)});
   },
 
-  getMemes: function() {
-    this.memes = new Memes();
-    this.memes.fetch({success: $.proxy(this.onSuccessFetchAll_, this)});
-  },
-
   onMemeAdded: function(meme) {
     this.memes.unshift(meme);
     var memeView = new MemeView({model: meme});
@@ -66,7 +73,7 @@ var AppRouterClass = Backbone.Router.extend({
 
   showComments: function() {
     this.memesListEl.append(new CommentsView({
-      model: this.comments,
+      model: this.comments
     }).render().$el);
   },
 
@@ -91,12 +98,38 @@ var AppRouterClass = Backbone.Router.extend({
       var memeView = new MemeView({model: this.memes.at(i)});
       this.memesListEl.append(memeView.render().$el);
     }
+
+    var paging = this.memesListEl.append('<div id="pagination">').children('#pagination');
+    paging.append('Shown ' + (50 * this.memes.page + 1) + '-' + (50 * this.memes.page + this.memes.length));
+    if (this.memes.page > 0) {
+      paging.append('<span id="prev">Prev 50</span>');
+    }
+
+    if (this.memes.length == 50) {
+      paging.append('<span id="next">Next 50</span>');
+    }
   },
 
   onSuccessDestroy_: function(model, resp) {
     Msg.info('Deleted!', 1500);
     this.memes.remove(model);
     Backbone.history.navigate('', true);
+  },
+
+  nextPage: function() {
+    ++this.memes.page;
+    this.memes.fetch({
+      data: this.memes.getParams(),
+      success: _.bind(this.start, this)});
+  },
+
+  prevPage: function() {
+    if (this.memes.page > 0) {
+      --this.memes.page;
+      this.memes.fetch({
+        data: this.memes.getParams(),
+        success: _.bind(this.start, this)});
+    }
   }
 });
 
