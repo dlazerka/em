@@ -117,7 +117,7 @@ public class MemeDao {
         // User asked for memes younger than the youngest.
         return "[]";
       }
-    } else if (limit == null) {
+    } else if (limit == null && page == 0) {
       String json = null;
       if (which.equals("all")) {
         json = (String) memcache.get(ALL);
@@ -149,7 +149,6 @@ public class MemeDao {
 
     q.setFilter(filter);
 
-
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
     if (limit != null) {
       options.limit(Math.max(limit, MEMES_PER_PAGE));
@@ -177,7 +176,7 @@ public class MemeDao {
     w.endArray();
     w.close();
     String value = out.toString();
-    if (limit == null && since == null) {
+    if (limit == null && since == null && page == 0) {
       if (which.equals("all")) {
         memcache.put(ALL, value, expiration);
       } else if (which.equals("popular")) {

@@ -128,7 +128,7 @@ var AppRouterClass = Backbone.Router.extend({
   },
 
   prevPage: function() {
-    if (this.memes.page > 1) {
+    if (this.memes.page > 0) {
       --this.memes.page;
       this.memes.fetch({
         data: this.memes.getParams(),
