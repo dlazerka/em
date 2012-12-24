@@ -45,12 +45,29 @@ var Meme = Backbone.Model.extend({
     if (!attrs.blobKey) {
       return 'No image';
     }
-  },
+  }
 });
 
 var Memes = Backbone.Collection.extend({
   model: Meme,
-  url: '/memes'
+  url: '/memes',
+  page: 0,
+  filter: 'popular',
+
+  setFilter: function(newFilter) {
+    if (newFilter != this.filter) {
+      this.filter = newFilter;
+      this.page = 0;
+    }
+  },
+
+  getParams: function() {
+    return {
+      filter: this.filter,
+      page: this.page
+    }
+  }
+
 });
 
 var MemeView = Backbone.View.extend({
@@ -72,12 +89,12 @@ var MemeView = Backbone.View.extend({
   events: {
     'click': 'onClick',
     'mouseover': 'onMouseOver',
-    'mouseout': 'onMouseOut',
+    'mouseout': 'onMouseOut'
   },
 
   onClick: function(event) {
     // Go to meme only if meme creation dialog is inactive.
-    if (!Create.onMemeClick(event, this)) {
+    if (!AppRouter.createMemeView.onMemeClick(event, this)) {
       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
     }
   },
@@ -222,5 +239,5 @@ var MemeView = Backbone.View.extend({
     }, this));
 
     return this;
-  },
+  }
 });

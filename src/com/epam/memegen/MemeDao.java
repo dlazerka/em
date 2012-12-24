@@ -61,6 +61,7 @@ public class MemeDao {
   public static final String ALL = "ALL";
   public static final String POPULAR = "POPULAR";
   public static final String TOP = "TOP";
+  public static final int MEMES_PER_PAGE = 50;
 
   private final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
@@ -90,7 +91,7 @@ public class MemeDao {
     return key;
   }
 
-  public String getAllAsJson(HttpServletRequest req, String which) throws IOException {
+  public String getAllAsJson(HttpServletRequest req, int page, String which) throws IOException {
     if (!util.isAuthenticated()) {
       return "[]";
     }
@@ -148,10 +149,15 @@ public class MemeDao {
 
     q.setFilter(filter);
 
+
     FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
     if (limit != null) {
-      options.limit(limit);
+      options.limit(Math.max(limit, MEMES_PER_PAGE));
+    } else {
+      options.limit(MEMES_PER_PAGE);
     }
+
+    options.offset(page * MEMES_PER_PAGE);
 
     PreparedQuery prepared = datastore.prepare(q);
     Iterable<Entity> iterable = prepared.asIterable(options);

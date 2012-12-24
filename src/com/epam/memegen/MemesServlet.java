@@ -24,7 +24,13 @@ public class MemesServlet extends HttpServlet {
       filter = "popular";
     }
 
-    String json = memeDao.getAllAsJson(req, filter);
+    int page = 0;
+    if (!Util.isNullOrEmpty(req.getParameter("page"))) {
+      page = Integer.parseInt(req.getParameter("page"));
+    }
+
+
+    String json = memeDao.getAllAsJson(req, page, filter);
     resp.getWriter().write(json);
   }
 }
