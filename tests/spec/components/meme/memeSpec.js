@@ -90,12 +90,15 @@ describe('Meme specifications', function() {
     });
   });
 
-  // TODO:jauhen Add tests for view.
   describe('for view:', function() {
+
     var view;
+    var model;
+    var container;
 
     beforeEach(function() {
-      var model = new Meme({
+      jasmine.Ajax.useMock();
+      model = new Meme({
         id: 1,
         blobKey: '123',
         src: 'http://expamle.com/1.jpg',
@@ -103,16 +106,17 @@ describe('Meme specifications', function() {
         bottom: 'bottom3',
         rating: 4
       });
-
-      view = new MemeView({model: model});
-
-
+      container = $('<div></div>');
     });
 
     it('render', function() {
-      var container = $('div');
+      view = new MemeView({model: model});
+      mostRecentAjaxRequest().response({status: 200, responseText: '<div/>'});
 
       container.append(view.render().$el);
+
+      // TODO:jauhen@gmail.com Extend this test.
+      expect(container.children('.meme').children().size()).toBe(0);
     });
 
   });
