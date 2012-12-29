@@ -19,7 +19,6 @@ var AppRouterClass = Backbone.Router.extend({
       this.createMemeView.render();
     }, this));
 
-    $('#delete').hide();
     // Make header ('<epam:memegen>') a link to the home
     $('#header').click(function() {
       Backbone.history.navigate('', true);
@@ -85,7 +84,6 @@ var AppRouterClass = Backbone.Router.extend({
     this.memesListEl.append('<br/>');
     var button = $('#delete');
     button.on('click', $.proxy(function() {
-      $('#delete').prop('disabled', true);
       Msg.info('Deleting...');
       meme.destroy({success: $.proxy(this.onSuccessDestroy_, this)})
     }, this));
