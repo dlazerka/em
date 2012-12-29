@@ -21,5 +21,5 @@ var Msg = {
     if (opt_hideAfterMs) {
       this.$el.delay(opt_hideAfterMs).slideUp(400);
     }
-  },
+  }
 };

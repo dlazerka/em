@@ -1,0 +1,13 @@
+load:
+ - lib/jasmine.js
+ - lib/jasmine-jquery.js
+ - lib/mock-ajax.js
+ - lib/jasmine-jstd-adapter.js
+ - ../war/js/lib/underscore.js
+ - ../war/js/lib/jquery.js
+ - ../war/js/lib/backbone.js
+ - ../war/components/meme/meme.js
+ - ../war/components/vote/vote.js
+
+test:
+ - spec/components/meme/memeSpec.js
