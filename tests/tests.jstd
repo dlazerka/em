@@ -11,3 +11,4 @@ load:
 
 test:
  - spec/components/meme/memeSpec.js
+ - spec/components/meme/memesSpec.js
