@@ -17,11 +17,11 @@
 
     <h1 id="header">&lt;epam:memegen&gt;</h1>
 
-    <div id="epam-memegen-install-button" style="display:none;" class="plugin-button">
-      <img src="chrome-icon.png" class="plugin-img"/>
-      <span class="plugin-link">
+    <div id="epam-memegen-install-button" style="display:none;" class="pluginInstall">
+      <img src="chrome-icon.png" class="pluginImg"/>
+      <a class="pluginLink">
           Don't miss a single meme - install Chrome Plugin
-      </span>
+      </a>
     </div>
 
     <div id="sidePane" class="visible_###IS_AUTHENTICATED###">
@@ -64,7 +64,14 @@
         Sorry for inconvenience, we're working on a more convenient authentication, using PMC API.
       </div>
 
-      <div id="memesList"></div>
+      <div>
+        <div id="memesList"></div>
+        <div class="pagination">
+          <a id="prevPage">Prev</a>
+          <span id="shownMemes"></span>
+          <a id="nextPage">Next</a>
+        </div>
+      </div>
     </div>
 
     <script>

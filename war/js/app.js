@@ -25,8 +25,8 @@ var AppRouterClass = Backbone.Router.extend({
       Backbone.history.navigate('', true);
     });
 
-    this.memesListEl.on('click', '#prev', _.bind(this.prevPage, this));
-    this.memesListEl.on('click', '#next', _.bind(this.nextPage, this));
+    $('#prevPage').on('click', _.bind(this.prevPage, this));
+    $('#nextPage').on('click', _.bind(this.nextPage, this));
   },
 
   start: function() {
@@ -98,16 +98,13 @@ var AppRouterClass = Backbone.Router.extend({
       var memeView = new MemeView({model: this.memes.at(i)});
       this.memesListEl.append(memeView.render().$el);
     }
-
-    var paging = this.memesListEl.append('<div id="pagination">').children('#pagination');
-    paging.append('Shown ' + (50 * this.memes.page + 1) + '-' + (50 * this.memes.page + this.memes.length));
-    if (this.memes.page > 0) {
-      paging.append('<span id="prev">Prev 50</span>');
-    }
-
-    if (this.memes.length == 50) {
-      paging.append('<span id="next">Next 50</span>');
-    }
+    
+    var memesPerPage = 50;
+    var startPos = (memesPerPage * this.memes.page + 1);
+    var endPos = (memesPerPage * this.memes.page + this.memes.length);
+    $('#shownMemes').text(startPos + '-' + endPos);
+    $('#prevPage').toggle(this.memes.page > 0);
+    $('#nextPage').toggle(this.memes.length == memesPerPage);
   },
 
   onSuccessDestroy_: function(model, resp) {

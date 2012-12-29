@@ -29,7 +29,6 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.images.Image;
-import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.memcache.ConsistentErrorHandler;
 import com.google.appengine.api.memcache.Expiration;
@@ -68,7 +67,6 @@ public class MemeDao {
   private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-  private final ImagesService imagesService = ImagesServiceFactory.getImagesService();
 
   private final Util util = new Util();
 

@@ -9,6 +9,12 @@ body, h1 {
   font-family: arial, sans-serif;
 }
 
+a {
+  color: #15c;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 div.clear {
   clear: both;
 }
@@ -56,22 +62,18 @@ h1#header {
   letter-spacing: 1px;
 }
 
-.plugin-button {
+.pluginInstall {
   position: absolute;
   top: 0;
   right: 10px;
   font-size: 12px;
-  font-family: arial, sans-serif;
 }
 
-.plugin-link {
-  text-decoration: underline;
-  color: #15c;
-  cursor: pointer;
+.pluginLink {
   vertical-align: middle;
 }
 
-.plugin-img {
+.pluginImg {
   height: 32px;
   width: 32px;
   vertical-align: middle;
@@ -152,10 +154,10 @@ img.preview {
   float: left; /* to remove strange space below */
 }
 
-#pagination {
+.pagination {
   clear: both;
-  text-align: right;
-  margin: 10px 30px 20px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 #pagination span {
