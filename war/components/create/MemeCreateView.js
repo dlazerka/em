@@ -1,35 +1,3 @@
-var MemePreview = MemeView.extend({
-  className: 'meme memePreview',
-  fontSize: 30,
-
-  initialize: function() {},
-
-  events: {},
-
-  render: function() {
-    this.$el.empty();
-    var uploadHelperText = $('#uploadHelperText');
-    if (this.model.get('src')) {
-      var data = {
-        image: this.getImageData(),
-        messages: this.getMessageData(),
-        canvas: null
-      };
-      this.template.done(_.bind(function () {
-        this.$el.html(this.compiledTemplate(data));
-      }, this));
-
-      uploadHelperText.hide();
-    } else {
-      this.$el.html('<div class="emptyImage" />');
-      uploadHelperText.show();
-      $('#top,#center,#bottom').val('');
-    }
-    $('#preview').html(this.$el);
-    this.positionMessages();
-  }
-});
-
 var MemeCreateView = Backbone.View.extend({
   el: '#create',
   meme: null,
@@ -51,7 +19,7 @@ var MemeCreateView = Backbone.View.extend({
 
   initialize: function() {
     if(!this.template) {
-      MemeCreateView.prototype.template = $.get('/components/meme/create.tpl');
+      this.template = $.get('/components/create/create.tpl');
     }
   },
 
@@ -69,7 +37,7 @@ var MemeCreateView = Backbone.View.extend({
   /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('#create').css('display') == 'none' ||
-        !this.template ||
+        !this.template1 ||
         !$(this.$el).children().size()) {
       return false;
     }
