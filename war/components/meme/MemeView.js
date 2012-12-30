@@ -25,7 +25,7 @@ var MemeView = Backbone.View.extend({
 
   onClick: function(event) {
     // Go to meme only if meme creation dialog is inactive.
-    if (!AppRouter.createMemeView.onMemeClick(event, this)) {
+    if (!AppRouter.createView.onMemeClick(event, this)) {
       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
     }
   },

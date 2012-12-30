@@ -1,4 +1,4 @@
-var MemeCreateView = Backbone.View.extend({
+var CreateView = Backbone.View.extend({
   el: '#create',
   meme: null,
   uploadUrl: UPLOAD_URL,
@@ -37,7 +37,7 @@ var MemeCreateView = Backbone.View.extend({
   /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('#create').css('display') == 'none' ||
-        !this.template1 ||
+        !this.template ||
         !$(this.$el).children().size()) {
       return false;
     }

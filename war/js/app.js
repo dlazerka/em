@@ -4,7 +4,7 @@ var AppRouterClass = Backbone.Router.extend({
   memes: new Memes(MEMES_JSON),
   memesListEl: $('#memesList'),
   comments: new Comments(),
-  createMemeView: new MemeCreateView(),
+  createView: new CreateView(),
 
   routes: {
     '': 'start',
@@ -16,7 +16,7 @@ var AppRouterClass = Backbone.Router.extend({
 
   initialize: function() {
     $('#showCreateDialog').click(_.bind(function() {
-      this.createMemeView.render();
+      this.createView.render();
     }, this));
 
     // Make header ('<epam:memegen>') a link to the home
