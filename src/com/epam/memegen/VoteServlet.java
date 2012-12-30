@@ -108,9 +108,7 @@ public class VoteServlet extends HttpServlet {
 
       MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
 
-      memcache.delete(MemeDao.ALL);
-      memcache.delete(MemeDao.POPULAR);
-      memcache.delete(MemeDao.TOP);
+      memcache.delete(MemeDao.Sort.RATING);
 
     } catch(EntityNotFoundException e) {
       throw new ServletException(e.getMessage());

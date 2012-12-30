@@ -44,9 +44,11 @@ public class MainServlet extends HttpServlet {
       readFile();
     }
     String uploadUrl = util.createUploadUrl();
-    String allMemesJson = memeDao.getAllAsJson(req, 0, "popular");
+    String allMemesJson = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
+    String topMemesJson = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
     String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
-    replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
+    replaced = replaced.replace("###ALL_MEMES_JSON###", allMemesJson);
+    replaced = replaced.replace("###TOP_MEMES_JSON###", topMemesJson);
 
 
     // Check authentication.

@@ -57,10 +57,11 @@ public class MemeDao {
   public static final String KIND = "Meme";
 
   public static final String LAST_TS = "LAST_TS";
-  public static final String ALL = "ALL";
-  public static final String POPULAR = "POPULAR";
-  public static final String TOP = "TOP";
   public static final int MEMES_PER_PAGE = 50;
+
+  public static enum Sort {
+    DATE, RATING
+  }
 
   private final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
@@ -89,7 +90,7 @@ public class MemeDao {
     return key;
   }
 
-  public String getAllAsJson(HttpServletRequest req, int page, String which) throws IOException {
+  public String getAllAsJson(HttpServletRequest req, int page, Sort sort) throws IOException {
     if (!util.isAuthenticated()) {
       return "[]";
     }
@@ -116,14 +117,7 @@ public class MemeDao {
         return "[]";
       }
     } else if (limit == null && page == 0) {
-      String json = null;
-      if (which.equals("all")) {
-        json = (String) memcache.get(ALL);
-      } else if (which.equals("popular")) {
-        json = (String) memcache.get(POPULAR);
-      } else if (which.equals("top")) {
-        json = (String) memcache.get(TOP);
-      }
+      String json = (String) memcache.get(sort.name());
       if (json != null) {
         return json;
       }
@@ -132,14 +126,8 @@ public class MemeDao {
     Date youngest = null;
     Query q = new Query(KIND, allKey);
     Filter filter = FilterOperator.EQUAL.of("deleted", false);
-    if (which.equals("all")) {
-      q.addSort("date", SortDirection.DESCENDING);
-    } else if (which.equals("popular")) {
-      q.addSort("date", SortDirection.DESCENDING);
-      filter = CompositeFilterOperator.and(filter, FilterOperator.EQUAL.of("isPositive", true));
-    } else if (which.equals("top")) {
-      q.addSort("rating", SortDirection.DESCENDING);
-    }
+    String sortField = sort == Sort.DATE ? "rating" : "date";
+    q.addSort(sortField, SortDirection.DESCENDING);
 
     if (since != null) {
       filter = CompositeFilterOperator.and(filter, new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
@@ -175,13 +163,7 @@ public class MemeDao {
     w.close();
     String value = out.toString();
     if (limit == null && since == null && page == 0) {
-      if (which.equals("all")) {
-        memcache.put(ALL, value, expiration);
-      } else if (which.equals("popular")) {
-        memcache.put(POPULAR, value, expiration);
-      } else if (which.equals("top")) {
-        memcache.put(TOP, value, expiration);
-      }
+      memcache.put(sort.name(), value, expiration);
     }
     if (youngest != null) {
       memcache.put(LAST_TS, youngest.getTime(), expiration);
@@ -370,9 +352,8 @@ public class MemeDao {
     String json = toJson(entity);
     memcache.put(key.getId(), json);
 
-    memcache.delete(ALL);
-    memcache.delete(POPULAR);
-    memcache.delete(TOP);
+    memcache.delete(Sort.DATE.name());
+    memcache.delete(Sort.RATING.name());
 
     // Set LAST_TS, taking care of for race conditions.
     long timestamp = justCreatedDate.getTime();
@@ -447,6 +428,7 @@ public class MemeDao {
     datastore.put(entity);
     memcache.delete(id);
     memcache.delete(LAST_TS);
-    memcache.delete(ALL);
+    memcache.delete(Sort.DATE);
+    memcache.delete(Sort.RATING);
   }
 }

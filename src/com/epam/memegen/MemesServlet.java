@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.epam.memegen.MemeDao.Sort;
+
 @SuppressWarnings("serial")
 public class MemesServlet extends HttpServlet {
   @SuppressWarnings("unused")
@@ -19,18 +21,12 @@ public class MemesServlet extends HttpServlet {
     resp.setCharacterEncoding("UTF-8");
     resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
 
-    String filter = req.getParameter("filter");
-    if (Util.isNullOrEmpty(filter)) {
-      filter = "popular";
-    }
-
     int page = 0;
     if (!Util.isNullOrEmpty(req.getParameter("page"))) {
       page = Integer.parseInt(req.getParameter("page"));
     }
 
-
-    String json = memeDao.getAllAsJson(req, page, filter);
+    String json = memeDao.getAllAsJson(req, page, Sort.DATE);
     resp.getWriter().write(json);
   }
 }
