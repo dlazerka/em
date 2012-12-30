@@ -2,9 +2,8 @@
  * Vote model and views.
  *
  * @author jauhen@gmail.com (Jauhen Kutsuk)
- * @author Dima Lazerka
+ * @author dlazerka@gmail.com (Dzmitry Lazerka)
  */
-
 var Meme = Backbone.Model.extend({
   defaults: {
     id: null,
