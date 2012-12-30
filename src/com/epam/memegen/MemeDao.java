@@ -126,7 +126,7 @@ public class MemeDao {
     Date youngest = null;
     Query q = new Query(KIND, allKey);
     Filter filter = FilterOperator.EQUAL.of("deleted", false);
-    String sortField = sort == Sort.DATE ? "rating" : "date";
+    String sortField = sort == Sort.RATING ? "rating" : "date";
     q.addSort(sortField, SortDirection.DESCENDING);
 
     if (since != null) {
