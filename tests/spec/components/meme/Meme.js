@@ -1,4 +1,4 @@
-describe('Meme specifications', function() {
+describe('Meme', function() {
   var model;
 
   beforeEach(function() {
@@ -12,7 +12,7 @@ describe('Meme specifications', function() {
     });
   });
 
-  it('on meme model creating vote should be created', function() {
+  it('on creating vote should be created', function() {
     expect(model.vote).toBeDefined();
     expect(model.vote.get('id')).toBe(1);
     expect(model.vote.get('rating')).toBe(4);
