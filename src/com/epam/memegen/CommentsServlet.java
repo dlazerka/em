@@ -22,7 +22,7 @@ import java.util.List;
 import static com.epam.memegen.Util.isNullOrEmpty;
 
 /**
- * @author Andrey Mormysh
+ * @author amormysh@gmail.com (Andrey Mormysh)
  */
 public class CommentsServlet extends HttpServlet {
 

@@ -1,19 +1,3 @@
-/**
- * Vote model and views.
- * 
- * @author jauhen@gmail.com (Jauhen Kutsuk)
- */
-
-/** Vote model, it handles like button. */
-var Vote = Backbone.Model.extend({
-  url: '/vote',
-
-  like: function(choice) {
-    ga.trackLike(this.id, choice);
-    this.save({'choice': choice});
-  }
-});
-
 /** Renders vote component and handle like/dislike buttons clicks. */
 var VoteView = Backbone.View.extend({
   tagName: 'div',

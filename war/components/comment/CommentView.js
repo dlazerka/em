@@ -1,30 +1,9 @@
 /**
- * Comments model and views.
- * 
- * @author Andrey Mormysh
+ * @author amormysh@gmail.com (Andrey Mormysh)
  * @author jauhen@gmail.com (Jauhen Kutsuk)
+ *
+ * Single comment view.
  */
-
-/** Comment model. */
-var Comment = Backbone.Model.extend({
-  defaults: {
-    memeId: null,
-    author: null,
-    text: null,
-    timestamp: null
-  },
-
-  url: '/comments'
-});
-
-/** List of comments. */
-var Comments = Backbone.Collection.extend({
-  model: Comment,
-  memeId: null,
-  url: '/comments'
-});
-
-/** Single comment view. */
 var CommentView = Backbone.View.extend({
   tagName: 'div',
   className: 'comment',
