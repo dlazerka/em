@@ -1,6 +1,4 @@
-window.Backbone = Backbone;
-
-var AppRouterClass = Backbone.Router.extend({
+var AppRouter = Backbone.Router.extend({
   memes: new Memes(MEMES_JSON),
   memesListEl: $('#memesList'),
   comments: new Comments(),
@@ -127,18 +125,3 @@ var AppRouterClass = Backbone.Router.extend({
     }
   }
 });
-
-$.ajaxSetup({
-  'cache': false,
-  // doesn't actually work, because of backbone bug https://github.com/documentcloud/backbone/issues/1875
-  'contentType': 'application/json; charset=UTF-8'
-});
-
-
-var AppRouter = new AppRouterClass();
-if (IS_AUTHENTICATED === false) {
-  ga.trackNoAuth();
-}
-
-// Trigger the initial route and enable HTML5 History API support
-Backbone.history.start();

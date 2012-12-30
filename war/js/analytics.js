@@ -32,10 +32,6 @@ var _gaq = _gaq || [];
     _gaq.push(['_trackEvent', 'Plugin install', '', '', 0]);
   }
 
-  function trackNoAuth() {
-    _gaq.push(['_trackEvent', 'NoAuth']);
-  }
-
   function trackError(msg) {
     _gaq.push(['_trackEvent', 'JS Error', msg, '', 0]);
   }
@@ -45,7 +41,6 @@ var _gaq = _gaq || [];
   window.ga.trackComment = trackComment;
   window.ga.trackCreate = trackCreate;
   window.ga.trackInstallPlugin = trackInstallPlugin;
-  window.ga.trackNoAuth = trackNoAuth;
   window.ga.trackError = trackError;
   
   init();
