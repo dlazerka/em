@@ -1,17 +1,20 @@
+/** Message at the top. */
 var Msg = {
   $el: $('#msg'),
 
+  /** Shows orange message. */
   info: function(text, opt_hideAfterMs) {
     this.$el.removeClass('error');
-    this.show(text, opt_hideAfterMs);
+    this.show_(text, opt_hideAfterMs);
   },
 
+  /** Shows red message. */
   error: function(text, opt_hideAfterMs) {
     this.$el.addClass('error');
-    this.show(text, opt_hideAfterMs);
+    this.show_(text, opt_hideAfterMs);
   },
 
-  show: function(text, opt_hideAfterMs) {
+  show_: function(text, opt_hideAfterMs) {
     this.$el.text(text);
     var w = this.$el.width();
     var ww = $(window).width();
