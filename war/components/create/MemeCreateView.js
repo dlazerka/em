@@ -98,7 +98,8 @@ var MemeCreateView = Backbone.View.extend({
     .error(_.bind(this.onUploadError, this));
   },
 
-  onImageUploadComplete: function(img) {
+  onImageUploadComplete: function() {
+    var img = $('img', this.$el);
     this.meme.set('width', img.width());
     this.meme.set('height', img.height());
   },
@@ -116,7 +117,7 @@ var MemeCreateView = Backbone.View.extend({
 
     var img = this.memeView.$('img');
     if (img[0].complete) {
-      this.onImageUploadComplete(img);
+      this.onImageUploadComplete();
     } else {
       img.load(_.bind(this.onImageUploadComplete, this));
     }
