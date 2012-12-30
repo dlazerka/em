@@ -1,6 +1,6 @@
 var CreateView = Backbone.View.extend({
   el: '#create',
-  meme: null,
+  memeView: new MemePreview({model: new Meme()}),
   uploadUrl: UPLOAD_URL,
 
   /** @type {$.promise} */
@@ -24,13 +24,21 @@ var CreateView = Backbone.View.extend({
     this.$el.hide();
     this.render();
   },
+  
+  reset: function() {
+    $('#submit').prop('disabled', false);
+    this.memeView.model = new Meme();
+    this.memeView.render();
+  },
+
+  toggle: function() {
+    this.reset();
+    this.$el.toggle();
+  },
 
   render: function() {
-    this.meme = new Meme();
-    this.memeView = new MemePreview({model: this.meme});
-
     this.template.done(_.bind(function(tpl) {
-      this.$el.append(_.template(tpl, {uploadUrl: this.uploadUrl}));
+      this.$el.append(_.template(tpl));
     }, this));
 
     return this;
@@ -43,24 +51,24 @@ var CreateView = Backbone.View.extend({
         !$(this.$el).children().size()) {
       return false;
     }
-    this.meme = new Meme({
+    this.memeView.model = new Meme({
       blobKey: memeView.model.get('blobKey'),
       src: memeView.model.get('src'),
       animated: memeView.model.get('animated'),
       height: memeView.model.get('height'),
       width: memeView.model.get('width')
     });
-    this.memeView.model = this.meme;
 
     this.setImage();
     return true;
   },
 
   updateMessage: function() {
-    var messages = this.meme.get('messages');
-    this.meme.set('top', $('#top').val() || null);
-    this.meme.set('center', $('#center').val() || null);
-    this.meme.set('bottom', $('#bottom').val() || null);
+    var meme = this.memeView.model;
+    var messages = meme.get('messages');
+    meme.set('top', $('#top').val() || null);
+    meme.set('center', $('#center').val() || null);
+    meme.set('bottom', $('#bottom').val() || null);
     this.memeView.render();
   },
 
@@ -82,10 +90,9 @@ var CreateView = Backbone.View.extend({
     var formData = new FormData();
     formData.append('image', element.files[0]);
 
-    var uploadUrl = $('#uploadUrl', this.$el).val();
     var progressListener = this.onUploadProgressEvent;
     $.ajax({
-      url: uploadUrl,
+      url: this.uploadUrl,
       data: formData,
       processData: false, // otherwise jquery throws TypeError
       contentType: false, // otherwise jquery will send wrong Content-Type
@@ -103,8 +110,8 @@ var CreateView = Backbone.View.extend({
 
   onImageUploadComplete: function() {
     var img = $('img', this.$el);
-    this.meme.set('width', img.width());
-    this.meme.set('height', img.height());
+    this.memeView.model.set('width', img.width());
+    this.memeView.model.set('height', img.height());
   },
 
   onUploadDone: function(data) {
@@ -112,9 +119,9 @@ var CreateView = Backbone.View.extend({
     this.uploadUrl = data.newUploadUrl;
     Msg.info('Uploaded!', 1500);
 
-    this.meme.set({
-      'src': data.uploads[0].src,
-      'blobKey': data.uploads[0].blobKey});
+    this.memeView.model.set({
+      src: data.uploads[0].src,
+      blobKey: data.uploads[0].blobKey});
 
     this.setImage();
 
@@ -143,7 +150,7 @@ var CreateView = Backbone.View.extend({
     Msg.info('Saving...');
     ga.trackCreate();
     $('#submit').prop('disabled', true);
-    var meme = this.meme.clone();
+    var meme = this.memeView.model.clone();
     var attrs = {};
     var options = {
       success: $.proxy(this.onSaved, this),
@@ -152,16 +159,11 @@ var CreateView = Backbone.View.extend({
     };
     meme.save(attrs, options);
   },
-
+  
   onSaved: function(model, resp) {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);
-    $('#submit').prop('disabled', false);
-    $('.upload').hide();
-    this.meme.set(this.meme.defaults, {silent: true});
-    this.memeView.render();
-
-    this.$el.empty();
+    this.reset();
   },
 
   onError: function(originalModel, resp, options) {
@@ -177,9 +179,7 @@ var CreateView = Backbone.View.extend({
       }
     }
     Msg.error('Error: ' + msg);
-    $('#submit').prop('disabled', false);
-    this.meme.set(this.meme.defaults);
-    this.memeView.render();
+    this.reset();
   },
 
   setImage: function() {

@@ -5,7 +5,6 @@
     or click on any meme.
   </div>
   <input id="uploadFile" class="uploadFile" type="file">
-  <input id="uploadUrl" type="hidden" value="<%=uploadUrl%>">
   <br/>
 </div>
 <div class="form">

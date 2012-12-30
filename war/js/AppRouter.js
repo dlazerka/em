@@ -13,7 +13,7 @@ var AppRouter = Backbone.Router.extend({
 
   initialize: function() {
     $('#showCreateDialog').click(_.bind(function() {
-      this.createView.$el.toggle();
+      this.createView.toggle();
     }, this));
 
     // Make header ('<epam:memegen>') a link to the home
