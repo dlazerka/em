@@ -47,15 +47,6 @@ var MemeView = Backbone.View.extend({
     }
   },
 
-  onImageLoad: function() {
-    if (this.$('.canvas').size()) {
-      this.$('.img').hide();
-      this.drawGifOnCanvas();
-    }
-    this.$el.show();
-    this.positionMessages();
-  },
-
   drawGifOnCanvas: function() {
     var context = this.$('.canvas').get(0).getContext('2d');
     context.drawImage(this.$('.img').get(0), 0, 0, this.getDesiredWidth(), this.getDesiredHeight());
@@ -136,9 +127,13 @@ var MemeView = Backbone.View.extend({
       width: this.getDesiredWidth()
     };
   },
+  
+  mustDrawOnCanvas: function() {
+    return this.model.get('animated') && this.className.indexOf('memeBig') == -1;
+  },
 
   render: function() {
-    this.$el.empty().hide();
+    this.$el.empty();
 
     var data = {
       image: this.getImageData(),
@@ -146,7 +141,7 @@ var MemeView = Backbone.View.extend({
       canvas: null
     };
 
-    if (this.model.get('animated') && this.className.indexOf('memeBig') == -1) {
+    if (this.mustDrawOnCanvas()) {
       data.canvas = {
         height: this.getDesiredHeight(),
         width: this.getDesiredWidth()
@@ -164,9 +159,15 @@ var MemeView = Backbone.View.extend({
       this.$el
           .html(this.compiledTemplate(data))
           .append(voteView.render().$el);
+      this.positionMessages();
 
-      // We should use direct binding because load event is not bubbled.
-      this.$('.img').load(_.bind(this.onImageLoad, this));
+      if (this.mustDrawOnCanvas()) {
+        this.$('.img').hide();
+        // We should use direct binding because load event is not bubbled.
+        this.$('.img').load(_.bind(function() {
+          this.drawGifOnCanvas();
+        }, this));
+      }
     }, this));
 
     return this;
