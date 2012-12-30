@@ -21,6 +21,8 @@ var CreateView = Backbone.View.extend({
     if(!this.template) {
       this.template = $.get('/components/create/create.tpl');
     }
+    this.$el.hide();
+    this.render();
   },
 
   render: function() {
@@ -33,7 +35,7 @@ var CreateView = Backbone.View.extend({
 
     return this;
   },
-
+  
   /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('#create').css('display') == 'none' ||
