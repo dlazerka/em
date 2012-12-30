@@ -43,12 +43,13 @@ var CreateView = Backbone.View.extend({
         !$(this.$el).children().size()) {
       return false;
     }
-    this.meme = memeView.model.clone();
-    this.meme.unset('top');
-    this.meme.unset('center');
-    this.meme.unset('bottom');
-    this.meme.unset('id');
-
+    this.meme = new Meme({
+      blobKey: memeView.model.get('blobKey'),
+      src: memeView.model.get('src'),
+      animated: memeView.model.get('animated'),
+      height: memeView.model.get('height'),
+      width: memeView.model.get('width')
+    });
     this.memeView.model = this.meme;
 
     this.setImage();
