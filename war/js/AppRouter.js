@@ -91,7 +91,7 @@ var AppRouter = Backbone.Router.extend({
   },
 
   nextPage: function() {
-    ++thithis.allMemesge;
+    ++this.allMemes.page;
     this.allMemes.fetch({
       data: this.allMemes.getParams(),
       success: _.bind(this.start, this)});
