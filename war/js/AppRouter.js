@@ -56,6 +56,7 @@ var AppRouter = Backbone.Router.extend({
       meme.destroy({success: $.proxy(this.onSuccessDestroy_, this)})
     }, this));
     this.getComments(id);
+    $('#pagination').hide();
   },
 
   showAllMemes: function() {
@@ -78,6 +79,7 @@ var AppRouter = Backbone.Router.extend({
     var memesPerPage = 50;
     var startPos = (memesPerPage * memes.page + 1);
     var endPos = (memesPerPage * memes.page + memes.length);
+    $('#pagination').show();
     $('#shownMemes').text(startPos + '-' + endPos);
     $('#prevPage').toggle(memes.page > 0);
     $('#nextPage').toggle(memes.length == memesPerPage);
