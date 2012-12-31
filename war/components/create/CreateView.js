@@ -1,7 +1,8 @@
 var CreateView = Backbone.View.extend({
   el: '#create',
   memeView: new MemePreview({model: new Meme()}),
-  uploadUrl: UPLOAD_URL,
+  /** @type {$.promise} */
+  uploadUrl: null,
 
   /** @type {$.promise} */
   template: null,
@@ -74,6 +75,7 @@ var CreateView = Backbone.View.extend({
 
   onUploadLinkClick: function(event) {
     $('#uploadFile').click();
+    this.uploadUrl = $.get('/upload');
     event.preventDefault();
     return false;
   },
@@ -81,6 +83,7 @@ var CreateView = Backbone.View.extend({
   onFileFieldChange: function(event) {
     if (!window['XMLHttpRequestUpload']) {
       alert('Your browser doesn\'t support XMLHttpRequestUpload. Try using a modern browser');
+      return;
     }
     var element = event.target;
     if (!element.files || !element.files.length) {
@@ -91,21 +94,23 @@ var CreateView = Backbone.View.extend({
     formData.append('image', element.files[0]);
 
     var progressListener = this.onUploadProgressEvent;
-    $.ajax({
-      url: this.uploadUrl,
-      data: formData,
-      processData: false, // otherwise jquery throws TypeError
-      contentType: false, // otherwise jquery will send wrong Content-Type
-      type: 'POST',
-      dataType: 'json',
-      xhr: function() {
-        var xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener("progress", progressListener, false);
-        return xhr;
-      }
-    })
-    .done(_.bind(this.onUploadDone, this))
-    .error(_.bind(this.onUploadError, this));
+    this.uploadUrl.done(_.bind(function(url) {
+      $.ajax({
+        url: url,
+        data: formData,
+        processData: false, // otherwise jquery throws TypeError
+        contentType: false, // otherwise jquery will send wrong Content-Type
+        type: 'POST',
+        dataType: 'json',
+        xhr: function() {
+          var xhr = new XMLHttpRequest();
+          xhr.upload.addEventListener("progress", progressListener, false);
+          return xhr;
+        }
+      })
+      .done(_.bind(this.onUploadDone, this))
+      .error(_.bind(this.onUploadError, this));
+    }, this));
   },
 
   onImageUploadComplete: function() {
@@ -115,8 +120,6 @@ var CreateView = Backbone.View.extend({
   },
 
   onUploadDone: function(data) {
-    // Set new upload URL so we can re-upload.
-    this.uploadUrl = data.newUploadUrl;
     Msg.info('Uploaded!', 1500);
 
     this.memeView.model.set({

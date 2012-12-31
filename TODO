@@ -15,7 +15,7 @@
 + Page with positive memes
 + Page with high rankend memes
 + Still GIFs.
-* Clean upload form on hide.
++ Clean upload form on hide.
 * Fix JS exception when opening a deleted meme.
 * Avoid page reload on Back from a meme.
 

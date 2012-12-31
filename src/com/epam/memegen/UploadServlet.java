@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.UploadOptions;
 import com.google.gson.stream.JsonWriter;
 
 @SuppressWarnings("serial")
@@ -24,7 +25,9 @@ public class UploadServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("text/plain");
-    String uploadUrl = util.createUploadUrl();
+    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 22);
+    // Success path doesn't matter because we're uploading by AJAX.
+    String uploadUrl = blobstoreService.createUploadUrl("/upload", uploadOptions);
     resp.getWriter().write(uploadUrl);
   }
 
@@ -42,8 +45,6 @@ public class UploadServlet extends HttpServlet {
     JsonWriter jsonWriter = new JsonWriter(resp.getWriter());
     jsonWriter.setIndent("  ");
     jsonWriter.beginObject();
-    String uploadUrl = util.createUploadUrl();
-    jsonWriter.name("newUploadUrl").value(uploadUrl);
     jsonWriter.name("uploads");
     jsonWriter.beginArray();
     for (BlobKey key : blobKeys) {

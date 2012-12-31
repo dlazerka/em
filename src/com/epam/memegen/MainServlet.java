@@ -43,13 +43,11 @@ public class MainServlet extends HttpServlet {
     if (SystemProperty.environment.value() == Environment.Value.Development) {
       readFile();
     }
-    String uploadUrl = util.createUploadUrl();
     String allMemesJson = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
     String topMemesJson = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
-    String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
+    String replaced = welcomeFileContent;
     replaced = replaced.replace("###ALL_MEMES_JSON###", allMemesJson);
     replaced = replaced.replace("###TOP_MEMES_JSON###", topMemesJson);
-
 
     // Check authentication.
     // If not logged in, send him to login url.

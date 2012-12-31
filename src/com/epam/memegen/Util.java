@@ -21,13 +21,6 @@ public class Util {
     return str == null || str.trim().equals("");
   }
 
-  public String createUploadUrl() {
-    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 22);
-    // Success path doesn't matter because we're uploading by AJAX.
-    String uploadUrl = blobstoreService.createUploadUrl("/upload", uploadOptions);
-    return uploadUrl;
-  }
-
   public boolean isAuthenticated() {
     boolean userLoggedIn = userService.isUserLoggedIn();
     if (userLoggedIn) {
