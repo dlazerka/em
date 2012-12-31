@@ -43,11 +43,13 @@ public class MainServlet extends HttpServlet {
     if (SystemProperty.environment.value() == Environment.Value.Development) {
       readFile();
     }
-    String allMemesJson = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
-    String topMemesJson = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
+    String allMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
+    String topMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
+    String deletedMemesIds = memeDao.getDeletedIdsAsJson();
     String replaced = welcomeFileContent;
-    replaced = replaced.replace("###ALL_MEMES_JSON###", allMemesJson);
-    replaced = replaced.replace("###TOP_MEMES_JSON###", topMemesJson);
+    replaced = replaced.replace("###ALL_MEMES###", allMemes);
+    replaced = replaced.replace("###TOP_MEMES###", topMemes);
+    replaced = replaced.replace("###DELETED_MEMES_IDS###", deletedMemesIds);
 
     // Check authentication.
     // If not logged in, send him to login url.

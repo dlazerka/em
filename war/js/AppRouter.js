@@ -1,6 +1,7 @@
 var AppRouter = Backbone.Router.extend({
   allMemes: new Memes(ALL_MEMES_JSON),
   topMemes: new Memes(TOP_MEMES_JSON),
+  deletedMemesIds: DELETED_MEMES_IDS,
   memesListEl: $('#memesList'),
   comments: new Comments(),
   createView: new CreateView(),
@@ -46,7 +47,15 @@ var AppRouter = Backbone.Router.extend({
 
   showOneMeme: function(id) {
     ga.trackPage('/meme/' + id);
+    $('#pagination').hide();
+
     var meme = this.allMemes.get(id);
+    if (!meme) {
+      var msg = _.contains(this.deletedMemesIds, Number(id)) ?
+          'Meme is deleted' : 'Meme not found';
+      this.memesListEl.html(msg);
+      return;
+    }
     var memeView = new MemeView({model: meme, className: 'meme memeBig'});
     this.memesListEl.html(memeView.render(50).$el);
     this.memesListEl.append('<br/>');
@@ -56,7 +65,6 @@ var AppRouter = Backbone.Router.extend({
       meme.destroy({success: $.proxy(this.onSuccessDestroy_, this)})
     }, this));
     this.getComments(id);
-    $('#pagination').hide();
   },
 
   showAllMemes: function() {

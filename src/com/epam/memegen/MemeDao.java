@@ -56,7 +56,10 @@ public class MemeDao {
 
   public static final String KIND = "Meme";
 
-  public static final String LAST_TS = "LAST_TS";
+  /* Memcache keys */
+  private static final String LAST_TS = "LAST_TS";
+  private static final String DELETED_IDS = "DELETED_IDS";
+
   public static final int MEMES_PER_PAGE = 50;
 
   public static enum Sort {
@@ -72,6 +75,7 @@ public class MemeDao {
   private final Util util = new Util();
 
   private final Expiration expiration = Expiration.byDeltaSeconds(666); // 11 minutes
+  private final FetchOptions fetchOptions = FetchOptions.Builder.withPrefetchSize(1000);
 
   public MemeDao() {
     memcache.setErrorHandler(new ConsistentErrorHandler() {
@@ -88,6 +92,26 @@ public class MemeDao {
   public static String getMemcacheKey(HttpServletRequest req) {
     String key = req.getRequestURI() + req.getQueryString();
     return key;
+  }
+
+  public String getDeletedIdsAsJson() throws IOException {
+    String result = (String) memcache.get(DELETED_IDS);
+    if (result != null) {
+      return result;
+    }
+    Query q = new Query(KIND, allKey);
+    q.setKeysOnly();
+    q.setFilter(new FilterPredicate("deleted", FilterOperator.EQUAL, true));
+    PreparedQuery prepared = datastore.prepare(q);
+    StringWriter sw = new StringWriter();
+    JsonWriter jw = new JsonWriter(sw).beginArray();
+    for (Entity entity : prepared.asIterable(fetchOptions)) {
+      jw.value(entity.getKey().getId());
+    }
+    jw.endArray().close();
+    result = sw.toString();
+    memcache.put(DELETED_IDS, result, expiration);
+    return result;
   }
 
   public String getAllAsJson(HttpServletRequest req, int page, Sort sort) throws IOException {
@@ -135,17 +159,16 @@ public class MemeDao {
 
     q.setFilter(filter);
 
-    FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
     if (limit != null) {
-      options.limit(Math.max(limit, MEMES_PER_PAGE));
+      fetchOptions.limit(Math.max(limit, MEMES_PER_PAGE));
     } else {
-      options.limit(MEMES_PER_PAGE);
+      fetchOptions.limit(MEMES_PER_PAGE);
     }
 
-    options.offset(page * MEMES_PER_PAGE);
+    fetchOptions.offset(page * MEMES_PER_PAGE);
 
     PreparedQuery prepared = datastore.prepare(q);
-    Iterable<Entity> iterable = prepared.asIterable(options);
+    Iterable<Entity> iterable = prepared.asIterable(fetchOptions);
 
     StringWriter out = new StringWriter();
     JsonWriter w = new JsonWriter(out);
@@ -419,7 +442,6 @@ public class MemeDao {
     if (!util.isAuthenticated()) {
       return;
     }
-
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key key = KeyFactory.createKey(allKey, KIND, id);
     Entity entity;
@@ -430,5 +452,7 @@ public class MemeDao {
     memcache.delete(LAST_TS);
     memcache.delete(Sort.DATE.name());
     memcache.delete(Sort.RATING.name());
+    memcache.delete(DELETED_IDS);
+    logger.info("Deleted meme " + id);
   }
 }
