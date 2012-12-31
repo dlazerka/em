@@ -428,7 +428,7 @@ public class MemeDao {
     datastore.put(entity);
     memcache.delete(id);
     memcache.delete(LAST_TS);
-    memcache.delete(Sort.DATE);
-    memcache.delete(Sort.RATING);
+    memcache.delete(Sort.DATE.name());
+    memcache.delete(Sort.RATING.name());
   }
 }
