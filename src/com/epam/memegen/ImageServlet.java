@@ -16,7 +16,8 @@ public class ImageServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    resp.setHeader("Cache-Control", "max-age=604800");// 1 week
+    // Note that if you're an application admin, AppEngine will reset this to "no-cache".
+    resp.setHeader("Cache-Control", "public, max-age=2592000");// 1 month
 
     String blobKey = req.getParameter("blobKey");
     if (Util.isNullOrEmpty(blobKey)) {
