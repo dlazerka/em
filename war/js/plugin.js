@@ -4,12 +4,10 @@ function init() {
   setTimeout(function() {
     // Check if plugin is installed by searching for element with id "epam-memegen-extension-is-installed".
     // If not found - show button.
-    if ($('#epam-memegen-extension-is-installed').size()) {
-      console.log("EPAM memegen plugin is installed");
-    } else {
-      $('#epam-memegen-install-button').show();
+    if (!$('#extensionInstalled').size()) {
+      $('#extensionAd').show();
     }
-  }, 1000);
+  }, 200);
 }
 
 function installPlugin() {
@@ -28,7 +26,7 @@ function installPluginChrome() {
   chrome.webstore.install(
     PLUGIN_URL,
     function() {
-      $('#epam-memegen-install-button').hide();
+      $('#extensionAd').hide();
     },
     function(err) {
       console.log(err);
@@ -39,5 +37,4 @@ function installPluginChrome() {
 
 $(function() {
   init();
-  $('#epam-memegen-install-button').click(installPlugin);
 });

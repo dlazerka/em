@@ -62,21 +62,18 @@ h1#header {
   letter-spacing: 1px;
 }
 
-.pluginInstall {
+.extensionAd {
   position: absolute;
   top: 0;
   right: 10px;
   font-size: 12px;
 }
-
-.pluginLink {
+.extensionLink, .extensionImg {
   vertical-align: middle;
 }
-
-.pluginImg {
+.extensionImg {
   height: 32px;
   width: 32px;
-  vertical-align: middle;
 }
 
 #sidePane {
