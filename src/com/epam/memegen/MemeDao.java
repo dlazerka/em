@@ -46,9 +46,8 @@ import com.google.gson.stream.JsonWriter;
 /**
  * Memcache contains JSONs for:
  * <li>Every meme by its long id.
- * <li>All memes by key "ALL".
- * <li>Popular memes by key "POPULAR".
- * <li>Top memes by key "TOP".
+ * <li>All memes ordered by date -- key "DATE".
+ * <li>All memes ordered by rating -- key "RATING".
  * <li>Last meme Date by key "LAST_TS".
  */
 public class MemeDao {
@@ -125,13 +124,6 @@ public class MemeDao {
     } catch (NumberFormatException e) {
       since = null;
     }
-    String limitS = req.getParameter("top");
-    Integer limit;
-    try {
-      limit = limitS == null ? null : Integer.parseInt(limitS);
-    } catch (NumberFormatException e) {
-      limit = null;
-    }
 
     // Lookup memcache
     if (since != null) {
@@ -140,7 +132,7 @@ public class MemeDao {
         // User asked for memes younger than the youngest.
         return "[]";
       }
-    } else if (limit == null && page == 0) {
+    } else if (page == 0) {
       String json = (String) memcache.get(sort.name());
       if (json != null) {
         return json;
@@ -159,11 +151,7 @@ public class MemeDao {
 
     q.setFilter(filter);
 
-    if (limit != null) {
-      fetchOptions.limit(Math.max(limit, MEMES_PER_PAGE));
-    } else {
-      fetchOptions.limit(MEMES_PER_PAGE);
-    }
+    fetchOptions.limit(MEMES_PER_PAGE);
 
     fetchOptions.offset(page * MEMES_PER_PAGE);
 
@@ -185,7 +173,7 @@ public class MemeDao {
     w.endArray();
     w.close();
     String value = out.toString();
-    if (limit == null && since == null && page == 0) {
+    if (since == null && page == 0) {
       memcache.put(sort.name(), value, expiration);
     }
     if (youngest != null) {
