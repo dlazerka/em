@@ -24,6 +24,8 @@ var MemeView = Backbone.View.extend({
   },
 
   onClick: function(event) {
+    event.preventDefault();// prevent <a> catching it.
+
     // Go to meme only if meme creation dialog is inactive.
     if (!AppRouter.createView.onMemeClick(event, this)) {
       Backbone.history.navigate('#meme/' + this.model.get('id'), true);
@@ -121,6 +123,7 @@ var MemeView = Backbone.View.extend({
 
   getImageData: function() {
     return {
+      id: this.model.get('id'), 
       src: this.model.get('src'), 
       text: _.values(this.model.getMessagesMap()).join(' ').trim(), 
       height: this.getDesiredHeight(), 
