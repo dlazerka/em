@@ -50,6 +50,7 @@ public class MainServlet extends HttpServlet {
     replaced = replaced.replace("###ALL_MEMES###", allMemes);
     replaced = replaced.replace("###TOP_MEMES###", topMemes);
     replaced = replaced.replace("###DELETED_MEMES_IDS###", deletedMemesIds);
+    replaced = replaced.replace("###MEMES_PER_PAGE###", MemeDao.MEMES_PER_PAGE + "");
 
     // Check authentication.
     // If not logged in, send him to login url.

@@ -1,6 +1,21 @@
 var AppRouter = Backbone.Router.extend({
-  allMemes: new Memes(ALL_MEMES_JSON),
-  topMemes: new Memes(TOP_MEMES_JSON),
+  allMemesFirstPage: new Memes(ALL_MEMES),
+  topMemesFirstPage: new Memes(TOP_MEMES),
+
+  /**
+   * Memes currently shown. New collection is assigned when top memes/page is changed.
+   * @type Backbone.Collection 
+   */
+  memes: null,
+
+  /**
+   * Memes that should be shown when clicking Next.
+   * @type jQuery.Promise
+   */
+  nextMemesPromise: null,
+  prevMemesPromise: null,
+  page: 0,
+  /** @type Array.<number> */
   deletedMemesIds: DELETED_MEMES_IDS,
   memesListEl: $('#memesList'),
   comments: new Comments(),
@@ -26,6 +41,29 @@ var AppRouter = Backbone.Router.extend({
     $('#nextPage').on('click', _.bind(this.nextPage, this));
   },
 
+  requestNextMemes: function() {
+    this.nextMemesPromise = $.get('/memes', {page: this.page + 1});
+    // There's one more .done() for this promise below.
+    this.nextMemesPromise.done(function(result) {
+      if (result.length == 0) {
+        $('#nextPage').css('visibility', 'hidden');
+      } else {
+        $('#nextPage').css('visibility', '');
+      }
+    });
+  },
+
+  requestPrevMemes: function() {
+    if (this.page == 0) {
+      this.prevMemesPromise == null;
+      $('#prevPage').css('visibility', 'hidden');
+      return;
+    } else {
+      $('#prevPage').css('visibility', '');
+    }
+    this.prevMemesPromise = $.get('/memes', {page: this.page - 1});
+  },
+
   getComments: function(memeId) {
     this.comments.memeId = memeId;
     this.comments.fetch({
@@ -34,7 +72,8 @@ var AppRouter = Backbone.Router.extend({
   },
 
   onMemeAdded: function(meme) {
-    this.allMemes.unshift(meme);
+    this.memes.unshift(meme);
+    this.allMemesFirstPage.unshift(meme);
     var memeView = new MemeView({model: meme});
     this.memesListEl.prepend(memeView.render().$el);
   },
@@ -49,7 +88,8 @@ var AppRouter = Backbone.Router.extend({
     ga.trackPage('/meme/' + id);
     $('#pagination').hide();
 
-    var meme = this.allMemes.get(id);
+    // TODO(lazerka): Doesn't work if meme is not on screen.
+    var meme = this.memes.get(id);
     if (!meme) {
       var msg = _.contains(this.deletedMemesIds, Number(id)) ?
           'Meme is deleted' : 'Meme not found';
@@ -67,52 +107,74 @@ var AppRouter = Backbone.Router.extend({
     this.getComments(id);
   },
 
+  reset: function() {
+    this.page = 0;
+    this.showMemes();
+    $('#pagination').show();
+    this.requestNextMemes();
+    this.requestPrevMemes();
+  },
+
   showAllMemes: function() {
     ga.trackPage();
-    this.showMemes(this.allMemes);
+    this.memes = this.allMemesFirstPage;
+    this.reset();
   },
 
   showTopMemes: function() {
     ga.trackPage('/top');
-    this.showMemes(this.topMemes);
+    this.memes = this.topMemesFirstPage;
+    this.reset();
   },
 
-  showMemes: function(memes) {
+  showMemes: function() {
     this.memesListEl.empty();
-    for (var i = 0; i < memes.length; i++) {
-      var memeView = new MemeView({model: memes.at(i)});
+    for (var i = 0; i < this.memes.length; i++) {
+      var memeView = new MemeView({model: this.memes.at(i)});
       this.memesListEl.append(memeView.render().$el);
     }
-    
-    var memesPerPage = 50;
-    var startPos = (memesPerPage * memes.page + 1);
-    var endPos = (memesPerPage * memes.page + memes.length);
-    $('#pagination').show();
-    $('#shownMemes').text(startPos + '-' + endPos);
-    $('#prevPage').toggle(memes.page > 0);
-    $('#nextPage').toggle(memes.length == memesPerPage);
+
+    var memesPerPage = 2;
+    var startPos = (memesPerPage * this.memes.page + 1);
+    var endPos = (memesPerPage * this.memes.page + this.memes.length);
   },
 
   onSuccessDestroy_: function(model, resp) {
     Msg.info('Deleted!', 1500);
-    this.allMemes.remove(model);
-    this.topMemes.remove(model);
+    this.memes.remove(model);
+    this.allMemesFirstPage.remove(model);
+    this.topMemesFirstPage.remove(model);
+    this.deletedMemesIds.push(model.get('id'));
     Backbone.history.navigate('', true);
   },
 
   nextPage: function() {
-    ++this.allMemes.page;
-    this.allMemes.fetch({
-      data: this.allMemes.getParams(),
-      success: _.bind(this.start, this)});
+    this.nextMemesPromise.done(_.bind(function(result) {
+      if (result.length == 0) {
+        // User should not be able to click, because Next must've been already hidden.
+        return;
+      }
+      this.memes = new Memes(result);
+      this.page++;
+      this.showMemes();
+      this.requestNextMemes();
+      this.requestPrevMemes();
+    }, this));
   },
 
   prevPage: function() {
-    if (this.allMemes.page > 0) {
-      --this.allMemes.page;
-      this.allMemes.fetch({
-        data: this.allMemes.getParams(),
-        success: _.bind(this.start, this)});
+    if (this.prevMemesPromise == null) {
+      // User should not be able to click, because Prev must've been already hidden.
+      return;
     }
+    this.prevMemesPromise.done(_.bind(function(result) {
+      this.memes = new Memes(result);
+      if (this.page > 0) {
+        this.page--;
+        this.showMemes();
+        this.requestPrevMemes();
+        this.requestNextMemes();
+      }
+    }, this));
   }
 });
