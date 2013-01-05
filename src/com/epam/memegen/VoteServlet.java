@@ -35,7 +35,8 @@ import com.google.gson.stream.JsonWriter;
 public class VoteServlet extends HttpServlet {
 
   private static final long serialVersionUID = 5706828606914220112L;
-  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
 
   protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
@@ -106,9 +107,8 @@ public class VoteServlet extends HttpServlet {
       meme.setProperty("isPositive", rating >= 0);
       datastore.put(meme);
 
-      MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
-
-      memcache.delete(MemeDao.Sort.RATING);
+      memcache.delete(MemeDao.Sort.DATE.name());
+      memcache.delete(MemeDao.Sort.RATING.name());
 
     } catch(EntityNotFoundException e) {
       throw new ServletException(e.getMessage());
