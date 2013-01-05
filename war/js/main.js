@@ -8,4 +8,4 @@ $.ajaxSetup({
 });
 
 // Trigger the initial route and enable HTML5 History API support
-Backbone.history.start();
+Backbone.history.start({pushState: true});

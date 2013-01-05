@@ -1,6 +1,6 @@
 var AppRouter = Backbone.Router.extend({
-  allMemesFirstPage: new Memes(ALL_MEMES),
-  topMemesFirstPage: new Memes(TOP_MEMES),
+  memesByDateFirstPage: new Memes(ALL_MEMES),
+  memesByRatingFirstPage: new Memes(TOP_MEMES),
 
   /**
    * Memes currently shown. New collection is assigned when top memes/page is changed.
@@ -13,6 +13,10 @@ var AppRouter = Backbone.Router.extend({
    * @type jQuery.Promise
    */
   nextMemesPromise: null,
+  /**
+   * Memes that should be shown when clicking Prev.
+   * @type jQuery.Promise
+   */
   prevMemesPromise: null,
   page: 0,
   /** @type Array.<number> */
@@ -22,9 +26,9 @@ var AppRouter = Backbone.Router.extend({
   createView: new CreateView(),
 
   routes: {
-    '': 'showAllMemes',
-    'top': 'showTopMemes',
-    'meme/:id': 'showOneMeme'
+    '': 'showMemesByDate',
+    'top': 'showMemesByRating',
+    ':id': 'showOneMeme'
   },
 
   initialize: function() {
@@ -37,8 +41,16 @@ var AppRouter = Backbone.Router.extend({
       Backbone.history.navigate('', true);
     });
 
+    $('#navRecent').on('click', _.bind(this.onNavClick, this, '/'));
+    $('#navTop').on('click', _.bind(this.onNavClick, this, '/top'));
+
     $('#prevPage').on('click', _.bind(this.prevPage, this));
     $('#nextPage').on('click', _.bind(this.nextPage, this));
+  },
+
+  onNavClick: function(event, path) {
+    event.preventDefault();// prevent <a> catching it.
+    this.navigate(path, true);
   },
 
   requestNextMemes: function() {
@@ -73,7 +85,7 @@ var AppRouter = Backbone.Router.extend({
 
   onMemeAdded: function(meme) {
     this.memes.unshift(meme);
-    this.allMemesFirstPage.unshift(meme);
+    this.memesByDateFirstPage.unshift(meme);
     var memeView = new MemeView({model: meme});
     this.memesListEl.prepend(memeView.render().$el);
   },
@@ -85,11 +97,15 @@ var AppRouter = Backbone.Router.extend({
   },
 
   showOneMeme: function(id) {
-    ga.trackPage('/meme/' + id);
+    ga.trackPage('/' + id);
     $('#pagination').hide();
 
-    // TODO(lazerka): Doesn't work if meme is not on screen.
-    var meme = this.memes.get(id);
+    var meme = null;
+    if (this.memes) {// If clicked on the screen
+       meme = this.memes.get(id);
+    } else {
+      meme = new Meme(MEME);
+    }
     if (!meme) {
       var msg = _.contains(this.deletedMemesIds, Number(id)) ?
           'Meme is deleted' : 'Meme not found';
@@ -115,15 +131,15 @@ var AppRouter = Backbone.Router.extend({
     this.requestPrevMemes();
   },
 
-  showAllMemes: function() {
-    ga.trackPage();
-    this.memes = this.allMemesFirstPage;
+  showMemesByDate: function() {
+    ga.trackPage('/');
+    this.memes = this.memesByDateFirstPage;
     this.reset();
   },
 
-  showTopMemes: function() {
+  showMemesByRating: function() {
     ga.trackPage('/top');
-    this.memes = this.topMemesFirstPage;
+    this.memes = this.memesByRatingFirstPage;
     this.reset();
   },
 
@@ -133,17 +149,15 @@ var AppRouter = Backbone.Router.extend({
       var memeView = new MemeView({model: this.memes.at(i)});
       this.memesListEl.append(memeView.render().$el);
     }
-
-    var memesPerPage = 2;
-    var startPos = (memesPerPage * this.memes.page + 1);
-    var endPos = (memesPerPage * this.memes.page + this.memes.length);
+    var startPos = (MEMES_PER_PAGE * this.memes.page + 1);
+    var endPos = (MEMES_PER_PAGE * this.memes.page + this.memes.length);
   },
 
   onSuccessDestroy_: function(model, resp) {
     Msg.info('Deleted!', 1500);
     this.memes.remove(model);
-    this.allMemesFirstPage.remove(model);
-    this.topMemesFirstPage.remove(model);
+    this.memesByDateFirstPage.remove(model);
+    this.memesByRatingFirstPage.remove(model);
     this.deletedMemesIds.push(model.get('id'));
     Backbone.history.navigate('', true);
   },

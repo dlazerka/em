@@ -1,4 +1,4 @@
-<a href="#meme/<%=image.id%>">
+<a href="<%=image.id%>">
   <img class="img" src="<%=image.src%>" alt="<%-image.text%>" title="<%-image.text%>" 
     style="height: <%=image.height%>px;width: <%=image.width%>px;"/>
   <% if (canvas) { %>

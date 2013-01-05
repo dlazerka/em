@@ -36,7 +36,7 @@ describe('Memes', function() {
   it('fetch params should return page and filter', function() {
     expect(memes.getParams()).toEqual({
       page: 0,
-      filter: 'popular'
+      filter: ''
     });
   });
 });
