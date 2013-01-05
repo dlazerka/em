@@ -29,11 +29,10 @@ import com.google.gson.JsonParser;
  * @author amormysh@gmail.com (Andrey Mormysh)
  */
 @SuppressWarnings("serial")
-public class CommentsServlet extends HttpServlet {
+public class CommentServlet extends HttpServlet {
 
   private UserService userService = UserServiceFactory.getUserService();
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -67,9 +66,6 @@ public class CommentsServlet extends HttpServlet {
     entity.setProperty(Comment.TEXT, comment.getText());
     entity.setProperty(Comment.DATE, date);
     entity.setProperty(Comment.AUTHOR, comment.getAuthor());
-    // TODO(lazerka): For backwards compatibility, for versions 20 and below. Remove when not needed anymore.
-    entity.setProperty("user", comment.getAuthor());
-    entity.setProperty("timestamp", date.getTime());
 
     datastore.put(entity);
     resp.getWriter().write(new Gson().toJson(comment));

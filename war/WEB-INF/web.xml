@@ -72,12 +72,12 @@
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>Comments</servlet-name>
-    <servlet-class>com.epam.memegen.CommentsServlet</servlet-class>
+    <servlet-name>Comment</servlet-name>
+    <servlet-class>com.epam.memegen.CommentServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Comments</servlet-name>
-    <url-pattern>/comments</url-pattern>
+    <servlet-name>Comment</servlet-name>
+    <url-pattern>/comment</url-pattern>
   </servlet-mapping>
   <!--
   <security-constraint>

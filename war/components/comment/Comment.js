@@ -10,5 +10,5 @@ var Comment = Backbone.Model.extend({
     timestamp: null
   },
 
-  url: '/comments'
+  url: '/comment'
 });

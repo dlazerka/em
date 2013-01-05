@@ -7,5 +7,5 @@
 var Comments = Backbone.Collection.extend({
   model: Comment,
   memeId: null,
-  url: '/comments'
+  url: '/comment'
 });
