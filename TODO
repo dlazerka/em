@@ -1,7 +1,7 @@
 Bugs:
 +  Clicking on Next doesn't work.
-* Go to a direct meme URL, that is not on the first page.
-* Click on a meme. Go back. See all text is incorrectly positioned.
++ Go to a direct meme URL, that is not on the first page.
+> Click on a meme. Go back. See all text is incorrectly positioned.
 
 Features:
 * Upload image from link.
