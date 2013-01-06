@@ -6,9 +6,13 @@ load:
  - ../war/js/lib/underscore.js
  - ../war/js/lib/jquery.js
  - ../war/js/lib/backbone.js
- - ../war/components/meme/meme.js
- - ../war/components/vote/vote.js
+ - ../war/components/meme/Meme.js
+ - ../war/components/meme/Memes.js
+ - ../war/components/meme/MemeView.js
+ - ../war/components/vote/Vote.js
+ - ../war/components/vote/VoteView.js
 
 test:
- - spec/components/meme/memeSpec.js
- - spec/components/meme/memesSpec.js
+ - spec/components/meme/Meme.js
+ - spec/components/meme/Memes.js
+ - spec/components/meme/MemeView.js
