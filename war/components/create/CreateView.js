@@ -25,7 +25,7 @@ var CreateView = Backbone.View.extend({
     this.$el.hide();
     this.render();
   },
-  
+
   reset: function() {
     $('#submit').prop('disabled', false);
     this.memeView.model = new Meme();
@@ -44,7 +44,7 @@ var CreateView = Backbone.View.extend({
 
     return this;
   },
-  
+
   /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('#create').css('display') == 'none' ||
@@ -162,7 +162,7 @@ var CreateView = Backbone.View.extend({
     };
     meme.save(attrs, options);
   },
-  
+
   onSaved: function(model, resp) {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);

@@ -130,7 +130,7 @@ var MemeView = Backbone.View.extend({
       width: this.getDesiredWidth()
     };
   },
-  
+
   mustDrawOnCanvas: function() {
     return this.model.get('animated') && this.className.indexOf('memeBig') == -1;
   },
@@ -162,8 +162,7 @@ var MemeView = Backbone.View.extend({
       this.$el
           .html(this.compiledTemplate(data))
           .append(voteView.render().$el);
-      this.positionMessages();
-
+      
       if (this.mustDrawOnCanvas()) {
         this.$('.img').hide();
         // We should use direct binding because load event is not bubbled.
@@ -172,6 +171,10 @@ var MemeView = Backbone.View.extend({
         }, this));
       }
     }, this));
+
+    // Schedule positioning, because if this.template was already complete,
+    // then message positioning won't know messages width until attached to the page.
+    window.setTimeout(_.bind(this.positionMessages, this), 0);
 
     return this;
   }
