@@ -13,7 +13,7 @@ describe('MemeView', function() {
     model = new Meme({
       id: 1,
       blobKey: '123',
-      src: 'http://expamle.com/1.jpg',
+      src: 'http://example.com/1.jpg',
       top: 'top1 very long very long longer than ever message',
       bottom: 'bottom3',
       rating: 4,
