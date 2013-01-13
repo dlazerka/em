@@ -3,18 +3,7 @@ var MemeView = Backbone.View.extend({
   className: 'meme memeSmall',
   fontSize: 30,
 
-  /** @type {jQuery.promise} */
-  template: null, 
-  /** @type {Underscore.template} */
-  compiledTemplate: null,
-
   initialize: function () {
-    if (!MemeView.template) {
-      MemeView.template = $.get('/components/meme/meme.tpl');
-    }
-    if(!this.template) {
-      this.template = MemeView.template;
-    }
   },
 
   events: {
@@ -153,29 +142,35 @@ var MemeView = Backbone.View.extend({
 
     var voteView = new VoteView({model: this.model.vote});
 
-    this.template.done(_.bind(function(tpl) {
-      // Cache compiled template.
-      if (!this.compiledTemplate) {
-        MemeView.prototype.compiledTemplate = _.template(tpl);
-      }
+    this.$el
+        .html(this.template(data))
+        .append(voteView.render().$el);
+    
+    if (this.mustDrawOnCanvas()) {
+      this.$('.img').hide();
+      // We should use direct binding because load event is not bubbled.
+      this.$('.img').load(_.bind(function() {
+        this.drawGifOnCanvas();
+      }, this));
+    }
 
-      this.$el
-          .html(this.compiledTemplate(data))
-          .append(voteView.render().$el);
-      
-      if (this.mustDrawOnCanvas()) {
-        this.$('.img').hide();
-        // We should use direct binding because load event is not bubbled.
-        this.$('.img').load(_.bind(function() {
-          this.drawGifOnCanvas();
-        }, this));
-      }
-    }, this));
-
-    // Schedule positioning, because if this.template was already complete,
-    // then message positioning won't know messages width until attached to the page.
-    window.setTimeout(_.bind(this.positionMessages, this), 0);
+    this.positionMessages();
 
     return this;
-  }
+  },
+
+  /** @type {Underscore.template} */
+  template: _.template(
+    '<a href="<%=image.id%>">' +
+    '<img class="img" src="<%=image.src%>" alt="<%-image.text%>" title="<%-image.text%>"' + 
+    '  style="height: <%=image.height%>px; width: <%=image.width%>px;"/>' +
+    '<% if (canvas) { %>' +
+    '  <canvas class="canvas" height="<%=canvas.height%>" width="<%=canvas.width%>"></canvas>' +
+    '  <img src="img/video.svg" class="videoIcon" alt="video"/>' +
+    '<% } %>' +
+    '<% _.each(messages, function(msg) { %>' +
+    '  <div class="message <%=msg.where%>-center"><%=msg.lines%></div>' +
+    '<% }); %>' +
+    '</a>'
+  ),
 });

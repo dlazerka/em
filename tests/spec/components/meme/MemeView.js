@@ -25,7 +25,6 @@ describe('MemeView', function() {
 
   it('render', function() {
     view = new MemeView({model: model});
-    mostRecentAjaxRequest().response({status: 200, contentType: '*', responseText: tpl});
 
     container.append(view.render().$el);
 
