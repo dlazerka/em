@@ -9,3 +9,4 @@
     <div class="message <%=msg.where%>-center"><%=msg.lines%></div>
   <% }); %>
 </a>
+<div class="vote"></div>

@@ -83,17 +83,17 @@ var AppRouter = Backbone.Router.extend({
       success: _.bind(this.showComments, this)});
   },
 
+  showComments: function() {
+    this.memesListEl.append(new CommentsView({
+      model: this.comments
+    }).render().$el);
+  },
+
   onMemeAdded: function(meme) {
     this.memes.unshift(meme);
     this.memesByDateFirstPage.unshift(meme);
     var memeView = new MemeView({model: meme});
     this.memesListEl.prepend(memeView.render().$el);
-  },
-
-  showComments: function() {
-    this.memesListEl.append(new CommentsView({
-      model: this.comments
-    }).render().$el);
   },
 
   showOneMeme: function(id) {

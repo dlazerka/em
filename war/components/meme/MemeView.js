@@ -2,6 +2,7 @@ var MemeView = Backbone.View.extend({
   tagName: 'div',
   className: 'meme memeSmall',
   fontSize: 30,
+  voteView: null,
 
   /** @type {jQuery.promise} */
   template: null, 
@@ -15,6 +16,7 @@ var MemeView = Backbone.View.extend({
     if(!this.template) {
       this.template = MemeView.template;
     }
+    this.voteView = new VoteView({model: this.model.vote});
   },
 
   events: {
@@ -151,18 +153,15 @@ var MemeView = Backbone.View.extend({
       };
     }
 
-    var voteView = new VoteView({model: this.model.vote});
-
     this.template.done(_.bind(function(tpl) {
       // Cache compiled template.
       if (!this.compiledTemplate) {
         MemeView.prototype.compiledTemplate = _.template(tpl);
       }
 
-      this.$el
-          .html(this.compiledTemplate(data))
-          .append(voteView.render().$el);
-      
+      this.$el.html(this.compiledTemplate(data));
+      this.voteView.setElement(this.$('.vote')).render();
+
       if (this.mustDrawOnCanvas()) {
         this.$('.img').hide();
         // We should use direct binding because load event is not bubbled.
