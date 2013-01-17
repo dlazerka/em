@@ -13,9 +13,7 @@ var MemePreview = MemeView.extend({
         messages: this.getMessageData(),
         canvas: null
       };
-      this.template.done(_.bind(function(tpl) {
-        this.$el.html(_.template(tpl, data));
-      }, this));
+      this.$el.html(this.template(data));
 
       uploadHelperText.hide();
     } else {

@@ -3,11 +3,6 @@ var VoteView = Backbone.View.extend({
   tagName: 'div',
   className: 'vote',
 
-  /** @type {jQuery.promise} */
-  template: null, 
-  /** @type {Underscore.template} */
-  compiledTemplate: null,
-
   events: {
     'click .dislike': 'dislike',
     'click .like': 'like'
@@ -15,9 +10,6 @@ var VoteView = Backbone.View.extend({
 
   initialize: function() {
     this.model.on('change', this.render, this);
-    if(!this.template) { 
-      VoteView.prototype.template = $.get('/components/vote/vote.tpl');
-    }
   },
 
   like: function() {
@@ -31,15 +23,13 @@ var VoteView = Backbone.View.extend({
   },
 
   render: function() {
-    // Done means that function will be runned when template is loaded.
-    this.template.done(_.bind(function(tpl) {
-      // Cache compiled template.
-      if (!this.compiledTemplate) {
-        VoteView.prototype.compiledTemplate = _.template(tpl);
-      }
-      this.$el.html(this.compiledTemplate(this.model.toJSON())) ; 
-    }, this));
-
+    this.$el.html(this.template(this.model.toJSON())) ; 
     return this;
-  }
+  },
+  
+  template: _.template(
+    '<div class="like"/>' +
+    '<div class="text"><%=rating%></div>' +
+    '<div class="dislike"/>'
+  ),
 });

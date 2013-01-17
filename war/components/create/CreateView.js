@@ -4,11 +4,6 @@ var CreateView = Backbone.View.extend({
   /** @type {$.promise} */
   uploadUrl: null,
 
-  /** @type {$.promise} */
-  template: null,
-  /** @type {_.template} */
-  compiledTemplate: null,
-
   events: {
     'keyup #top': 'updateMessage',
     'keyup #center': 'updateMessage',
@@ -19,9 +14,6 @@ var CreateView = Backbone.View.extend({
   },
 
   initialize: function() {
-    if(!this.template) {
-      this.template = $.get('/components/create/create.tpl');
-    }
     this.$el.hide();
     this.render();
   },
@@ -38,17 +30,13 @@ var CreateView = Backbone.View.extend({
   },
 
   render: function() {
-    this.template.done(_.bind(function(tpl) {
-      this.$el.append(_.template(tpl));
-    }, this));
-
+    this.$el.append(this.template());
     return this;
   },
 
   /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('#create').css('display') == 'none' ||
-        !this.template ||
         !$(this.$el).children().size()) {
       return false;
     }
@@ -188,5 +176,28 @@ var CreateView = Backbone.View.extend({
   setImage: function() {
     $('#uploadHelperText').hide();
     this.memeView.render();
-  }
+  },
+
+  template: _.template(
+    '<div class="imageWithUpload">' +
+    '  <div id="preview" class="preview"></div>' +
+    '  <div id="uploadHelperText" class="uploadHelperText">' +
+    '    <a id="uploadLink" href="#">Upload</a> new image,<br/>' +
+    '    or click on any meme.' +
+    '  </div>' +
+    '  <input id="uploadFile" class="uploadFile" type="file">' +
+    '  <br/>' +
+    '</div>' +
+    '<div class="form">' +
+    '  <textarea id="top"></textarea>' +
+    '  <br/>' +
+    '  <textarea id="center"></textarea>' +
+    '  <br/>' +
+    '  <textarea id="bottom"></textarea>' +
+    '  <br/>' +
+    '  <input type="hidden" name="blobKey"/>' +
+    '  <button id="submit">Submit</button>' +
+    '</div>' +
+    '<div class="clear"></div>'
+  ),
 });
