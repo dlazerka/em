@@ -154,7 +154,7 @@ var MemeView = Backbone.View.extend({
       }, this));
     }
 
-    this.positionMessages();
+    setTimeout(_.bind(this.positionMessages, this));
 
     return this;
   },
