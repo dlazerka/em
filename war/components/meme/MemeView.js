@@ -2,8 +2,10 @@ var MemeView = Backbone.View.extend({
   tagName: 'div',
   className: 'meme memeSmall',
   fontSize: 30,
+  voteView: null,
 
   initialize: function () {
+    this.voteView = new VoteView({model: this.model.vote});
   },
 
   events: {
@@ -140,11 +142,8 @@ var MemeView = Backbone.View.extend({
       };
     }
 
-    var voteView = new VoteView({model: this.model.vote});
-
-    this.$el
-        .html(this.template(data))
-        .append(voteView.render().$el);
+    this.$el.html(this.template(data));
+    this.voteView.setElement(this.$('.vote')).render();
     
     if (this.mustDrawOnCanvas()) {
       this.$('.img').hide();
@@ -171,6 +170,7 @@ var MemeView = Backbone.View.extend({
     '<% _.each(messages, function(msg) { %>' +
     '  <div class="message <%=msg.where%>-center"><%=msg.lines%></div>' +
     '<% }); %>' +
-    '</a>'
+    '</a>' +
+    '<div class="vote"></div>'
   ),
 });

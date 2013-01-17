@@ -1,8 +1,5 @@
 /** Renders vote component and handle like/dislike buttons clicks. */
 var VoteView = Backbone.View.extend({
-  tagName: 'div',
-  className: 'vote',
-
   events: {
     'click .dislike': 'dislike',
     'click .like': 'like'
