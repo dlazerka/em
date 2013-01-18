@@ -4,7 +4,6 @@ bg = chrome.extension.getBackgroundPage();
 go();
 function go() {
     var memes = new Memes();
-    var max = bg.lastSeen || 0;
     memes.fetch({
       success: onMemesSuccess,
       error: onMemesError
@@ -14,6 +13,7 @@ function go() {
 function onMemesSuccess(m) {
   console.log("success");
   console.log(arguments);
+  var max = bg.lastSeen || 0;
   var len = Math.min(5, m.length);
   for (var i = 0; i < len; i++) {
     ts = parseInt(m.at(i).get('timestamp'));

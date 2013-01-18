@@ -47,7 +47,7 @@ var MemeView = Backbone.View.extend({
     },
 
     onclick: function(event) {
-        window.open('http://epammeme.appspot.com/#meme/' + this.model.get('id'));
+        window.open('http://epammeme.appspot.com/' + this.model.get('id'));
     },
 
     positionMessages: function(fontSize) {
