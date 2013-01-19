@@ -10,7 +10,8 @@ var CreateView = Backbone.View.extend({
     'keyup #bottom': 'updateMessage',
     'change #uploadFile': 'onFileFieldChange',
     'click #submit': 'onSubmitClick',
-    'click #uploadLink': 'onUploadLinkClick'
+    'click #uploadLink': 'onUploadLinkClick',
+    'keyup #remoteImageUrl': 'onRemoteUrlFieldChange',
   },
 
   initialize: function() {
@@ -67,7 +68,23 @@ var CreateView = Backbone.View.extend({
     event.preventDefault();
     return false;
   },
+  
+  onRemoteUrlFieldChange: function(event) {
+    var url = this.$('#remoteImageUrl').val();
+    var img = $('<img>')
+    $('body').append(img);
+    img.load(_.bind(function(event) {
 
+    }, this));
+    img.attr('src', url);
+  },
+
+  /**
+   * Uploads the file by AJAX, showing progress by messages.
+   * When uploaded, show the image using url from server.
+   * We could optimize a bit and show image even before it's uploaded to server
+   * (using FileReader readAsDataURL), but it's not worth it.
+   */
   onFileFieldChange: function(event) {
     if (!window['XMLHttpRequestUpload']) {
       alert('Your browser doesn\'t support XMLHttpRequestUpload. Try using a modern browser');
@@ -101,12 +118,6 @@ var CreateView = Backbone.View.extend({
     }, this));
   },
 
-  onImageUploadComplete: function() {
-    var img = $('img', this.$el);
-    this.memeView.model.set('width', img.width());
-    this.memeView.model.set('height', img.height());
-  },
-
   onUploadDone: function(data) {
     Msg.info('Uploaded!', 1500);
 
@@ -122,6 +133,18 @@ var CreateView = Backbone.View.extend({
     } else {
       img.load(_.bind(this.onImageUploadComplete, this));
     }
+  },
+
+  onImageUploadComplete: function() {
+    return;
+    var img = this.$('img');
+    this.memeView.model.set('width', img.width());
+    this.memeView.model.set('height', img.height());
+  },
+
+  setImage: function() {
+    $('#uploadHelperText').hide();
+    this.memeView.render();
   },
 
   onUploadError: function(jqXhr, status, message) {
@@ -173,16 +196,12 @@ var CreateView = Backbone.View.extend({
     this.reset();
   },
 
-  setImage: function() {
-    $('#uploadHelperText').hide();
-    this.memeView.render();
-  },
-
   template: _.template(
     '<div class="imageWithUpload">' +
     '  <div id="preview" class="preview"></div>' +
     '  <div id="uploadHelperText" class="uploadHelperText">' +
     '    <a id="uploadLink" href="#">Upload</a> new image,<br/>' +
+    '    or enter <input type="text" id="remoteImageUrl" class="remoteImageUrl" placeholder=" remote image URL"><br/>' +
     '    or click on any meme.' +
     '  </div>' +
     '  <input id="uploadFile" class="uploadFile" type="file">' +
