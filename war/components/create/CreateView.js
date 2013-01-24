@@ -4,6 +4,8 @@ var CreateView = Backbone.View.extend({
   /** @type {$.promise} */
   uploadUrl: null,
 
+  lastDownloadedUrl: null,
+
   events: {
     'keyup #top': 'updateMessage',
     'keyup #center': 'updateMessage',
@@ -20,6 +22,7 @@ var CreateView = Backbone.View.extend({
   },
 
   reset: function() {
+    $('#remoteImageUrl').val('');
     $('#submit').prop('disabled', false);
     this.memeView.model = new Meme();
     this.memeView.render();
@@ -68,15 +71,29 @@ var CreateView = Backbone.View.extend({
     event.preventDefault();
     return false;
   },
-  
-  onRemoteUrlFieldChange: function(event) {
-    var url = this.$('#remoteImageUrl').val();
-    var img = $('<img>')
-    $('body').append(img);
-    img.load(_.bind(function(event) {
 
-    }, this));
-    img.attr('src', url);
+  /**
+   * Calls server that will download image by user-provided URL.
+   * Server will return blobKey and image src.
+   */
+  onRemoteUrlFieldChange: function(event) {
+    var url = $('#remoteImageUrl').val() || '';
+    url = url.trim();
+    if (!url || url == this.lastDownloadedUrl) return;
+    this.lastDownloadedUrl = url;
+    $.ajax({
+      url: '/download',
+      data: {'url': url},
+      type: 'GET',
+      dataType: 'json',
+    })
+    .done(_.bind(this.onUploadDone, this))
+    .error(_.bind(this.onAjaxError, this))
+    .complete(function() {
+      $('#remoteImageUrl').attr('disabled', null);
+    });
+    $('#remoteImageUrl').attr('disabled', 'true');
+    Msg.info('Downloading...');
   },
 
   /**
@@ -114,7 +131,7 @@ var CreateView = Backbone.View.extend({
         }
       })
       .done(_.bind(this.onUploadDone, this))
-      .error(_.bind(this.onUploadError, this));
+      .error(_.bind(this.onAjaxError, this));
     }, this));
   },
 
@@ -147,7 +164,13 @@ var CreateView = Backbone.View.extend({
     this.memeView.render();
   },
 
-  onUploadError: function(jqXhr, status, message) {
+  onAjaxError: function(jqXhr, status, message) {
+    var json = jqXhr.responseText;
+    try {
+      message = JSON.parse(json).message;
+    } catch (e) {
+      // Let message be message.
+    }
     Msg.error('Error: ' + message);
   },
 
@@ -167,20 +190,20 @@ var CreateView = Backbone.View.extend({
     var meme = this.memeView.model.clone();
     var attrs = {};
     var options = {
-      success: $.proxy(this.onSaved, this),
-      error: $.proxy(this.onError, this),
+      success: $.proxy(this.onMemeSaved, this),
+      error: $.proxy(this.onMemeSaveError, this),
       contentType: 'application/json; charset=utf-8'
     };
     meme.save(attrs, options);
   },
 
-  onSaved: function(model, resp) {
+  onMemeSaved: function(model, resp) {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);
     this.reset();
   },
 
-  onError: function(originalModel, resp, options) {
+  onMemeSaveError: function(originalModel, resp, options) {
     if (_.isString(resp)) {
       // Validation error.
       msg = resp;

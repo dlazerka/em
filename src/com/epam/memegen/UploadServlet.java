@@ -25,7 +25,7 @@ public class UploadServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("text/plain");
-    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 22);
+    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(Util.MAX_IMAGE_SIZE);
     // Success path doesn't matter because we're uploading by AJAX.
     String uploadUrl = blobstoreService.createUploadUrl("/upload", uploadOptions);
     resp.getWriter().write(uploadUrl);
