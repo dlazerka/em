@@ -49,7 +49,7 @@ var AppRouter = Backbone.Router.extend({
     $('#nextPage').on('click', _.bind(this.nextPage, this));
   },
 
-  onNavClick: function(event, path) {
+  onNavClick: function(path, event) {
     event.preventDefault();// prevent <a> catching it.
     this.navigate(path, true);
   },
