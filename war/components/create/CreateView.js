@@ -10,6 +10,7 @@ var CreateView = Backbone.View.extend({
     'keyup #bottom': 'updateMessage',
     'change #uploadFile': 'onFileFieldChange',
     'click #submit': 'onSubmitClick',
+    'click #cancel': 'toggle',
     'click #uploadLink': 'onUploadLinkClick'
   },
 
@@ -197,6 +198,7 @@ var CreateView = Backbone.View.extend({
     '  <br/>' +
     '  <input type="hidden" name="blobKey"/>' +
     '  <button id="submit">Submit</button>' +
+    '  <button id="cancel">Cancel</button>' +
     '</div>' +
     '<div class="clear"></div>'
   ),
