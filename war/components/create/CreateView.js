@@ -10,7 +10,7 @@ var CreateView = Backbone.View.extend({
     'keyup #bottom': 'updateMessage',
     'change #uploadFile': 'onFileFieldChange',
     'click #submit': 'onSubmitClick',
-    'click #cancel': 'toggle',
+    'click #cancel': 'onCancelClick',
     'click #uploadLink': 'onUploadLinkClick'
   },
 
@@ -28,6 +28,11 @@ var CreateView = Backbone.View.extend({
   toggle: function() {
     this.reset();
     this.$el.toggle();
+  },
+  
+  onCancelClick: function() {
+    this.toggle();
+    $('#showCreateDialog').attr('disabled', null);
   },
 
   render: function() {
