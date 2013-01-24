@@ -116,7 +116,6 @@ var MemeView = Backbone.View.extend({
     return {
       id: this.model.get('id'), 
       src: this.model.get('src'), 
-      text: _.values(this.model.getMessagesMap()).join(' ').trim(), 
       height: this.getDesiredHeight(), 
       width: this.getDesiredWidth()
     };
@@ -161,7 +160,7 @@ var MemeView = Backbone.View.extend({
   /** @type {Underscore.template} */
   template: _.template(
     '<a href="<%=image.id%>">' +
-    '<img class="img" src="<%=image.src%>" alt="<%-image.text%>" title="<%-image.text%>"' + 
+    '<img class="img" src="<%=image.src%>" alt=""' +
     '  style="height: <%=image.height%>px; width: <%=image.width%>px;"/>' +
     '<% if (canvas) { %>' +
     '  <canvas class="canvas" height="<%=canvas.height%>" width="<%=canvas.width%>"></canvas>' +
