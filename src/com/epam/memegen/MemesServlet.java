@@ -26,7 +26,12 @@ public class MemesServlet extends HttpServlet {
       page = Integer.parseInt(req.getParameter("page"));
     }
 
-    String json = memeDao.getAllAsJson(req, page, Sort.DATE);
+    Sort sort = Sort.DATE;
+    if ("rating".equals(req.getParameter("sort"))) {
+      sort = Sort.RATING;
+    }
+
+    String json = memeDao.getAllAsJson(req, page, sort);
     resp.getWriter().write(json);
   }
 }

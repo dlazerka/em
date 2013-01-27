@@ -7,6 +7,11 @@ var AppRouter = Backbone.Router.extend({
    * @type Backbone.Collection 
    */
   memes: null,
+  
+  /**
+   * Possible values: ['date', 'rating'].
+   */
+  sort: 'date',
 
   /**
    * Memes that should be shown when clicking Next.
@@ -55,7 +60,11 @@ var AppRouter = Backbone.Router.extend({
   },
 
   requestNextMemes: function() {
-    this.nextMemesPromise = $.get('/memes', {page: this.page + 1});
+    var params = {
+      page: this.page + 1,
+      sort: this.sort,
+    };
+    this.nextMemesPromise = $.get('/memes', params);
     // There's one more .done() for this promise below.
     this.nextMemesPromise.done(function(result) {
       if (result.length == 0) {
@@ -74,7 +83,11 @@ var AppRouter = Backbone.Router.extend({
     } else {
       $('#prevPage').css('visibility', '');
     }
-    this.prevMemesPromise = $.get('/memes', {page: this.page - 1});
+    var params = {
+        page: this.page - 1,
+        sort: this.sort,
+      };
+    this.prevMemesPromise = $.get('/memes', params);
   },
 
   getComments: function(memeId) {
@@ -91,10 +104,11 @@ var AppRouter = Backbone.Router.extend({
   },
 
   onMemeAdded: function(meme) {
-    this.memes.unshift(meme);
     this.memesByDateFirstPage.unshift(meme);
     var memeView = new MemeView({model: meme});
-    this.memesListEl.prepend(memeView.render().$el);
+    if (this.memes == this.memesByDateFirstPage) {
+      this.memesListEl.prepend(memeView.render().$el);
+    }
   },
 
   showOneMeme: function(id) {
@@ -133,12 +147,14 @@ var AppRouter = Backbone.Router.extend({
   },
 
   showMemesByDate: function() {
+    this.sort = 'date';
     ga.trackPage('/');
     this.memes = this.memesByDateFirstPage;
     this.reset();
   },
 
   showMemesByRating: function() {
+    this.sort = 'rating';
     ga.trackPage('/top');
     this.memes = this.memesByRatingFirstPage;
     this.reset();
