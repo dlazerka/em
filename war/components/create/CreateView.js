@@ -159,7 +159,6 @@ var CreateView = Backbone.View.extend({
   },
 
   onImageUploadComplete: function() {
-    return;
     var img = this.$('img');
     this.memeView.model.set('width', img.width());
     this.memeView.model.set('height', img.height());
