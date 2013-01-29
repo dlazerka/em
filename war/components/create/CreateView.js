@@ -15,6 +15,7 @@ var CreateView = Backbone.View.extend({
     'click #cancel': 'onCancelClick',
     'click #uploadLink': 'onUploadLinkClick',
     'keyup #remoteImageUrl': 'onRemoteUrlFieldChange',
+    'change #remoteImageUrl': 'onRemoteUrlFieldChange',
   },
 
   initialize: function() {
@@ -94,8 +95,14 @@ var CreateView = Backbone.View.extend({
       dataType: 'json',
     })
     .done(_.bind(this.onUploadDone, this))
-    .error(_.bind(this.onAjaxError, this));
-    Msg.info('Downloading...');
+    .error(_.bind(function() {
+      // If it's not a change event, then skip errors.
+      if (event.type != 'change') return;
+      this.onAjaxError.call(this, arguments);
+    }, this));
+    if (event.type == 'change') {
+      Msg.info('Downloading...');
+    }
   },
 
   /**
