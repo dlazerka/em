@@ -94,11 +94,7 @@ var CreateView = Backbone.View.extend({
       dataType: 'json',
     })
     .done(_.bind(this.onUploadDone, this))
-    .error(_.bind(this.onAjaxError, this))
-    .complete(function() {
-      $('#remoteImageUrl').attr('disabled', null);
-    });
-    $('#remoteImageUrl').attr('disabled', 'true');
+    .error(_.bind(this.onAjaxError, this));
     Msg.info('Downloading...');
   },
 
