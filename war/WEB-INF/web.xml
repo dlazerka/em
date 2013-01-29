@@ -52,6 +52,14 @@
     <url-pattern>/upload</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>Download</servlet-name>
+    <servlet-class>com.epam.memegen.DownloadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Download</servlet-name>
+    <url-pattern>/download</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>Adhoc</servlet-name>
     <servlet-class>com.epam.memegen.AdhocServlet</servlet-class>
   </servlet>

@@ -7,6 +7,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 public class Util {
+  public static final int MAX_IMAGE_SIZE = 1 << 22;
+
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   private final UserService userService = UserServiceFactory.getUserService();
 

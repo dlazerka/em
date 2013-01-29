@@ -4,6 +4,8 @@ var CreateView = Backbone.View.extend({
   /** @type {$.promise} */
   uploadUrl: null,
 
+  lastDownloadedUrl: null,
+
   events: {
     'keyup #top': 'updateMessage',
     'keyup #center': 'updateMessage',
@@ -11,7 +13,8 @@ var CreateView = Backbone.View.extend({
     'change #uploadFile': 'onFileFieldChange',
     'click #submit': 'onSubmitClick',
     'click #cancel': 'onCancelClick',
-    'click #uploadLink': 'onUploadLinkClick'
+    'click #uploadLink': 'onUploadLinkClick',
+    'keyup #remoteImageUrl': 'onRemoteUrlFieldChange',
   },
 
   initialize: function() {
@@ -20,6 +23,7 @@ var CreateView = Backbone.View.extend({
   },
 
   reset: function() {
+    $('#remoteImageUrl').val('');
     $('#submit').prop('disabled', false);
     this.memeView.model = new Meme();
     this.memeView.render();
@@ -29,7 +33,7 @@ var CreateView = Backbone.View.extend({
     this.reset();
     this.$el.toggle();
   },
-  
+
   onCancelClick: function() {
     this.toggle();
     $('#showCreateDialog').attr('disabled', null);
@@ -74,6 +78,36 @@ var CreateView = Backbone.View.extend({
     return false;
   },
 
+  /**
+   * Calls server that will download image by user-provided URL.
+   * Server will return blobKey and image src.
+   */
+  onRemoteUrlFieldChange: function(event) {
+    var url = $('#remoteImageUrl').val() || '';
+    url = url.trim();
+    if (!url || url == this.lastDownloadedUrl) return;
+    this.lastDownloadedUrl = url;
+    $.ajax({
+      url: '/download',
+      data: {'url': url},
+      type: 'GET',
+      dataType: 'json',
+    })
+    .done(_.bind(this.onUploadDone, this))
+    .error(_.bind(this.onAjaxError, this))
+    .complete(function() {
+      $('#remoteImageUrl').attr('disabled', null);
+    });
+    $('#remoteImageUrl').attr('disabled', 'true');
+    Msg.info('Downloading...');
+  },
+
+  /**
+   * Uploads the file by AJAX, showing progress by messages.
+   * When uploaded, show the image using url from server.
+   * We could optimize a bit and show image even before it's uploaded to server
+   * (using FileReader readAsDataURL), but it's not worth it.
+   */
   onFileFieldChange: function(event) {
     if (!window['XMLHttpRequestUpload']) {
       alert('Your browser doesn\'t support XMLHttpRequestUpload. Try using a modern browser');
@@ -103,14 +137,8 @@ var CreateView = Backbone.View.extend({
         }
       })
       .done(_.bind(this.onUploadDone, this))
-      .error(_.bind(this.onUploadError, this));
+      .error(_.bind(this.onAjaxError, this));
     }, this));
-  },
-
-  onImageUploadComplete: function() {
-    var img = $('img', this.$el);
-    this.memeView.model.set('width', img.width());
-    this.memeView.model.set('height', img.height());
   },
 
   onUploadDone: function(data) {
@@ -130,7 +158,25 @@ var CreateView = Backbone.View.extend({
     }
   },
 
-  onUploadError: function(jqXhr, status, message) {
+  onImageUploadComplete: function() {
+    return;
+    var img = this.$('img');
+    this.memeView.model.set('width', img.width());
+    this.memeView.model.set('height', img.height());
+  },
+
+  setImage: function() {
+    $('#uploadHelperText').hide();
+    this.memeView.render();
+  },
+
+  onAjaxError: function(jqXhr, status, message) {
+    var json = jqXhr.responseText;
+    try {
+      message = JSON.parse(json).message;
+    } catch (e) {
+      // Let message be message.
+    }
     Msg.error('Error: ' + message);
   },
 
@@ -150,20 +196,20 @@ var CreateView = Backbone.View.extend({
     var meme = this.memeView.model.clone();
     var attrs = {};
     var options = {
-      success: $.proxy(this.onSaved, this),
-      error: $.proxy(this.onError, this),
+      success: $.proxy(this.onMemeSaved, this),
+      error: $.proxy(this.onMemeSaveError, this),
       contentType: 'application/json; charset=utf-8'
     };
     meme.save(attrs, options);
   },
 
-  onSaved: function(model, resp) {
+  onMemeSaved: function(model, resp) {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);
     this.reset();
   },
 
-  onError: function(originalModel, resp, options) {
+  onMemeSaveError: function(originalModel, resp, options) {
     if (_.isString(resp)) {
       // Validation error.
       msg = resp;
@@ -179,16 +225,12 @@ var CreateView = Backbone.View.extend({
     this.reset();
   },
 
-  setImage: function() {
-    $('#uploadHelperText').hide();
-    this.memeView.render();
-  },
-
   template: _.template(
     '<div class="imageWithUpload">' +
     '  <div id="preview" class="preview"></div>' +
     '  <div id="uploadHelperText" class="uploadHelperText">' +
     '    <a id="uploadLink" href="#">Upload</a> new image,<br/>' +
+    '    or enter <input type="text" id="remoteImageUrl" class="remoteImageUrl" placeholder=" remote image URL"><br/>' +
     '    or click on any meme.' +
     '  </div>' +
     '  <input id="uploadFile" class="uploadFile" type="file">' +

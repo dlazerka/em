@@ -4,7 +4,7 @@ Bugs:
 > Click on a meme. Go back. See all text is incorrectly positioned.
 
 Features:
-* Upload image from link.
+> Upload image from link.
 * Context
 * Author (We can save userId (like in votes) and allow author to edit his meme.)
 * Send Feedback
