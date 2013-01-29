@@ -57,7 +57,7 @@ public class DownloadServlet extends HttpServlet {
       downloadUrl = new URL(urlS);
     } catch (MalformedURLException e) {
       String msg = "Malformed url: " + urlS;
-      logger.log(Level.WARNING, msg, e);
+      logger.log(Level.WARNING, msg);// Do not spam logs with stacktraces.
       writeError(HttpServletResponse.SC_BAD_REQUEST, msg, resp);
       return;
     }
@@ -125,8 +125,24 @@ public class DownloadServlet extends HttpServlet {
     HttpURLConnection downloadConnection = (HttpURLConnection) downloadUrl.openConnection();
     downloadConnection.connect();
 
-    if (downloadConnection.getResponseCode() != 200) {
-      String msg = "Download respose code is " + downloadConnection.getResponseCode();
+    int responseCode;
+    try {
+      responseCode = downloadConnection.getResponseCode();
+    } catch (IOException e) {
+      String msg = "Cannot fetch " + urlS + ": " + e.getMessage();
+      logger.log(Level.WARNING, msg);
+      writeError(HttpServletResponse.SC_BAD_REQUEST, msg, resp);
+      return null;
+    } catch (IllegalArgumentException e) {
+      // In case url is "http:".
+      String msg = "Cannot fetch " + urlS + ": " + e.getMessage();
+      logger.log(Level.WARNING, msg, e);
+      writeError(HttpServletResponse.SC_BAD_REQUEST, msg, resp);
+      return null;
+    }
+
+    if (responseCode != 200) {
+      String msg = "Download respose code is " + responseCode;
       logger.log(Level.WARNING, msg);
       writeError(HttpServletResponse.SC_BAD_REQUEST, msg, resp);
       return null;
@@ -135,6 +151,11 @@ public class DownloadServlet extends HttpServlet {
     int contentLength = downloadConnection.getContentLength();
     if (contentLength > Util.MAX_IMAGE_SIZE) {
       String msg = "Image size is too large (" + contentLength + "): " + urlS;
+      logger.log(Level.WARNING, msg);
+      writeError(HttpServletResponse.SC_BAD_REQUEST, msg, resp);
+      return null;
+    } else if (contentLength <= 0) {
+      String msg = "No image at url " + urlS + ", contentLength=" + contentLength;
       logger.log(Level.WARNING, msg);
       writeError(HttpServletResponse.SC_BAD_REQUEST, msg, resp);
       return null;
