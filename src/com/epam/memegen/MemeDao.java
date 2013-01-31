@@ -46,9 +46,8 @@ import com.google.gson.stream.JsonWriter;
 /**
  * Memcache contains JSONs for:
  * <li>Every meme by its long id.
- * <li>All memes by key "ALL".
- * <li>Popular memes by key "POPULAR".
- * <li>Top memes by key "TOP".
+ * <li>All memes ordered by date -- key "DATE".
+ * <li>All memes ordered by rating -- key "RATING".
  * <li>Last meme Date by key "LAST_TS".
  */
 public class MemeDao {
@@ -56,11 +55,15 @@ public class MemeDao {
 
   public static final String KIND = "Meme";
 
-  public static final String LAST_TS = "LAST_TS";
-  public static final String ALL = "ALL";
-  public static final String POPULAR = "POPULAR";
-  public static final String TOP = "TOP";
+  /* Memcache keys */
+  private static final String LAST_TS = "LAST_TS";
+  private static final String DELETED_IDS = "DELETED_IDS";
+
   public static final int MEMES_PER_PAGE = 50;
+
+  public static enum Sort {
+    DATE, RATING
+  }
 
   private final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
@@ -71,6 +74,7 @@ public class MemeDao {
   private final Util util = new Util();
 
   private final Expiration expiration = Expiration.byDeltaSeconds(666); // 11 minutes
+  private final FetchOptions fetchOptions = FetchOptions.Builder.withPrefetchSize(1000);
 
   public MemeDao() {
     memcache.setErrorHandler(new ConsistentErrorHandler() {
@@ -89,7 +93,27 @@ public class MemeDao {
     return key;
   }
 
-  public String getAllAsJson(HttpServletRequest req, int page, String which) throws IOException {
+  public String getDeletedIdsAsJson() throws IOException {
+    String result = (String) memcache.get(DELETED_IDS);
+    if (result != null) {
+      return result;
+    }
+    Query q = new Query(KIND, allKey);
+    q.setKeysOnly();
+    q.setFilter(new FilterPredicate("deleted", FilterOperator.EQUAL, true));
+    PreparedQuery prepared = datastore.prepare(q);
+    StringWriter sw = new StringWriter();
+    JsonWriter jw = new JsonWriter(sw).beginArray();
+    for (Entity entity : prepared.asIterable(fetchOptions)) {
+      jw.value(entity.getKey().getId());
+    }
+    jw.endArray().close();
+    result = sw.toString();
+    memcache.put(DELETED_IDS, result, expiration);
+    return result;
+  }
+
+  public String getAllAsJson(HttpServletRequest req, int page, Sort sort) throws IOException {
     if (!util.isAuthenticated()) {
       return "[]";
     }
@@ -100,13 +124,6 @@ public class MemeDao {
     } catch (NumberFormatException e) {
       since = null;
     }
-    String limitS = req.getParameter("top");
-    Integer limit;
-    try {
-      limit = limitS == null ? null : Integer.parseInt(limitS);
-    } catch (NumberFormatException e) {
-      limit = null;
-    }
 
     // Lookup memcache
     if (since != null) {
@@ -115,15 +132,8 @@ public class MemeDao {
         // User asked for memes younger than the youngest.
         return "[]";
       }
-    } else if (limit == null && page == 0) {
-      String json = null;
-      if (which.equals("all")) {
-        json = (String) memcache.get(ALL);
-      } else if (which.equals("popular")) {
-        json = (String) memcache.get(POPULAR);
-      } else if (which.equals("top")) {
-        json = (String) memcache.get(TOP);
-      }
+    } else if (page == 0) {
+      String json = (String) memcache.get(sort.name());
       if (json != null) {
         return json;
       }
@@ -132,14 +142,8 @@ public class MemeDao {
     Date youngest = null;
     Query q = new Query(KIND, allKey);
     Filter filter = FilterOperator.EQUAL.of("deleted", false);
-    if (which.equals("all")) {
-      q.addSort("date", SortDirection.DESCENDING);
-    } else if (which.equals("popular")) {
-      q.addSort("date", SortDirection.DESCENDING);
-      filter = CompositeFilterOperator.and(filter, FilterOperator.EQUAL.of("isPositive", true));
-    } else if (which.equals("top")) {
-      q.addSort("rating", SortDirection.DESCENDING);
-    }
+    String sortField = sort == Sort.RATING ? "rating" : "date";
+    q.addSort(sortField, SortDirection.DESCENDING);
 
     if (since != null) {
       filter = CompositeFilterOperator.and(filter, new FilterPredicate("date", FilterOperator.GREATER_THAN, new Date(since)));
@@ -147,17 +151,12 @@ public class MemeDao {
 
     q.setFilter(filter);
 
-    FetchOptions options = FetchOptions.Builder.withPrefetchSize(1000);
-    if (limit != null) {
-      options.limit(Math.max(limit, MEMES_PER_PAGE));
-    } else {
-      options.limit(MEMES_PER_PAGE);
-    }
+    fetchOptions.limit(MEMES_PER_PAGE);
 
-    options.offset(page * MEMES_PER_PAGE);
+    fetchOptions.offset(page * MEMES_PER_PAGE);
 
     PreparedQuery prepared = datastore.prepare(q);
-    Iterable<Entity> iterable = prepared.asIterable(options);
+    Iterable<Entity> iterable = prepared.asIterable(fetchOptions);
 
     StringWriter out = new StringWriter();
     JsonWriter w = new JsonWriter(out);
@@ -174,14 +173,8 @@ public class MemeDao {
     w.endArray();
     w.close();
     String value = out.toString();
-    if (limit == null && since == null && page == 0) {
-      if (which.equals("all")) {
-        memcache.put(ALL, value, expiration);
-      } else if (which.equals("popular")) {
-        memcache.put(POPULAR, value, expiration);
-      } else if (which.equals("top")) {
-        memcache.put(TOP, value, expiration);
-      }
+    if (since == null && page == 0) {
+      memcache.put(sort.name(), value, expiration);
     }
     if (youngest != null) {
       memcache.put(LAST_TS, youngest.getTime(), expiration);
@@ -370,9 +363,8 @@ public class MemeDao {
     String json = toJson(entity);
     memcache.put(key.getId(), json);
 
-    memcache.delete(ALL);
-    memcache.delete(POPULAR);
-    memcache.delete(TOP);
+    memcache.delete(Sort.DATE.name());
+    memcache.delete(Sort.RATING.name());
 
     // Set LAST_TS, taking care of for race conditions.
     long timestamp = justCreatedDate.getTime();
@@ -438,7 +430,6 @@ public class MemeDao {
     if (!util.isAuthenticated()) {
       return;
     }
-
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key key = KeyFactory.createKey(allKey, KIND, id);
     Entity entity;
@@ -447,6 +438,9 @@ public class MemeDao {
     datastore.put(entity);
     memcache.delete(id);
     memcache.delete(LAST_TS);
-    memcache.delete(ALL);
+    memcache.delete(Sort.DATE.name());
+    memcache.delete(Sort.RATING.name());
+    memcache.delete(DELETED_IDS);
+    logger.info("Deleted meme " + id);
   }
 }

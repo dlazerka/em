@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +24,8 @@ import com.google.appengine.api.utils.SystemProperty.Environment;
 public class MainServlet extends HttpServlet {
   @SuppressWarnings("unused")
   private static final Logger logger = Logger.getLogger(MainServlet.class.getName());
+  private static final Pattern memePattern = Pattern.compile("^/([0-9]+)$");
+
   private final Util util = new Util();
   private final MemeDao memeDao = new MemeDao();
   private final UserService userService = UserServiceFactory.getUserService();
@@ -43,11 +47,24 @@ public class MainServlet extends HttpServlet {
     if (SystemProperty.environment.value() == Environment.Value.Development) {
       readFile();
     }
-    String uploadUrl = util.createUploadUrl();
-    String allMemesJson = memeDao.getAllAsJson(req, 0, "popular");
-    String replaced = welcomeFileContent.replace("###UPLOAD_URL###", uploadUrl);
-    replaced = replaced.replace("###MEMES_JSON###", allMemesJson);
+    String allMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
+    String topMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
+    String deletedMemesIds = memeDao.getDeletedIdsAsJson();
+    String replaced = welcomeFileContent;
+    replaced = replaced.replace("###ALL_MEMES###", allMemes);
+    replaced = replaced.replace("###TOP_MEMES###", topMemes);
+    replaced = replaced.replace("###DELETED_MEMES_IDS###", deletedMemesIds);
+    replaced = replaced.replace("###MEMES_PER_PAGE###", MemeDao.MEMES_PER_PAGE + "");
+    String uri = req.getRequestURI();
 
+    // If opening a particular meme like "GET /12345".
+    String meme = "null";
+    Matcher matcher = memePattern.matcher(uri);
+    if (matcher.matches()) {
+      long id = Long.parseLong(matcher.group(1));
+      meme = memeDao.getAsJson(id);
+    }
+    replaced = replaced.replace("###MEME###", meme);
 
     // Check authentication.
     // If not logged in, send him to login url.

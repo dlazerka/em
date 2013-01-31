@@ -1,7 +1,7 @@
 .meme {
   float: left;
   margin-right: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   position: relative;
 }
 
@@ -17,13 +17,18 @@
 .meme.memeSmall {
   cursor: pointer;
   height: 200px;
-  border: 1px gray solid;
+  outline: 1px gray solid;
+}
+
+.meme.memeSmall a {
+	display: inline-block;
 }
 
 .memeSmall .img,
 .meme .canvas {
   display: inline-block;
   height: 200px;
+  vertical-align: top; /* Prevents extra 4px at the bottom */
 }
 
 .videoIcon {
@@ -33,12 +38,6 @@
   width: 50px;
   max-width: 50%;
   max-height: 50%;
-}
-
-.meme span {
-  display: none;
-  float: left;
-  padding-bottom: 20px;
 }
 
 .meme .message {

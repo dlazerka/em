@@ -1,12 +1,10 @@
 var CreateView = Backbone.View.extend({
   el: '#create',
-  meme: null,
-  uploadUrl: UPLOAD_URL,
-
+  memeView: new MemePreview({model: new Meme()}),
   /** @type {$.promise} */
-  template: null,
-  /** @type {_.template} */
-  compiledTemplate: null,
+  uploadUrl: null,
+
+  lastDownloadedUrl: null,
 
   events: {
     'keyup #top': 'updateMessage',
@@ -14,62 +12,109 @@ var CreateView = Backbone.View.extend({
     'keyup #bottom': 'updateMessage',
     'change #uploadFile': 'onFileFieldChange',
     'click #submit': 'onSubmitClick',
-    'click #uploadLink': 'onUploadLinkClick'
+    'click #cancel': 'onCancelClick',
+    'click #uploadLink': 'onUploadLinkClick',
+    'keyup #remoteImageUrl': 'onRemoteUrlFieldChange',
+    'change #remoteImageUrl': 'onRemoteUrlFieldChange',
   },
 
   initialize: function() {
-    if(!this.template) {
-      this.template = $.get('/components/create/create.tpl');
-    }
+    this.$el.hide();
+    this.render();
+  },
+
+  reset: function() {
+    $('#remoteImageUrl').val('');
+    $('#submit').prop('disabled', false);
+    this.memeView.model = new Meme();
+    this.memeView.render();
+  },
+
+  toggle: function() {
+    this.reset();
+    this.$el.toggle();
+  },
+
+  onCancelClick: function() {
+    this.toggle();
+    $('#showCreateDialog').attr('disabled', null);
   },
 
   render: function() {
-    this.meme = new Meme();
-    this.memeView = new MemePreview({model: this.meme});
-
-    this.template.done(_.bind(function(tpl) {
-      this.$el.append(_.template(tpl, {uploadUrl: this.uploadUrl}));
-    }, this));
-
+    this.$el.append(this.template());
     return this;
   },
 
   /** @returns {boolean} Whether event was consumed */
   onMemeClick: function(event, memeView) {
     if ($('#create').css('display') == 'none' ||
-        !this.template ||
         !$(this.$el).children().size()) {
       return false;
     }
-    this.meme = memeView.model.clone();
-    this.meme.unset('top');
-    this.meme.unset('center');
-    this.meme.unset('bottom');
-    this.meme.unset('id');
-
-    this.memeView.model = this.meme;
+    this.memeView.model = new Meme({
+      blobKey: memeView.model.get('blobKey'),
+      src: memeView.model.get('src'),
+      animated: memeView.model.get('animated'),
+      height: memeView.model.get('height'),
+      width: memeView.model.get('width')
+    });
 
     this.setImage();
     return true;
   },
 
   updateMessage: function() {
-    var messages = this.meme.get('messages');
-    this.meme.set('top', $('#top').val() || null);
-    this.meme.set('center', $('#center').val() || null);
-    this.meme.set('bottom', $('#bottom').val() || null);
+    var meme = this.memeView.model;
+    var messages = meme.get('messages');
+    meme.set('top', $('#top').val() || null);
+    meme.set('center', $('#center').val() || null);
+    meme.set('bottom', $('#bottom').val() || null);
     this.memeView.render();
   },
 
   onUploadLinkClick: function(event) {
     $('#uploadFile').click();
+    this.uploadUrl = $.get('/upload');
     event.preventDefault();
     return false;
   },
 
+  /**
+   * Calls server that will download image by user-provided URL.
+   * Server will return blobKey and image src.
+   */
+  onRemoteUrlFieldChange: function(event) {
+    var url = $('#remoteImageUrl').val() || '';
+    url = url.trim();
+    if (!url || url == this.lastDownloadedUrl) return;
+    this.lastDownloadedUrl = url;
+    $.ajax({
+      url: '/download',
+      data: {'url': url},
+      type: 'GET',
+      dataType: 'json',
+    })
+    .done(_.bind(this.onUploadDone, this))
+    .error(_.bind(function() {
+      // If it's not a change event, then skip errors.
+      if (event.type != 'change') return;
+      this.onAjaxError.call(this, arguments);
+    }, this));
+    if (event.type == 'change') {
+      Msg.info('Downloading...');
+    }
+  },
+
+  /**
+   * Uploads the file by AJAX, showing progress by messages.
+   * When uploaded, show the image using url from server.
+   * We could optimize a bit and show image even before it's uploaded to server
+   * (using FileReader readAsDataURL), but it's not worth it.
+   */
   onFileFieldChange: function(event) {
     if (!window['XMLHttpRequestUpload']) {
       alert('Your browser doesn\'t support XMLHttpRequestUpload. Try using a modern browser');
+      return;
     }
     var element = event.target;
     if (!element.files || !element.files.length) {
@@ -79,39 +124,32 @@ var CreateView = Backbone.View.extend({
     var formData = new FormData();
     formData.append('image', element.files[0]);
 
-    var uploadUrl = $('#uploadUrl', this.$el).val();
     var progressListener = this.onUploadProgressEvent;
-    $.ajax({
-      url: uploadUrl,
-      data: formData,
-      processData: false, // otherwise jquery throws TypeError
-      contentType: false, // otherwise jquery will send wrong Content-Type
-      type: 'POST',
-      dataType: 'json',
-      xhr: function() {
-        var xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener("progress", progressListener, false);
-        return xhr;
-      }
-    })
-    .done(_.bind(this.onUploadDone, this))
-    .error(_.bind(this.onUploadError, this));
-  },
-
-  onImageUploadComplete: function() {
-    var img = $('img', this.$el);
-    this.meme.set('width', img.width());
-    this.meme.set('height', img.height());
+    this.uploadUrl.done(_.bind(function(url) {
+      $.ajax({
+        url: url,
+        data: formData,
+        processData: false, // otherwise jquery throws TypeError
+        contentType: false, // otherwise jquery will send wrong Content-Type
+        type: 'POST',
+        dataType: 'json',
+        xhr: function() {
+          var xhr = new XMLHttpRequest();
+          xhr.upload.addEventListener("progress", progressListener, false);
+          return xhr;
+        }
+      })
+      .done(_.bind(this.onUploadDone, this))
+      .error(_.bind(this.onAjaxError, this));
+    }, this));
   },
 
   onUploadDone: function(data) {
-    // Set new upload URL so we can re-upload.
-    this.uploadUrl = data.newUploadUrl;
     Msg.info('Uploaded!', 1500);
 
-    this.meme.set({
-      'src': data.uploads[0].src,
-      'blobKey': data.uploads[0].blobKey});
+    this.memeView.model.set({
+      src: data.uploads[0].src,
+      blobKey: data.uploads[0].blobKey});
 
     this.setImage();
 
@@ -123,7 +161,24 @@ var CreateView = Backbone.View.extend({
     }
   },
 
-  onUploadError: function(jqXhr, status, message) {
+  onImageUploadComplete: function() {
+    var img = this.$('img');
+    this.memeView.model.set('width', img.width());
+    this.memeView.model.set('height', img.height());
+  },
+
+  setImage: function() {
+    $('#uploadHelperText').hide();
+    this.memeView.render();
+  },
+
+  onAjaxError: function(jqXhr, status, message) {
+    var json = jqXhr.responseText;
+    try {
+      message = JSON.parse(json).message;
+    } catch (e) {
+      // Let message be message.
+    }
     Msg.error('Error: ' + message);
   },
 
@@ -140,28 +195,23 @@ var CreateView = Backbone.View.extend({
     Msg.info('Saving...');
     ga.trackCreate();
     $('#submit').prop('disabled', true);
-    var meme = this.meme.clone();
+    var meme = this.memeView.model.clone();
     var attrs = {};
     var options = {
-      success: $.proxy(this.onSaved, this),
-      error: $.proxy(this.onError, this),
+      success: $.proxy(this.onMemeSaved, this),
+      error: $.proxy(this.onMemeSaveError, this),
       contentType: 'application/json; charset=utf-8'
     };
     meme.save(attrs, options);
   },
 
-  onSaved: function(model, resp) {
+  onMemeSaved: function(model, resp) {
     AppRouter.onMemeAdded(model);
     Msg.info('Saved!', 1500);
-    $('#submit').prop('disabled', false);
-    $('.upload').hide();
-    this.meme.set(this.meme.defaults, {silent: true});
-    this.memeView.render();
-
-    this.$el.empty();
+    this.reset();
   },
 
-  onError: function(originalModel, resp, options) {
+  onMemeSaveError: function(originalModel, resp, options) {
     if (_.isString(resp)) {
       // Validation error.
       msg = resp;
@@ -174,13 +224,31 @@ var CreateView = Backbone.View.extend({
       }
     }
     Msg.error('Error: ' + msg);
-    $('#submit').prop('disabled', false);
-    this.meme.set(this.meme.defaults);
-    this.memeView.render();
+    this.reset();
   },
 
-  setImage: function() {
-    $('#uploadHelperText').hide();
-    this.memeView.render();
-  }
+  template: _.template(
+    '<div class="imageWithUpload">' +
+    '  <div id="preview" class="preview"></div>' +
+    '  <div id="uploadHelperText" class="uploadHelperText">' +
+    '    <a id="uploadLink" href="#">Upload</a> new image,<br/>' +
+    '    or enter <input type="text" id="remoteImageUrl" class="remoteImageUrl" placeholder=" remote image URL"><br/>' +
+    '    or click on any meme.' +
+    '  </div>' +
+    '  <input id="uploadFile" class="uploadFile" type="file">' +
+    '  <br/>' +
+    '</div>' +
+    '<div class="form">' +
+    '  <textarea id="top"></textarea>' +
+    '  <br/>' +
+    '  <textarea id="center"></textarea>' +
+    '  <br/>' +
+    '  <textarea id="bottom"></textarea>' +
+    '  <br/>' +
+    '  <input type="hidden" name="blobKey"/>' +
+    '  <button id="submit">Submit</button>' +
+    '  <button id="cancel">Cancel</button>' +
+    '</div>' +
+    '<div class="clear"></div>'
+  ),
 });

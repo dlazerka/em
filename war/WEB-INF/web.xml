@@ -52,6 +52,14 @@
     <url-pattern>/upload</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>Download</servlet-name>
+    <servlet-class>com.epam.memegen.DownloadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Download</servlet-name>
+    <url-pattern>/download</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>Adhoc</servlet-name>
     <servlet-class>com.epam.memegen.AdhocServlet</servlet-class>
   </servlet>
@@ -72,12 +80,12 @@
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>Comments</servlet-name>
-    <servlet-class>com.epam.memegen.CommentsServlet</servlet-class>
+    <servlet-name>Comment</servlet-name>
+    <servlet-class>com.epam.memegen.CommentServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Comments</servlet-name>
-    <url-pattern>/comments</url-pattern>
+    <servlet-name>Comment</servlet-name>
+    <url-pattern>/comment</url-pattern>
   </servlet-mapping>
   <!--
   <security-constraint>

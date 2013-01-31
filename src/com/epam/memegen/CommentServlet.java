@@ -1,7 +1,23 @@
 package com.epam.memegen;
 
+import static com.epam.memegen.Util.isNullOrEmpty;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.epam.memegen.model.Comment;
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.labs.repackaged.com.google.common.collect.Lists;
@@ -9,26 +25,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import static com.epam.memegen.Util.isNullOrEmpty;
-
 /**
- * @author Andrey Mormysh
+ * @author amormysh@gmail.com (Andrey Mormysh)
  */
-public class CommentsServlet extends HttpServlet {
+@SuppressWarnings("serial")
+public class CommentServlet extends HttpServlet {
 
   private UserService userService = UserServiceFactory.getUserService();
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,9 +66,6 @@ public class CommentsServlet extends HttpServlet {
     entity.setProperty(Comment.TEXT, comment.getText());
     entity.setProperty(Comment.DATE, date);
     entity.setProperty(Comment.AUTHOR, comment.getAuthor());
-    // TODO(lazerka): For backwards compatibility, for versions 20 and below. Remove when not needed anymore.
-    entity.setProperty("user", comment.getAuthor());
-    entity.setProperty("timestamp", date.getTime());
 
     datastore.put(entity);
     resp.getWriter().write(new Gson().toJson(comment));

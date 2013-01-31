@@ -17,10 +17,10 @@
 
     <h1 id="header">&lt;epam:memegen&gt;</h1>
 
-    <div id="epam-memegen-install-button" style="display:none;" class="pluginInstall">
-      <img src="chrome-icon.png" class="pluginImg"/>
-      <a class="pluginLink">
-          Don't miss a single meme - install Chrome Plugin
+    <div id="extensionAd" style="display:none;" class="extensionAd">
+      <img src="img/chrome.png" class="extensionImg"/>
+      <a class="extensionLink">
+          Don't miss a single meme - install Chrome Extension
       </a>
     </div>
 
@@ -35,9 +35,8 @@
         Delete
       </button>
 
-      <a href="#popular">Popular Memes</a>
-      <a href="#all">All Memes</a>
-      <a href="#top">Top Memes</a>
+      <a id="navRecent" href="/">Recent</a>
+      <a id="navTop" href="/top">Top</a>
     </div>
 
     <div id="contentPane">
@@ -63,26 +62,34 @@
         Sorry for inconvenience, we're working on a more convenient authentication, using PMC API.
       </div>
 
-      <div>
+      <div class="display_###IS_AUTHENTICATED###">
         <div id="memesList"></div>
-        <div class="pagination">
-          <a id="prevPage">Prev</a>
-          <span id="shownMemes"></span>
-          <a id="nextPage">Next</a>
+        <div id="pagination" class="pagination">
+          <a id="prevPage">Previous Page</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a id="nextPage">Next Page</a>
         </div>
       </div>
     </div>
 
     <script>
-      const MEMES_JSON = ###MEMES_JSON###;
       const IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
-      const UPLOAD_URL = '###UPLOAD_URL###';
       const ENV = '###ENV###';
       const PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
+      const DELETED_MEMES_IDS = ###DELETED_MEMES_IDS###;
+      const ALL_MEMES = ###ALL_MEMES###;
+      const TOP_MEMES = ###TOP_MEMES###;
+      const MEMES_PER_PAGE = ###MEMES_PER_PAGE###;
+      const MEME = ###MEME###;
     </script>
     <script type="text/javascript" src="components/msg/Msg.js"></script>
-    <script type="text/javascript" src="components/comment/comment.js"></script>
-    <script type="text/javascript" src="components/vote/vote.js"></script>
+    <script type="text/javascript" src="components/comment/Comment.js"></script>
+    <script type="text/javascript" src="components/comment/CommentView.js"></script>
+    <script type="text/javascript" src="components/comment/Comments.js"></script>
+    <script type="text/javascript" src="components/comment/CommentsView.js"></script>
+    <script type="text/javascript" src="components/comment/CommentForm.js"></script>
+    <script type="text/javascript" src="components/vote/Vote.js"></script>
+    <script type="text/javascript" src="components/vote/VoteView.js"></script>
     <script type="text/javascript" src="components/meme/Meme.js"></script>
     <script type="text/javascript" src="components/meme/MemeView.js"></script>
     <script type="text/javascript" src="components/meme/Memes.js"></script>
@@ -91,7 +98,7 @@
     <script type="text/javascript" src="js/analytics.js"></script>
     <script type="text/javascript" src="js/plugin.js"></script>
     <script type="text/javascript" src="js/AppRouter.js"></script>
-    <script type="text/javascript" src="js/memgen.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
   </body>
   </body>
 </html>

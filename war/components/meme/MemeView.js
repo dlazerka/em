@@ -2,19 +2,10 @@ var MemeView = Backbone.View.extend({
   tagName: 'div',
   className: 'meme memeSmall',
   fontSize: 30,
-
-  /** @type {jQuery.promise} */
-  template: null, 
-  /** @type {Underscore.template} */
-  compiledTemplate: null,
+  voteView: null,
 
   initialize: function () {
-    if (!MemeView.template) {
-      MemeView.template = $.get('/components/meme/meme.tpl');
-    }
-    if(!this.template) {
-      this.template = MemeView.template;
-    }
+    this.voteView = new VoteView({model: this.model.vote});
   },
 
   events: {
@@ -24,9 +15,11 @@ var MemeView = Backbone.View.extend({
   },
 
   onClick: function(event) {
+    event.preventDefault();// prevent <a> catching it.
+
     // Go to meme only if meme creation dialog is inactive.
     if (!AppRouter.createView.onMemeClick(event, this)) {
-      Backbone.history.navigate('#meme/' + this.model.get('id'), true);
+      Backbone.history.navigate('' + this.model.get('id'), true);
     }
   },
 
@@ -45,15 +38,6 @@ var MemeView = Backbone.View.extend({
       this.$('.videoIcon').show();
       this.$('.img').hide();
     }
-  },
-
-  onImageLoad: function() {
-    if (this.$('.canvas').size()) {
-      this.$('.img').hide();
-      this.drawGifOnCanvas();
-    }
-    this.$el.show();
-    this.positionMessages();
   },
 
   drawGifOnCanvas: function() {
@@ -130,15 +114,19 @@ var MemeView = Backbone.View.extend({
 
   getImageData: function() {
     return {
+      id: this.model.get('id'), 
       src: this.model.get('src'), 
-      text: _.values(this.model.getMessagesMap()).join(' ').trim(), 
       height: this.getDesiredHeight(), 
       width: this.getDesiredWidth()
     };
   },
 
+  mustDrawOnCanvas: function() {
+    return this.model.get('animated') && this.className.indexOf('memeBig') == -1;
+  },
+
   render: function() {
-    this.$el.empty().hide();
+    this.$el.empty();
 
     var data = {
       image: this.getImageData(),
@@ -146,29 +134,42 @@ var MemeView = Backbone.View.extend({
       canvas: null
     };
 
-    if (this.model.get('animated') && this.className.indexOf('memeBig') == -1) {
+    if (this.mustDrawOnCanvas()) {
       data.canvas = {
         height: this.getDesiredHeight(),
         width: this.getDesiredWidth()
       };
     }
 
-    var voteView = new VoteView({model: this.model.vote});
-
-    this.template.done(_.bind(function(tpl) {
-      // Cache compiled template.
-      if (!this.compiledTemplate) {
-        MemeView.prototype.compiledTemplate = _.template(tpl);
-      }
-
-      this.$el
-          .html(this.compiledTemplate(data))
-          .append(voteView.render().$el);
-
+    this.$el.html(this.template(data));
+    this.voteView.setElement(this.$('.vote')).render();
+    
+    if (this.mustDrawOnCanvas()) {
+      this.$('.img').hide();
       // We should use direct binding because load event is not bubbled.
-      this.$('.img').load(_.bind(this.onImageLoad, this));
-    }, this));
+      this.$('.img').load(_.bind(function() {
+        this.drawGifOnCanvas();
+      }, this));
+    }
+
+    setTimeout(_.bind(this.positionMessages, this));
 
     return this;
-  }
+  },
+
+  /** @type {Underscore.template} */
+  template: _.template(
+    '<a href="<%=image.id%>">' +
+    '<img class="img" src="<%=image.src%>" alt=""' +
+    '  style="height: <%=image.height%>px; width: <%=image.width%>px;"/>' +
+    '<% if (canvas) { %>' +
+    '  <canvas class="canvas" height="<%=canvas.height%>" width="<%=canvas.width%>"></canvas>' +
+    '  <img src="img/video.svg" class="videoIcon" alt="video"/>' +
+    '<% } %>' +
+    '<% _.each(messages, function(msg) { %>' +
+    '  <div class="message <%=msg.where%>-center"><%=msg.lines%></div>' +
+    '<% }); %>' +
+    '</a>' +
+    '<div class="vote"></div>'
+  ),
 });

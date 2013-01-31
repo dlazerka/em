@@ -1,29 +1,16 @@
-+ Fix bug when sometimes Memcache has just "[]".
-+ Upload with preview
-+ ImageServlet resp.setHeader("Cache-Control", "max-age=32000000, must-revalidate");
-+ Remove page reload on meme create.
-+ Remove page reload on meme click.
-+ Remove page reload on meme delete.
-+ Fix select file right after one was uploaded (new uploadUrl)
-+ Spaces should stretch the message (no space eating).
-+ deleted = False
-+ Fix bug with clicking on just created meme.
-+ Display link to chrome plugin (if not installed)
-+ Add Analytics events.
-+ Voting
-+ Add Analytics events.
-+ Page with positive memes
-+ Page with high rankend memes
-+ Still GIFs.
-* Clean upload form on hide.
-* Fix JS exception when opening a deleted meme.
-* Avoid page reload on Back from a meme.
+Bugs:
++ Clicking on Next doesn't work.
++ Go to a direct meme URL, that is not on the first page.
+> Click on a meme. Go back. See all text is incorrectly positioned.
 
-* Upload image from link.
+Features:
+> Upload image from link.
 * Context
-* Pagination
 * Author (We can save userId (like in votes) and allow author to edit his meme.)
 * Send Feedback
-
+* Browse templates.
 * Draw text on image (Canvas cannot draw on animated GIFs).
+
+Cleanup/Minor Features:
+* Use Cursors for pagination.
 - Use Drag & Drop (Chrome doesn't catch 'drop' event, putting to long box)

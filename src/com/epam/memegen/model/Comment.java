@@ -3,7 +3,7 @@ package com.epam.memegen.model;
 import java.util.Date;
 
 /**
- * @author Andrey Mormysh
+ * @author amormysh@gmail.com (Andrey Mormysh)
  */
 public class Comment {
   public static final String KIND = "Comment";

@@ -3,7 +3,7 @@ var MemePreview = MemeView.extend({
   fontSize: 30,
 
   events: {},
-
+  
   render: function() {
     this.$el.empty();
     var uploadHelperText = $('#uploadHelperText');
@@ -13,9 +13,7 @@ var MemePreview = MemeView.extend({
         messages: this.getMessageData(),
         canvas: null
       };
-      this.template.done(_.bind(function(tpl) {
-        this.$el.html(_.template(tpl, data));
-      }, this));
+      this.$el.html(this.template(data));
 
       uploadHelperText.hide();
     } else {
@@ -23,6 +21,7 @@ var MemePreview = MemeView.extend({
       uploadHelperText.show();
       $('#top,#center,#bottom').val('');
     }
+    this.$('.vote').remove();
     $('#preview').html(this.$el);
     this.positionMessages();
   }

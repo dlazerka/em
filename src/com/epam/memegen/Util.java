@@ -7,6 +7,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 public class Util {
+  public static final int MAX_IMAGE_SIZE = 1 << 22;
+
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   private final UserService userService = UserServiceFactory.getUserService();
 
@@ -19,13 +21,6 @@ public class Util {
 
   public static boolean isNullOrEmpty(String str) {
     return str == null || str.trim().equals("");
-  }
-
-  public String createUploadUrl() {
-    UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(1 << 22);
-    // Success path doesn't matter because we're uploading by AJAX.
-    String uploadUrl = blobstoreService.createUploadUrl("/upload", uploadOptions);
-    return uploadUrl;
   }
 
   public boolean isAuthenticated() {
