@@ -51,10 +51,10 @@ public class MainServlet extends HttpServlet {
     String topMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
     String deletedMemesIds = memeDao.getDeletedIdsAsJson();
     String replaced = welcomeFileContent;
+
     replaced = replaced.replace("###ALL_MEMES###", allMemes);
     replaced = replaced.replace("###TOP_MEMES###", topMemes);
     replaced = replaced.replace("###DELETED_MEMES_IDS###", deletedMemesIds);
-    replaced = replaced.replace("###MEMES_PER_PAGE###", MemeDao.MEMES_PER_PAGE + "");
     String uri = req.getRequestURI();
 
     // If opening a particular meme like "GET /12345".
@@ -85,14 +85,20 @@ public class MainServlet extends HttpServlet {
       replaced = replaced.replace("###USER_EMAIL###", email);
     }
 
-    replaced = replaced.replace("###ENV###", SystemProperty.environment.value().toString());
     resp.setContentType("text/html");
     resp.setCharacterEncoding("UTF-8");
     resp.getWriter().write(replaced);
   }
 
   private void readFile() throws FileNotFoundException, IOException {
-    FileInputStream fr = new FileInputStream("index.html");
-    welcomeFileContent = IOUtils.toString(fr, Charset.forName("UTF-8"));
+    FileInputStream is = new FileInputStream("index.html");
+    try {
+      welcomeFileContent = IOUtils.toString(is, Charset.forName("UTF-8"))
+          .replace("###APP_VERSION###", SystemProperty.applicationVersion.get())
+          .replace("###ENV###", SystemProperty.environment.value().toString())
+          .replace("###MEMES_PER_PAGE###", MemeDao.MEMES_PER_PAGE + "");
+    } finally {
+      IOUtils.closeQuietly(is);
+    }
   }
 }

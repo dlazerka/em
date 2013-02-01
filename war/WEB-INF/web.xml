@@ -11,6 +11,17 @@
     <url-pattern>/</url-pattern>
     <load-on-startup>1</load-on-startup>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Js</servlet-name>
+    <servlet-class>com.epam.memegen.JsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Js</servlet-name>
+    <url-pattern>/memgen.js</url-pattern>
+    <load-on-startup>1</load-on-startup>
+  </servlet-mapping>
+
   <servlet>
     <servlet-name>Meme</servlet-name>
     <servlet-class>com.epam.memegen.MemeServlet</servlet-class>
