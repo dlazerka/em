@@ -1,7 +1,3 @@
-@import url("/components/comment/comment.css");
-@import url("/components/meme/meme.css");
-@import url("/components/vote/vote.css");
-
 body, h1 {
   margin: 0;
   padding: 0;
@@ -68,14 +64,6 @@ h1#header {
   right: 10px;
   font-size: 12px;
 }
-.extensionLink, .extensionImg {
-  vertical-align: middle;
-}
-.extensionImg {
-  height: 32px;
-  width: 32px;
-}
-
 #sidePane {
   width: 150px;
   float: left;

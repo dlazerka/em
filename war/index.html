@@ -4,8 +4,22 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>&lt;epam:memegen&gt;</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib">
+    <script>
+      const IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
+      const ENV = '###ENV###';
+      const PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
+      const DELETED_MEMES_IDS = ###DELETED_MEMES_IDS###;
+      const ALL_MEMES = ###ALL_MEMES###;
+      const TOP_MEMES = ###TOP_MEMES###;
+      const MEMES_PER_PAGE = ###MEMES_PER_PAGE###;
+      const MEME = ###MEME###;
+    </script>
+    <script type="text/javascript" src="js/lib/underscore-1.4.2.js" defer></script>
+    <script type="text/javascript" src="js/lib/jquery-1.8.3.js" defer></script>
+    <script type="text/javascript" src="js/lib/backbone-0.9.9.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="memgen.css?###APP_VERSION###">
+    <script type="text/javascript" src="memgen.js?###APP_VERSION###" defer></script>
   </head>
   <body>
 
@@ -14,9 +28,9 @@
     <h1 id="header">&lt;epam:memegen&gt;</h1>
 
     <div id="extensionAd" style="display:none;" class="extensionAd">
-      <img src="img/chrome.png" class="extensionImg"/>
-      <a class="extensionLink">
-          Don't miss a single meme - install Chrome Extension
+      <a href="https://chrome.google.com/webstore/detail/epam-memegen/jgmpoflmemllolbnmidoclcpbpoabcib"
+        target="_blank" title="Stay Alert! Install Memegen Chrome Extension!">
+        <img src="img/chrome.png" width="36" height="36"/>
       </a>
     </div>
 
@@ -67,21 +81,5 @@
         </div>
       </div>
     </div>
-
-    <script>
-      const IS_AUTHENTICATED = ###IS_AUTHENTICATED###;
-      const ENV = '###ENV###';
-      const PLUGIN_URL = 'https://chrome.google.com/webstore/detail/jgmpoflmemllolbnmidoclcpbpoabcib';
-      const DELETED_MEMES_IDS = ###DELETED_MEMES_IDS###;
-      const ALL_MEMES = ###ALL_MEMES###;
-      const TOP_MEMES = ###TOP_MEMES###;
-      const MEMES_PER_PAGE = ###MEMES_PER_PAGE###;
-      const MEME = ###MEME###;
-    </script>
-    <script type="text/javascript" src="js/lib/underscore-1.4.2.js" defer></script>
-    <script type="text/javascript" src="js/lib/jquery-1.8.3.js" defer></script>
-    <script type="text/javascript" src="js/lib/backbone-0.9.9.js" defer></script>
-    <script type="text/javascript" src="memgen.js?###APP_VERSION###" defer></script>
-  </body>
   </body>
 </html>

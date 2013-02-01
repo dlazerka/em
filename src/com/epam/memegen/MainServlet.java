@@ -24,7 +24,7 @@ import com.google.appengine.api.utils.SystemProperty.Environment;
 public class MainServlet extends HttpServlet {
   @SuppressWarnings("unused")
   private static final Logger logger = Logger.getLogger(MainServlet.class.getName());
-  private static final Pattern memePattern = Pattern.compile("^/([0-9]+)$");
+  private final Pattern memePattern = Pattern.compile("^/([0-9]+)$");
 
   private final Util util = new Util();
   private final MemeDao memeDao = new MemeDao();
@@ -44,27 +44,34 @@ public class MainServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    if (SystemProperty.environment.value() == Environment.Value.Development) {
-      readFile();
-    }
-    String allMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
-    String topMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
-    String deletedMemesIds = memeDao.getDeletedIdsAsJson();
-    String replaced = welcomeFileContent;
-
-    replaced = replaced.replace("###ALL_MEMES###", allMemes);
-    replaced = replaced.replace("###TOP_MEMES###", topMemes);
-    replaced = replaced.replace("###DELETED_MEMES_IDS###", deletedMemesIds);
     String uri = req.getRequestURI();
 
     // If opening a particular meme like "GET /12345".
     String meme = "null";
-    Matcher matcher = memePattern.matcher(uri);
-    if (matcher.matches()) {
-      long id = Long.parseLong(matcher.group(1));
+    Matcher memeMatcher = memePattern.matcher(uri);
+    if (memeMatcher.matches()) {
+      long id = Long.parseLong(memeMatcher.group(1));
       meme = memeDao.getAsJson(id);
     }
+
+    if (meme == null || !(memeMatcher.matches() || uri.equals("/"))) {
+      resp.sendError(404, "Not Found");
+      return;
+    }
+
+    if (SystemProperty.environment.value() == Environment.Value.Development) {
+      readFile();
+    }
+    String replaced = welcomeFileContent;
     replaced = replaced.replace("###MEME###", meme);
+
+    String allMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.DATE);
+    String topMemes = memeDao.getAllAsJson(req, 0, MemeDao.Sort.RATING);
+    String deletedMemesIds = memeDao.getDeletedIdsAsJson();
+
+    replaced = replaced.replace("###ALL_MEMES###", allMemes);
+    replaced = replaced.replace("###TOP_MEMES###", topMemes);
+    replaced = replaced.replace("###DELETED_MEMES_IDS###", deletedMemesIds);
 
     // Check authentication.
     // If not logged in, send him to login url.

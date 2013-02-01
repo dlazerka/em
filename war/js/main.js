@@ -7,5 +7,8 @@ $.ajaxSetup({
   'contentType': 'application/json; charset=UTF-8'
 });
 
-// Trigger the initial route and enable HTML5 History API support
-Backbone.history.start({pushState: true});
+// Schedule onload so that CSS is already loaded.
+$(function() {
+  // Trigger the initial route and enable HTML5 History API support
+  Backbone.history.start({pushState: true});
+});

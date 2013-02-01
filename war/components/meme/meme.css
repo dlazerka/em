@@ -24,11 +24,14 @@
 	display: inline-block;
 }
 
+.meme .img {
+  vertical-align: top; /* Prevents extra 4px at the bottom */
+}
+
 .memeSmall .img,
 .meme .canvas {
   display: inline-block;
   height: 200px;
-  vertical-align: top; /* Prevents extra 4px at the bottom */
 }
 
 .videoIcon {
