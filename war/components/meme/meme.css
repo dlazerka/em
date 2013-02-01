@@ -24,7 +24,8 @@
 	display: inline-block;
 }
 
-.meme .img {
+.meme .img,
+.meme .canvas {
   vertical-align: top; /* Prevents extra 4px at the bottom */
 }
 
