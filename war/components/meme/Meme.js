@@ -18,12 +18,17 @@ var Meme = Backbone.Model.extend({
 
   initialize: function() {
     this.vote = new Vote({
-      id: this.id,
+      id: this.id,// null if meme is not yet saved
       rating: this.get('rating')
     });
     this.vote.on('change', function () {
       this.set('rating', this.vote.get('rating'));
     }, this);
+
+    // Update vote's ID when this meme is saved.
+    this.bind('sync', _.bind(function() {
+      this.vote.set('id', this.id)
+    }, this));
   },
 
   getMessagesMap: function() {
