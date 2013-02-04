@@ -19,7 +19,6 @@ public class MemesServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("application/json");
     resp.setCharacterEncoding("UTF-8");
-    resp.setHeader("X-Chrome-Exponential-Throttling", "disable");
 
     int page = 0;
     if (!Util.isNullOrEmpty(req.getParameter("page"))) {

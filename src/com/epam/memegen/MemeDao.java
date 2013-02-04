@@ -2,7 +2,9 @@ package com.epam.memegen;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,18 +56,18 @@ public class MemeDao {
   private static final Logger logger = Logger.getLogger(MemeDao.class.getName());
 
   public static final String KIND = "Meme";
+  public static final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
   /* Memcache keys */
   private static final String LAST_TS = "LAST_TS";
   private static final String DELETED_IDS = "DELETED_IDS";
+  private static final String TIMESTAMPS = "TIMESTAMPS";
 
   public static final int MEMES_PER_PAGE = 50;
 
   public static enum Sort {
     DATE, RATING
   }
-
-  private final Key allKey = KeyFactory.createKey(KIND, "ALL");
 
   private final MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -74,7 +76,6 @@ public class MemeDao {
   private final Util util = new Util();
 
   private final Expiration expiration = Expiration.byDeltaSeconds(666); // 11 minutes
-  private final FetchOptions fetchOptions = FetchOptions.Builder.withPrefetchSize(1000);
 
   public MemeDao() {
     memcache.setErrorHandler(new ConsistentErrorHandler() {
@@ -93,6 +94,30 @@ public class MemeDao {
     return key;
   }
 
+  public List<Long> getTimestamps() throws IOException {
+    int maxCount = 99;
+    @SuppressWarnings("unchecked")
+    List<Long> timestamps = (List<Long>) memcache.get(TIMESTAMPS);
+    if (timestamps == null) {
+      timestamps = new ArrayList<Long>(maxCount);
+
+      Query q = new Query(MemeDao.KIND, MemeDao.allKey);
+      q.setFilter(FilterOperator.EQUAL.of("deleted", false));
+      q.addSort("date", SortDirection.DESCENDING);
+      FetchOptions fetchOptions = FetchOptions.Builder.withPrefetchSize(maxCount);
+      fetchOptions.limit(maxCount);
+      PreparedQuery prepared = datastore.prepare(q);
+      List<Entity> memes = prepared.asList(fetchOptions);
+      for (Entity meme : memes) {
+        Date date = (Date) meme.getProperty("date");
+        if (date != null) timestamps.add(date.getTime());
+      }
+      memcache.put(TIMESTAMPS, timestamps);
+    }
+    return timestamps;
+  }
+
+
   public String getDeletedIdsAsJson() throws IOException {
     String result = (String) memcache.get(DELETED_IDS);
     if (result != null) {
@@ -104,7 +129,7 @@ public class MemeDao {
     PreparedQuery prepared = datastore.prepare(q);
     StringWriter sw = new StringWriter();
     JsonWriter jw = new JsonWriter(sw).beginArray();
-    for (Entity entity : prepared.asIterable(fetchOptions)) {
+    for (Entity entity : prepared.asIterable(FetchOptions.Builder.withPrefetchSize(100))) {
       jw.value(entity.getKey().getId());
     }
     jw.endArray().close();
@@ -151,8 +176,8 @@ public class MemeDao {
 
     q.setFilter(filter);
 
+    FetchOptions fetchOptions = FetchOptions.Builder.withPrefetchSize(MEMES_PER_PAGE);
     fetchOptions.limit(MEMES_PER_PAGE);
-
     fetchOptions.offset(page * MEMES_PER_PAGE);
 
     PreparedQuery prepared = datastore.prepare(q);
@@ -365,6 +390,7 @@ public class MemeDao {
 
     memcache.delete(Sort.DATE.name());
     memcache.delete(Sort.RATING.name());
+    memcache.delete(TIMESTAMPS);
 
     // Set LAST_TS, taking care of for race conditions.
     long timestamp = justCreatedDate.getTime();
@@ -441,6 +467,7 @@ public class MemeDao {
     memcache.delete(Sort.DATE.name());
     memcache.delete(Sort.RATING.name());
     memcache.delete(DELETED_IDS);
+    memcache.delete(TIMESTAMPS);
     logger.info("Deleted meme " + id);
   }
 }

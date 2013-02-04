@@ -40,6 +40,16 @@
     <servlet-name>Meme</servlet-name>
     <url-pattern>/meme/*</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>MemesStats</servlet-name>
+    <servlet-class>com.epam.memegen.MemesStatsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MemesStats</servlet-name>
+    <url-pattern>/memes/stats</url-pattern>
+  </servlet-mapping>
+
   <servlet>
     <servlet-name>Memes</servlet-name>
     <servlet-class>com.epam.memegen.MemesServlet</servlet-class>
@@ -48,14 +58,7 @@
     <servlet-name>Memes</servlet-name>
     <url-pattern>/memes</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>Vote</servlet-name>
-    <servlet-class>com.epam.memegen.VoteServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Vote</servlet-name>
-    <url-pattern>/vote</url-pattern>
-  </servlet-mapping>
+
   <servlet>
     <servlet-name>Image</servlet-name>
     <servlet-class>com.epam.memegen.ImageServlet</servlet-class>
