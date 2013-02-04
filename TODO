@@ -3,6 +3,7 @@ Bugs:
 + Go to a direct meme URL, that is not on the first page.
 + Click on a meme. Go back. See all text is incorrectly positioned.
 * Memes 57002 and 54001 wasn't marked as animated.
+* Upload: press cancel. Popup appears.
 
 Features:
 + Upload image from link.
