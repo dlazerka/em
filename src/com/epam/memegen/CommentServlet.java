@@ -3,6 +3,7 @@ package com.epam.memegen;
 import static com.epam.memegen.Util.isNullOrEmpty;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +21,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.labs.repackaged.com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -74,7 +74,7 @@ public class CommentServlet extends HttpServlet {
   private List<Comment> getComments(long memeId) {
     Query query = new Query(Comment.KIND, KeyFactory.createKey(MemeDao.KIND, memeId))
         .addSort(Comment.DATE);
-    List<Comment> comments = Lists.newArrayList();
+    List<Comment> comments = new ArrayList<>();
     PreparedQuery preparedQuery = datastore.prepare(query);
     for (Entity entity : preparedQuery.asIterable()) {
       Comment comment = fromEntity(entity);

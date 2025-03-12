@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" build-on-make="true" name="epammeme:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/epammeme_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="epammeme" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="commons-io-2.4.jar" module-name="epammeme" />
+          <element id="library" level="module" name="gson-2.2.2.jar" module-name="epammeme" />
+          <element id="library" level="module" name="commons-lang3-3.1.jar" module-name="epammeme" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="epammeme/web/Web" />
+    </root>
+  </artifact>
+</component>
